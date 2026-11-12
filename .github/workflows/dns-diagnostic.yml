@@ -1,0 +1,31 @@
+name: Diagnose FeatherMC domain
+on:
+  push:
+    paths:
+      - '.github/workflows/dns-diagnostic.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  diagnose:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Public domain DNS and Pages diagnostics
+        shell: bash
+        run: |
+          echo '--- Nameservers ---'
+          dig +time=3 +tries=1 +short NS mcfeather.com || true
+          echo '--- A records from Google ---'
+          dig @8.8.8.8 +time=3 +tries=1 +short A mcfeather.com || true
+          echo '--- A records from Cloudflare ---'
+          dig @1.1.1.1 +time=3 +tries=1 +short A mcfeather.com || true
+          echo '--- AAAA ---'
+          dig +time=3 +tries=1 +short AAAA mcfeather.com || true
+          echo '--- WWW CNAME ---'
+          dig +time=3 +tries=1 +short CNAME www.mcfeather.com || true
+          echo '--- HTTP response apex ---'
+          curl -IL --max-time 12 --silent --show-error http://mcfeather.com || true
+          echo '--- HTTPS response apex ---'
+          curl -IL --max-time 12 --silent --show-error https://mcfeather.com || true
+          echo '--- GitHub Pages default domain ---'
+          curl -IL --max-time 12 --silent --show-error https://tr1ton4ikus.github.io/feathermc-site/ || true
