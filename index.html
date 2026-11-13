@@ -143,7 +143,7 @@
     [data-theme="light"] .hero-photo.dark {opacity:0}
     .hero::before { content:""; position:absolute; inset:0; z-index:-3; background: linear-gradient(90deg, var(--hero-left) 0%, var(--hero-mid) 39%, var(--hero-right) 78%), linear-gradient(0deg, var(--bg) 0%, transparent 28%); transition:background .7s; }
     .hero::after { content:""; position:absolute; inset:auto 0 0; height: 150px; z-index:-2; background:linear-gradient(to top,var(--bg),transparent); pointer-events:none; }
-    .hero-radial { position:absolute; z-index:-2; width:65vw; height:65vw; left:-21vw; top:20%; background:radial-gradient(circle,rgba(230,135,207,.10),transparent 60%); pointer-events:none; }
+    
     .hero-petals { position:absolute; inset:0; z-index:-1; width:100%; height:100%; pointer-events:none; }
     .hero-content { position:relative; z-index:1; }
     .hero-eyebrow { display:inline-flex; align-items:center; gap: 11px; border:1px solid var(--border); background:var(--chip); backdrop-filter:blur(10px); padding: 9px 15px 9px 11px; border-radius:999px; font-family:var(--font-pixel); font-size:14px; line-height:1.2; letter-spacing:1.35px; color:var(--text); margin-bottom:28px; box-shadow:inset 0 1px rgba(255,255,255,.13); }
@@ -488,7 +488,7 @@
 [data-theme="light"] {--bg:#fffaf3;--bg-alt:#fff1df;--card:#fffdf8;--surface:rgba(255,253,248,.91);--text:#392b25;--muted:#77665d;--muted-2:#9b8777;--accent:#cc750e;--accent-strong:#d97a0a;--accent-faint:rgba(255,171,51,.13);--accent-text:#ffffff;--border:rgba(139,90,38,.17);--line:rgba(139,90,38,.12);--nav-bg:rgba(255,250,240,.84);--hero-left:rgba(255,250,238,.92);--hero-mid:rgba(255,240,219,.68);--hero-right:rgba(255,247,228,.04);--shadow:rgba(117,68,19,.14);--chip:rgba(255,245,223,.74);--rose:#d99b36;--purple:#cb6b55;}
 ::selection{background:#ffcf78;color:#352212}
 .brand-icon{width:43px;height:43px;transform:rotate(-9deg)}.brand-icon img,.brand:hover .brand-icon img{filter:drop-shadow(0 4px 6px rgba(235,131,21,.30))}
-.nav-discord{color:var(--accent)!important}.hero-photo{background-position:center 48%}.hero-radial{background:linear-gradient(90deg,var(--hero-left) 0%,var(--hero-mid) 48%,var(--hero-right) 89%)!important}
+.nav-discord{color:var(--accent)!important}.hero-photo{background-position:center 48%}
 .hero-eyebrow .eyebrow-star,.hero-headline em{color:var(--accent)!important}.hero-caption strong{color:var(--text)}
 .button-primary,.nav-cta{background:linear-gradient(135deg,#ffc764,#ff991f)!important;color:#35200c!important;border-color:transparent!important;box-shadow:0 10px 24px rgba(242,138,24,.24)}
 .button-primary:hover,.nav-cta:hover{box-shadow:0 15px 32px rgba(238,134,28,.35)!important;transform:translateY(-2px)}
@@ -1216,7 +1216,6 @@
 <section aria-labelledby="heroTitle" class="hero homepage" id="top">
 <div aria-hidden="true" class="hero-photo light"></div>
 <div aria-hidden="true" class="hero-photo dark"></div>
-<div aria-hidden="true" class="hero-radial"></div>
 <canvas aria-hidden="true" class="hero-petals" id="petals"></canvas>
 <div class="container hero-content">
 <div class="hero-eyebrow"><span class="eyebrow-star">✦</span> БЕЗ ПРОХОДОК · БЕЗ ЛИЦЕНЗИИ · БЕЗ АНКЕТ</div>
