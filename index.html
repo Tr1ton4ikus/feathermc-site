@@ -709,6 +709,25 @@
   .brand-icon img{ animation:none !important; }
   .status-dot{ animation:none !important; }
 }
+
+/* ---------- Iteration 7 — mobile responsiveness: eliminate CONNECT overflow ---------- */
+@media(max-width:640px){
+  /* Root cause: grid items default to min-width:auto and overran their 1fr track,
+     then the card's overflow:hidden clipped the copy button + "ВЕРСИЯ" column. */
+  .join-grid > *, .welcome-grid > *, .features-grid > *{ min-width:0; }
+  .connect-card{ padding:24px 18px; max-width:100%; }
+  /* Address + copy become one full-width, thumb-friendly tap block. */
+  .address-field{ flex-wrap:wrap; padding:14px; min-height:0; gap:12px; }
+  .address-field code{ flex:1 1 100%; text-align:center; font-size:22px; }
+  .address-field button{ flex:1 1 100%; width:100%; justify-content:center; min-height:50px; }
+  /* Status rows stack to a single column so every label + value shows in full. */
+  .connect-info{ flex-direction:column; align-items:stretch; gap:13px; }
+  .connect-info > div{ display:flex; align-items:baseline; justify-content:space-between; gap:12px; }
+  .connect-info .info-label{ margin-bottom:0; }
+  .connect-info .info-value{ white-space:normal; word-break:break-word; text-align:right; }
+}
+/* Disclaimer reads better in the body sans than the pixel font at small sizes. */
+.connect-footnote{ font:400 12.5px/1.6 var(--font-body) !important; letter-spacing:.2px; }
 </style>
 </head>
 <body>

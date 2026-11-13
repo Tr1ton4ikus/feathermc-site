@@ -186,3 +186,31 @@ no copy-success morph, no signature feather move, a restless marquee.
 marquee 62s, and green copy-check morph all confirmed. (Programmatic clicks can't trigger the
 real clipboard, so the morph was verified by forcing the success state — the copy logic itself
 is unchanged from the original working path.)
+
+---
+
+## Iteration 7 — Mobile design & responsiveness
+
+**Player score: 4/10** (a sharp, deserved drop). "The hero and nav drawer are 8/10 work, but the
+CONNECT card plus footer have P0 horizontal overflow with a half-clipped primary button. A phone
+user literally cannot tap 'copy IP' — the core action."
+
+**Root cause (measured):** at 375px the `.connect-card` rendered **399px wide** — grid items
+default to `min-width:auto`, so the card overran its 1fr track and the card's own `overflow:hidden`
+clipped the copy button and the "ВЕРСИЯ" column. The page itself didn't scroll sideways, which is
+why it slipped through — the damage was *inside* the clipped card.
+
+**Implemented:**
+- **Killed the overflow.** `.join-grid/.welcome-grid/.features-grid > * { min-width:0 }` on mobile
+  lets items respect their track. Re-measured: card is now **339px**, **0 overflowing children**,
+  `scrollWidth === 375`.
+- **Stacked the copy block (P0).** The address + "КОПИРОВАТЬ" button now stack vertically into one
+  full-width, thumb-friendly tap block (button is fully visible and tappable).
+- **Single-column status (P1).** The СТАТУС / ОНЛАЙН / ВЕРСИЯ rows collapse to one column on
+  mobile — every label and "Скоро" value shows in full as a clean label→value row.
+- **Readable disclaimer (P1).** The status footnote moves from the pixel font to the body sans
+  (confirmed computed font = Trebuchet MS).
+
+**Verification:** 375px — `scrollWidth===clientWidth===375` (no sideways scroll), 0 children
+overflow the card, address+button stacked, status single-column; no console errors. Desktop
+untouched (fixes scoped to `max-width:640`).
