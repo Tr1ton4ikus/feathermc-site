@@ -1022,7 +1022,6 @@
   background-color:transparent;
   box-shadow:none;
   transition:background-color .54s ease,border-color .54s ease,box-shadow .54s ease;
-  will-change:transform;
 }
 @media(min-width:1291px) {
   .header .nav>.nav-links {
@@ -1031,7 +1030,6 @@
     background-color:transparent;
     box-shadow:none;
     transition:background-color .54s ease,border-color .54s ease,box-shadow .54s ease;
-    will-change:transform;
   }
 }
 .header.is-scrolled {
@@ -1039,6 +1037,7 @@
 }
 .header.is-scrolled .nav {
   width:100%;max-width:1430px;min-height:58px;margin:0 auto;
+  grid-template-columns:auto minmax(0,1fr) auto;
   padding:0;gap:clamp(10px,1.5vw,22px);
   background:transparent;border:0;border-radius:0;box-shadow:none;
   backdrop-filter:none;-webkit-backdrop-filter:none;
@@ -1133,6 +1132,24 @@
   .header.is-scrolled .nav{gap:5px;}
   .header.is-scrolled .nav>.brand{padding:6px;}
   .header.is-scrolled .nav>.nav-actions{padding:5px;}
+}
+/* Focus rings stay visible over imagery in both glass states. */
+.header :is(a,button):focus-visible{outline:3px solid var(--accent);outline-offset:3px;}
+.nav .menu-button{min-width:44px;min-height:44px;}
+.nav .theme-toggle{min-height:44px;}
+.nav .theme-toggle .toggle-bubble{top:6px;}
+@media(min-width:1291px) and (max-width:1460px){
+  .header.is-scrolled{padding-inline:12px;}
+  .header.is-scrolled .nav{gap:8px;}
+  .header.is-scrolled .nav>.brand{padding-inline:8px;}
+  .header.is-scrolled .nav>.nav-links{padding-inline:5px;}
+  .header.is-scrolled .nav>.nav-actions{padding-inline:7px;gap:6px;}
+}
+@media(max-width:1290px){
+  .header .nav-links{overscroll-behavior:contain;scrollbar-width:thin;}
+  .header .nav-links:not(.open){pointer-events:none;}
+  .header .nav-links.open{pointer-events:auto;}
+  .header.is-scrolled .nav>.nav-links{max-height:calc(100dvh - 102px);}
 }
 @media(prefers-reduced-motion:reduce) {
   .header,.header .nav,.header .nav::after,
@@ -1351,6 +1368,11 @@
       ];
       const compactNav = window.matchMedia('(max-width: 1290px)');
       let headerScrollFrame = 0;
+      const headerAnimations = new Map();
+      function cancelHeaderAnimations() {
+        headerAnimations.forEach(animation => animation.cancel());
+        headerAnimations.clear();
+      }
 
       // FLIP animation: move each group from its actual previous screen position
       // into the new three-part layout, including a smooth reverse on scroll up.
@@ -1365,7 +1387,7 @@
 
           const moving = compactNav.matches ? [floatParts[0],floatParts[2]] : floatParts;
           const previous = moving.map(element => element.getBoundingClientRect());
-          floatParts.forEach(element => element.getAnimations().forEach(animation => animation.cancel()));
+          cancelHeaderAnimations();
           siteHeader.classList.toggle('is-scrolled', shouldSplit);
 
           if (prefersReducedMotion || !Element.prototype.animate) return;
@@ -1373,14 +1395,16 @@
             const next = element.getBoundingClientRect();
             const dx = previous[index].left - next.left;
             const dy = previous[index].top - next.top;
-            element.animate([
-              {transform: `translate3d(${dx}px, ${dy}px, 0) scale(.985)`, opacity:.94},
-              {transform:'translate3d(0, 0, 0) scale(1)', opacity:1}
+            const animation = element.animate([
+              {transform: `translate3d(${dx}px, ${dy}px, 0)`},
+              {transform:'translate3d(0, 0, 0)'}
             ], {
               duration:shouldSplit ? 660 : 550,
               easing:'cubic-bezier(.19, 1, .22, 1)',
               fill:'none'
             });
+            headerAnimations.set(element, animation);
+            animation.onfinish = () => headerAnimations.delete(element);
           });
         });
       }
@@ -1463,21 +1487,39 @@
       }
       document.querySelectorAll('[data-copy]').forEach(button => button.addEventListener('click', () => copyIP(button)));
 
-      menuButton.addEventListener('click', () => {
-        const open = !navLinks.classList.contains('open');
-        navLinks.classList.toggle('open',open);
-        menuButton.setAttribute('aria-expanded',String(open));
-        menuButton.setAttribute('aria-label',open ? 'Закрыть меню' : 'Открыть меню');
-      });
-      navLinks.querySelectorAll('a').forEach(link => link.addEventListener('click', () => {
-        navLinks.classList.remove('open');menuButton.setAttribute('aria-expanded','false');
+      // A disclosure, rather than an ARIA menu: ordinary links retain native Tab behavior.
+      function setMenuOpen(open, restoreFocus = false) {
+        const expanded = compactNav.matches && open;
+        if (restoreFocus) menuButton.focus({preventScroll:true});
+        navLinks.classList.toggle('open', expanded);
+        navLinks.inert = compactNav.matches && !expanded;
+        menuButton.setAttribute('aria-expanded', String(expanded));
+        menuButton.setAttribute('aria-label', expanded ? 'Закрыть меню' : 'Открыть меню');
+      }
+      menuButton.addEventListener('click', () => setMenuOpen(!navLinks.classList.contains('open')));
+      navLinks.querySelectorAll('a, [data-copy]').forEach(link => link.addEventListener('click', () => {
+        // Move focus out before making the closed dropdown inert.
+        setMenuOpen(false, compactNav.matches);
       }));
       document.addEventListener('click', event => {
-        if (!event.target.closest('.nav') && navLinks.classList.contains('open')) {
-          navLinks.classList.remove('open');menuButton.setAttribute('aria-expanded','false');
+        if (!event.target.closest('.nav') && navLinks.classList.contains('open')) setMenuOpen(false);
+      });
+      document.addEventListener('keydown', event => {
+        if (event.key === 'Escape' && navLinks.classList.contains('open')) {
+          setMenuOpen(false, true);
         }
       });
-      document.addEventListener('keydown',event => { if (event.key === 'Escape') {navLinks.classList.remove('open');menuButton.setAttribute('aria-expanded','false');} });
+      document.addEventListener('focusin', event => {
+        if (navLinks.classList.contains('open') && !siteHeader.contains(event.target)) setMenuOpen(false);
+      });
+      compactNav.addEventListener('change', () => {
+        cancelHeaderAnimations();
+        const hiddenFocus = compactNav.matches && navLinks.contains(document.activeElement);
+        setMenuOpen(false, hiddenFocus);
+      });
+      window.addEventListener('resize', cancelHeaderAnimations, {passive:true});
+      window.addEventListener('hashchange', () => setMenuOpen(false));
+      setMenuOpen(false);
 
       if ('IntersectionObserver' in window && !prefersReducedMotion) {
         const observer = new IntersectionObserver(entries => {
