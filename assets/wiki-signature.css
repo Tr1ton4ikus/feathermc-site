@@ -64,3 +64,17 @@ html[data-theme=light] .sitebar{background:rgba(255,247,233,.78);border-bottom-c
 @media(max-width:800px){.sitebar .barrow{gap:10px}.sitebar .navlinks{gap:4px}.sitebar .navlinks a{padding:7px 8px}.sitebar .navlinks .donate-link{padding:7px 11px}.sidebar{max-height:380px}.reading{box-shadow:none}}
 @media(max-width:520px){#wikiGrid .card{min-height:0}.intro .eyebrow{font-size:10px}.article-content th,.article-content td{padding:10px}.article-content h2::before{height:19px}}
 @media(prefers-reduced-motion:reduce){.sitebar .navlinks a,.sitebar .themebtn,#wikiGrid .card,.sidebar a,.wiki-topics .topic,.article-pagination a,#view-wiki .wiki-category-strip a,#view-wiki .wiki-library-filters button{transition:none!important}}
+
+/* Guided entry points — clear, curated paths through the 12 existing articles. */
+.wiki-quickstart{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px;margin:0 0 28px;}
+.wiki-quickstart a{display:flex;align-items:center;gap:13px;min-width:0;min-height:82px;padding:15px 16px;border-radius:17px;
+  text-decoration:none;color:var(--ink);background:var(--paper);border:1px solid var(--line);
+  transition:transform .25s,border-color .25s,box-shadow .25s;}
+.wiki-quickstart a:hover{transform:translateY(-3px);border-color:var(--accent);box-shadow:0 11px 26px rgba(10,10,20,.09);}
+.wiki-quickstart .quick-icon{display:grid;place-items:center;flex:none;width:42px;height:42px;border-radius:12px;
+  background:linear-gradient(135deg,rgba(255,190,95,.22),rgba(255,130,62,.13));color:var(--accent);font-size:21px;}
+.wiki-quickstart strong,.wiki-quickstart small{display:block;}
+.wiki-quickstart strong{font-size:14px;line-height:1.3;}
+.wiki-quickstart small{font-size:11px;color:var(--muted);margin-top:5px;line-height:1.45;}
+@media(max-width:720px){.wiki-quickstart{grid-template-columns:1fr;gap:9px}.wiki-quickstart a{min-height:66px;padding:11px 14px}}
+@media(prefers-reduced-motion:reduce){.wiki-quickstart a{transition:none!important}}
