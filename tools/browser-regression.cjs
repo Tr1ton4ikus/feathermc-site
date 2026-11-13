@@ -77,7 +77,7 @@ const server = http.createServer((req, res) => {
     assert(await page.locator('a[href="https://discord.gg/afb4uxe3GP"]').count());
     await page.locator('[data-copy]:visible').first().click();
     await page.waitForTimeout(100);
-    assert.equal(await page.evaluate(() => navigator.clipboard.readText()), 'mcfeather.com');
+    assert.equal(await page.evaluate(() => navigator.clipboard.readText()), 'play.mcfeather.com');
     // Artistic gallery must open accessibly and close without leaving the page.
     assert.equal(await page.locator('[data-world-scene]').count(), 3);
     await page.locator('[data-world-scene]').first().click();

@@ -1,0 +1,45 @@
+{
+  "username": "FeatherMC • Новости",
+  "avatar_url": "https://mcfeather.com/assets/feather-logo.webp",
+  "allowed_mentions": {
+    "parse": []
+  },
+  "embeds": [
+    {
+      "author": {
+        "name": "FEATHERMC • НОВАЯ ГЛАВА",
+        "url": "https://mcfeather.com/"
+      },
+      "title": "🌅 FeatherMC открыт — твоё приключение начинается!",
+      "url": "https://mcfeather.com/",
+      "description": "**Новый мир, новые знакомства и твоя собственная история.** ✨\n\nСобирай друзей, выбирай место для первых построек и заходи в Minecraft — **можно начинать играть прямо сейчас!**",
+      "color": 16760928,
+      "fields": [
+        {
+          "name": "🎮 IP сервера",
+          "value": "```play.mcfeather.com```",
+          "inline": false
+        },
+        {
+          "name": "🚀 Как начать играть",
+          "value": "**1.** Запусти Minecraft\n**2.** Открой «Сетевая игра» → «Добавить сервер»\n**3.** Вставь IP `play.mcfeather.com`\n**4.** Подключайся и создавай свою историю!",
+          "inline": false
+        },
+        {
+          "name": "🔗 Всё под рукой",
+          "value": "[🌐 Официальный сайт](https://mcfeather.com/)  •  [📖 FeatherWiki](https://mcfeather.com/wiki.html)  •  [🎁 Донат-магазин](https://feather.trademc.org/)",
+          "inline": false
+        }
+      ],
+      "thumbnail": {
+        "url": "https://mcfeather.com/assets/feather-logo.webp"
+      },
+      "image": {
+        "url": "https://mcfeather.com/assets/background-light.webp"
+      },
+      "footer": {
+        "text": "FeatherMC  ✦  Твой мир. Твоя история."
+      }
+    }
+  ]
+}
