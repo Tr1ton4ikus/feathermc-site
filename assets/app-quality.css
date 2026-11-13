@@ -1,0 +1,9 @@
+/* Allow grid children to shrink to the mobile viewport instead of their text width. */
+[data-theme="light"] .app-page{--accent:#945410;--muted-2:#796553;}
+#view-gradient .grad-editor{grid-template-columns:minmax(0,.86fr) minmax(0,1.14fr);}
+#view-gradient :is(.grad-controls,.grad-output,.color-card,.gradient-preview-shell){min-width:0;}
+#view-gradient .color-card{grid-template-columns:47px minmax(0,1fr);column-gap:9px;}
+#view-gradient .color-card span{overflow-wrap:anywhere;}
+#view-gradient .gradient-preview-text{max-width:100%;}
+@media(max-width:1024px){#view-gradient .grad-editor{grid-template-columns:minmax(0,1fr);}}
+@media(max-width:380px){#view-gradient .grad-swatches{grid-template-columns:minmax(0,1fr);}#view-gradient .format-top{flex-wrap:wrap;}#view-gradient .skin-preview-label{flex-wrap:wrap;gap:8px;}}
