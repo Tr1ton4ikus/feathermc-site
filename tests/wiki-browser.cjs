@@ -15,7 +15,7 @@ const assert = require('node:assert/strict');
   assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false,`wiki overflow ${width}/${theme}`);
  }
  const links=await page.locator('#wikiGrid .card').evaluateAll(cards=>cards.map(card=>card.getAttribute('href')));
- for(const link of links){await page.goto(base+'/'+link);assert.equal(await page.locator('h1').count(),1);assert.ok(await page.locator('#articleToc a').count()>0);assert.equal(await page.locator('[aria-current="page"]').count(),1);
+ for(const link of links){await page.goto(base+'/'+link);assert.equal(await page.locator('h1').count(),1);assert.ok(await page.locator('#articleToc a').count()>0);assert.equal(await page.locator('.sidebar [aria-current="page"]').count(),1);
   for(const width of [320,768,1440]){await page.setViewportSize({width,height:900});assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false,`${link} overflow ${width}`);}
  }
  await page.locator('#wikiNavSearch').fill('неттакойстатьи');assert.equal(await page.locator('#wikiNavEmpty').isVisible(),true);
