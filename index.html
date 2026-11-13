@@ -995,92 +995,151 @@
 }
 @media(prefers-reduced-motion:reduce){.nav-links a .nav-ic{transition:none;}}
 
-/* Scroll-aware Astrums-style header: an integrated bar becomes three floating capsules. */
-.header{transition:padding .3s var(--round);}
-.header .nav{transition:background .32s,border-color .32s,box-shadow .32s,padding .32s;}
-.header.is-scrolled{
+
+/* Glass navigation: seamless float-apart motion (JS FLIP) and translucent surfaces. */
+.header {
+  padding:0;
+  transition:none; /* geometry moves via FLIP, never sudden grid tweening */
+}
+.header .nav {
+  background:rgba(12,16,26,.54);
+  border-bottom-color:rgba(255,225,170,.16);
+  box-shadow:0 10px 35px rgba(6,9,20,.10);
+  transition:background-color .52s ease,border-color .52s ease,box-shadow .52s ease;
+}
+[data-theme="light"] .header .nav {
+  background:rgba(255,250,240,.65);
+  border-bottom-color:rgba(137,91,46,.18);
+  box-shadow:0 10px 32px rgba(83,52,21,.055);
+}
+.header .nav::after {
+  transition:opacity .4s ease;
+}
+.header .nav>.brand,
+.header .nav>.nav-actions {
+  border:1px solid transparent;
+  border-radius:16px;
+  background-color:transparent;
+  box-shadow:none;
+  transition:background-color .54s ease,border-color .54s ease,box-shadow .54s ease;
+  will-change:transform;
+}
+@media(min-width:1291px) {
+  .header .nav>.nav-links {
+    border:1px solid transparent;
+    border-radius:16px;
+    background-color:transparent;
+    box-shadow:none;
+    transition:background-color .54s ease,border-color .54s ease,box-shadow .54s ease;
+    will-change:transform;
+  }
+}
+.header.is-scrolled {
   padding:12px max(16px,calc((100vw - 1430px)/2)) 0;
 }
-.header.is-scrolled .nav{
-  width:100%;max-width:1430px;margin:0 auto;min-height:58px;
+.header.is-scrolled .nav {
+  width:100%;max-width:1430px;min-height:58px;margin:0 auto;
   padding:0;gap:clamp(10px,1.5vw,22px);
   background:transparent;border:0;border-radius:0;box-shadow:none;
   backdrop-filter:none;-webkit-backdrop-filter:none;
 }
-.header.is-scrolled .nav::after{display:none;}
+[data-theme="light"] .header.is-scrolled .nav { background:transparent;box-shadow:none; }
+.header.is-scrolled .nav::after { opacity:0; }
 .header.is-scrolled .nav>.brand,
 .header.is-scrolled .nav>.nav-links,
-.header.is-scrolled .nav>.nav-actions{
-  border:1px solid var(--border);
-  border-radius:16px;
-  background:rgba(16,20,31,.92);
-  box-shadow:0 12px 36px rgba(0,0,0,.20),inset 0 1px rgba(255,255,255,.05);
-  backdrop-filter:blur(24px) saturate(150%);
-  -webkit-backdrop-filter:blur(24px) saturate(150%);
+.header.is-scrolled .nav>.nav-actions {
+  border:1px solid rgba(255,210,143,.20);
+  border-radius:17px;
+  background-color:rgba(16,20,31,.49);
+  box-shadow:
+    0 13px 35px rgba(3,6,16,.16),
+    inset 0 1px rgba(255,255,255,.095),
+    0 0 0 1px rgba(255,198,104,.025);
+  backdrop-filter:blur(23px) saturate(160%);
+  -webkit-backdrop-filter:blur(23px) saturate(160%);
 }
 [data-theme="light"] .header.is-scrolled .nav>.brand,
 [data-theme="light"] .header.is-scrolled .nav>.nav-links,
-[data-theme="light"] .header.is-scrolled .nav>.nav-actions{
-  background:rgba(255,251,242,.95);
-  box-shadow:0 12px 34px rgba(83,52,21,.13),inset 0 1px rgba(255,255,255,.8);
+[data-theme="light"] .header.is-scrolled .nav>.nav-actions {
+  background-color:rgba(255,249,237,.64);
+  border-color:rgba(140,89,39,.23);
+  box-shadow:
+    0 12px 32px rgba(95,61,28,.095),
+    inset 0 1px rgba(255,255,255,.56);
 }
-.header.is-scrolled .nav>.brand{
-  justify-self:start;padding:8px 16px 8px 12px;min-height:58px;
+.header.is-scrolled .nav>.brand {
+  justify-self:start;min-height:58px;padding:8px 16px 8px 12px;
 }
-.header.is-scrolled .nav>.nav-links{
+.header.is-scrolled .nav>.nav-links {
   justify-self:center;align-self:center;width:max-content;max-width:100%;
   min-height:58px;padding:6px 8px;gap:1px;
 }
-.header.is-scrolled .nav>.nav-actions{
+.header.is-scrolled .nav>.nav-actions {
   justify-self:end;align-self:center;min-height:58px;padding:8px 10px;
 }
 .header.is-scrolled .nav>.nav-actions .nav-ip{min-height:38px;}
-/* Store is the one intentionally prominent navigation destination. */
+/* Donation is the one vivid button against the transparent glass. */
 .nav-links>li>a.nav-shop-link,
-.header.is-scrolled .nav-links>li>a.nav-shop-link{
+.header.is-scrolled .nav-links>li>a.nav-shop-link {
   color:#352008!important;
   background:linear-gradient(125deg,#ffe0a1,#ffc15a 55%,#f6a338)!important;
   border:1px solid rgba(255,219,148,.60)!important;
   box-shadow:0 4px 16px rgba(232,139,24,.24),inset 0 1px rgba(255,255,255,.55);
   font-weight:800;
 }
-.nav-links>li>a.nav-shop-link:hover{
+.nav-links>li>a.nav-shop-link:hover {
   color:#281706!important;
   background:linear-gradient(125deg,#ffedc2,#ffd078 55%,#ffb549)!important;
   box-shadow:0 7px 20px rgba(237,150,35,.35);
   transform:translateY(-1px);
 }
 .nav-links>li>a.nav-shop-link .nav-ic{stroke:#513110;}
-@media(max-width:1290px){
+@media(max-width:1290px) {
+  .header .nav-links {
+    background-color:rgba(15,19,30,.84);
+    border-color:var(--border);
+    backdrop-filter:blur(24px) saturate(150%);
+    -webkit-backdrop-filter:blur(24px) saturate(150%);
+  }
+  [data-theme="light"] .header .nav-links{background-color:rgba(255,250,239,.88);}
   .header.is-scrolled{padding:10px 12px 0;}
   .header.is-scrolled .nav{grid-template-columns:auto minmax(0,1fr);gap:9px;}
-  .header.is-scrolled .nav>.brand{
+  .header.is-scrolled .nav>.brand {
     min-height:54px;padding:7px 12px 7px 9px;border-radius:14px;
   }
-  .header.is-scrolled .nav>.nav-actions{
+  .header.is-scrolled .nav>.nav-actions {
     min-height:54px;padding:6px 9px;border-radius:14px;
   }
-  /* The drop-down stays a menu rather than becoming a desktop pill. */
-  .header.is-scrolled .nav>.nav-links{
+  /* The dropdown remains readable over the page, unlike the three header chips. */
+  .header.is-scrolled .nav>.nav-links {
     position:absolute;top:calc(100% + 8px);left:10px;right:10px;
     width:auto;max-width:none;min-height:0;justify-self:auto;align-self:auto;
     padding:12px;gap:3px;flex-direction:column;align-items:stretch;
-    border-radius:17px;box-shadow:0 22px 65px rgba(0,0,0,.30);
+    border-radius:17px;
+    background-color:rgba(15,19,30,.84);
+    box-shadow:0 22px 65px rgba(0,0,0,.26);
+  }
+  [data-theme="light"] .header.is-scrolled .nav>.nav-links {
+    background-color:rgba(255,250,239,.88);
   }
 }
-@media(max-width:820px){
+@media(max-width:820px) {
   .header.is-scrolled{padding:8px 10px 0;}
   .header.is-scrolled .nav>.brand,
   .header.is-scrolled .nav>.nav-actions{min-height:48px;}
 }
-@media(max-width:380px){
+@media(max-width:380px) {
   .header.is-scrolled{padding-inline:7px;}
   .header.is-scrolled .nav{gap:5px;}
   .header.is-scrolled .nav>.brand{padding:6px;}
   .header.is-scrolled .nav>.nav-actions{padding:5px;}
 }
-@media(prefers-reduced-motion:reduce){
-  .header,.header .nav,.nav-links>li>a.nav-shop-link{transition:none!important;}
+@media(prefers-reduced-motion:reduce) {
+  .header,.header .nav,.header .nav::after,
+  .header .nav>.brand,.header .nav>.nav-links,.header .nav>.nav-actions,
+  .nav-links>li>a.nav-shop-link {
+    transition:none!important;
+  }
 }
 </style>
 </head>
@@ -1285,11 +1344,49 @@
       const menuButton = document.getElementById('menuButton');
       const navLinks = document.getElementById('main-menu');
       const siteHeader = document.querySelector('.header');
+      const floatParts = [
+        siteHeader.querySelector('.nav > .brand'),
+        siteHeader.querySelector('.nav > .nav-links'),
+        siteHeader.querySelector('.nav > .nav-actions')
+      ];
+      const compactNav = window.matchMedia('(max-width: 1290px)');
+      let headerScrollFrame = 0;
+
+      // FLIP animation: move each group from its actual previous screen position
+      // into the new three-part layout, including a smooth reverse on scroll up.
       function syncHeaderScroll() {
-        siteHeader.classList.toggle('is-scrolled', window.scrollY > 72);
+        if (headerScrollFrame) return;
+        headerScrollFrame = requestAnimationFrame(() => {
+          headerScrollFrame = 0;
+          const wasSplit = siteHeader.classList.contains('is-scrolled');
+          // A small hysteresis zone prevents rapid flicker around the threshold.
+          const shouldSplit = window.scrollY > (wasSplit ? 55 : 105);
+          if (wasSplit === shouldSplit) return;
+
+          const moving = compactNav.matches ? [floatParts[0],floatParts[2]] : floatParts;
+          const previous = moving.map(element => element.getBoundingClientRect());
+          floatParts.forEach(element => element.getAnimations().forEach(animation => animation.cancel()));
+          siteHeader.classList.toggle('is-scrolled', shouldSplit);
+
+          if (prefersReducedMotion || !Element.prototype.animate) return;
+          moving.forEach((element, index) => {
+            const next = element.getBoundingClientRect();
+            const dx = previous[index].left - next.left;
+            const dy = previous[index].top - next.top;
+            element.animate([
+              {transform: `translate3d(${dx}px, ${dy}px, 0) scale(.985)`, opacity:.94},
+              {transform:'translate3d(0, 0, 0) scale(1)', opacity:1}
+            ], {
+              duration:shouldSplit ? 660 : 550,
+              easing:'cubic-bezier(.19, 1, .22, 1)',
+              fill:'none'
+            });
+          });
+        });
       }
+
+      siteHeader.classList.toggle('is-scrolled', window.scrollY > 95);
       window.addEventListener('scroll', syncHeaderScroll, {passive:true});
-      syncHeaderScroll();
       const toast = document.getElementById('toast');
       const toastText = document.getElementById('toastText');
       let toastTimeout;
