@@ -618,6 +618,38 @@
     radial-gradient(120% 85% at 85% -12%, rgba(255,182,63,.12), transparent 55%),
     radial-gradient(95% 72% at 6% 112%, rgba(255,141,176,.08), transparent 62%);
 }
+
+/* ---------- Iteration 3 — hero composition + WOW ---------- */
+
+/* Scrim anchors the type to the sky so the lower-left text reads crisp over bright clouds.
+   Desktop only — on phones the text already sits over darker sky, and a boxy scrim looks
+   like a stray panel, so it fades out below the fold-width. */
+@media(min-width:1141px){
+  .hero.homepage .hero-content{
+    padding:clamp(8px,1.6vw,22px) clamp(16px,2.6vw,34px) clamp(14px,2.4vw,30px);
+    margin-left:calc(-1 * clamp(16px,2.6vw,34px));
+    border-radius:30px;
+    background:radial-gradient(130% 125% at 16% 60%, rgba(9,7,14,.58), rgba(9,7,14,.16) 52%, transparent 72%);
+  }
+}
+@media(min-width:641px) and (max-width:1140px){
+  .hero.homepage .hero-content{
+    padding:4px 20px 10px; border-radius:26px;
+    background:radial-gradient(120% 90% at 26% 48%, rgba(9,7,14,.42), transparent 72%);
+  }
+}
+
+/* Living gold-fade — the "MC" shimmers like late sun catching gold. Text is always
+   fully painted (shimmer only animates the fill colour), so it can never render blank. */
+@media(prefers-reduced-motion:no-preference){
+  .hero-title .mc{
+    background:linear-gradient(100deg,#ffd98c 0%,#ffb02a 28%,#ff8f18 50%,#ffd98c 72%,#ffb02a 100%);
+    background-size:220% 100%;
+    -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; color:transparent;
+    animation:goldSweep 7.5s ease-in-out infinite;
+  }
+  @keyframes goldSweep{ 0%,100%{background-position:0% 50%} 50%{background-position:100% 50%} }
+}
 </style>
 </head>
 <body>
@@ -667,9 +699,7 @@
 <div class="hero-buttons">
 <button class="button button-primary" data-copy="" type="button"> <svg aria-hidden="true"><use href="#i-copy"></use></svg> Скопировать IP </button>
 <a class="button button-secondary" href="#about">Что тебя ждёт <svg aria-hidden="true"><use href="#i-arrow"></use></svg></a>
-</div>
-<div class="hero-small"><span aria-hidden="true" class="mini-icons"><span>✿</span><span>✦</span><span>♡</span></span><span>Место для твоих новых воспоминаний</span></div>
-</div><aside aria-label="Обратный отсчёт до открытия FeatherMC" class="launch-spotlight" id="launch">
+</div></div><aside aria-label="Обратный отсчёт до открытия FeatherMC" class="launch-spotlight" id="launch">
 <div aria-hidden="true" class="launch-flare">✦ <span>✧</span></div>
 <div class="launch-topline"><span class="launch-live-dot"></span> FEATHERMC • НАЧАЛО ИСТОРИИ <span class="launch-ticket">14 / 11</span></div>
 <div class="launch-copy"><span class="launch-pretitle">СОВСЕМ СКОРО</span><h2>Мир откроется<br/><em>для тебя.</em></h2><p>14 ноября 2026 · 17:00 МСК</p></div>

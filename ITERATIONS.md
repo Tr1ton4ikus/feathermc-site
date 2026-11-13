@@ -67,3 +67,32 @@ three feature cards are a generic SaaS icon-box grid.
 **Verification:** cache-busted render confirms icon gradients (amber/rose/dusk), sans button
 font, tinted indices; no console errors. (Note: browser pane needed a tab recreate after
 heavy viewport toggling — unrelated to the site.)
+
+---
+
+## Iteration 3 — Hero section & immediate WOW factor
+
+**Player score: 6.5/10.** "A countdown site that hides its countdown below the fold and
+leaves half the hero empty hasn't earned the gasp yet." P0s: surface the live countdown in
+the hero's empty right half; add a contrast scrim under the lower-left text; on mobile put
+the countdown directly under the buttons (not below an icon row + card header).
+
+**Implemented:**
+- **Countdown now anchors the hero.** At desktop width the live ticking countdown card fills
+  the previously empty right half of the sky — the single most WOW-capable element is now the
+  hero's co-star, not a footnote. (Verified at 1366px.)
+- **Contrast scrim** behind the lower-left hero text on desktop/tablet (a soft radial that
+  fades to transparent), so the description reads crisply over bright clouds — scoped out on
+  phones, where the text sits over darker sky and a boxed scrim looked like a stray panel.
+- **Living gold-fade.** The "MC" of the wordmark now shimmers with a slow animated gold
+  gradient (text is always fully painted, so it can never render blank).
+- **Removed the twee pastel icon trio** ("Место для твоих воспоминаний") from the hero — two
+  Players flagged it as cheapening the cinematic tone. Its removal also pulls the countdown
+  **directly under the buttons on mobile** (solving the mobile ordering P0).
+
+**Reverted during the round:** an initial hero entrance animation used `backwards` fill and
+left the wordmark/buttons briefly blank on load — unacceptable for critical above-fold
+content. Removed it; a JS-triggered safe version is deferred to the animations iteration.
+
+**Verification:** desktop 1366px — countdown beside hero, scrim + gold shimmer present, no
+console errors. Mobile 375px — full hero visible, countdown immediately under the buttons.
