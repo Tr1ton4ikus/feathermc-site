@@ -1589,9 +1589,11 @@
             petals=Array.from({length:w<640?17:37},()=>makePetal(true));
           }
           resize();window.addEventListener('resize',resize,{passive:true});
-          let last=0;
+          let last=0, particleFrame=0, heroVisible=true;
           function frame(t) {
-            if (t-last<25) {requestAnimationFrame(frame);return;}
+            particleFrame=0;
+            if(document.hidden || !heroVisible) return;
+            if (t-last<25) {particleFrame=requestAnimationFrame(frame);return;}
             const delta=Math.min((t-last||25)/25,2);last=t;
             ctx.clearRect(0,0,w,h);
             petals.forEach((p,i)=>{
@@ -1602,9 +1604,29 @@
               ctx.globalAlpha=p.alpha;ctx.fillStyle=i%3===0?'#ffc9e5':i%3===1?'#ff9dcf':'#ffb4db';
               ctx.beginPath();ctx.ellipse(0,0,p.s*.66,p.s*1.15,.3,0,Math.PI*2);ctx.fill();ctx.restore();
             });
-            requestAnimationFrame(frame);
+            particleFrame=requestAnimationFrame(frame);
           }
-          requestAnimationFrame(frame);
+          function syncParticles() {
+            if(document.hidden || !heroVisible) {
+              cancelAnimationFrame(particleFrame);
+              particleFrame=0;
+              return;
+            }
+            if(!particleFrame) {
+              last=0;
+              resize();
+              particleFrame=requestAnimationFrame(frame);
+            }
+          }
+          document.addEventListener('visibilitychange',syncParticles);
+          if('IntersectionObserver' in window) {
+            const heroObserver=new IntersectionObserver(entries=>{
+              heroVisible=entries[0].isIntersecting;
+              syncParticles();
+            });
+            heroObserver.observe(canvas.closest('.hero'));
+          }
+          syncParticles();
         }
       }
     })();
