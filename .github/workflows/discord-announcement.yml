@@ -1,4 +1,4 @@
-name: Send FeatherMC Discord announcement
+name: Send Feather Discord announcement
 
 on:
   workflow_dispatch:

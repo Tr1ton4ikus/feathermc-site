@@ -36,7 +36,7 @@
       if (!thumbnail) return;
       image.src = link.getAttribute('href');
       image.alt = thumbnail.alt;
-      caption.textContent = link.dataset.sceneTitle || 'Атмосфера FeatherMC';
+      caption.textContent = link.dataset.sceneTitle || 'Атмосфера Feather';
       dialog.showModal();
     });
   });

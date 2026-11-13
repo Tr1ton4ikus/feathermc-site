@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Post a selected FeatherMC announcement through a secret Discord webhook.
+"""Post a selected Feather announcement through a secret Discord webhook.
 
 No webhook URL is stored in source control. Choose the message from a fixed
 allowlist: never read an arbitrary file path from workflow input.
@@ -48,13 +48,13 @@ def prepare_request(webhook, announcement):
     data = json.dumps(payload, ensure_ascii=False).encode("utf-8")
     return urllib.request.Request(
         url, data=data,
-        headers={"Content-Type": "application/json", "User-Agent": "FeatherMC-Announcement/2.0"},
+        headers={"Content-Type": "application/json", "User-Agent": "Feather-Announcement/2.0"},
         method="POST",
     )
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Send a FeatherMC Discord announcement.")
+    parser = argparse.ArgumentParser(description="Send a Feather Discord announcement.")
     parser.add_argument("--announcement", choices=sorted(ANNOUNCEMENTS), default="how-to-play")
     args = parser.parse_args()
     webhook = os.environ.get("DISCORD_WEBHOOK_URL", "").strip()

@@ -29,4 +29,11 @@ for name, path in module.ANNOUNCEMENTS.items():
             for button in row["components"]:
                 assert button["type"] == 2 and button["style"] == 5 and button["url"].startswith("https://")
     assert "play.mcfeather.com" in json.dumps(data), name
+discohook = json.loads((ROOT / "discord" / "discohook-how-to-play.json").read_text(encoding="utf-8"))
+assert "components" not in discohook
+assert "content" not in discohook
+assert discohook["username"].startswith("Feather ")
+assert "play.mcfeather.com" in json.dumps(discohook)
+assert discohook["embeds"][0]["image"]["url"].startswith("https://media.discordapp.net/attachments/")
+assert all("FeatherMC" not in json.dumps(d, ensure_ascii=False) for d in [discohook])
 print("PASS: Discord templates, webhooks, and link buttons are valid.")

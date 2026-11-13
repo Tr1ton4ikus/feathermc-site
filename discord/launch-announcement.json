@@ -1,5 +1,5 @@
 {
-  "username": "FeatherMC • Новости",
+  "username": "Feather • Новости",
   "avatar_url": "https://mcfeather.com/assets/feather-logo.webp",
   "allowed_mentions": {
     "parse": []
@@ -7,10 +7,10 @@
   "embeds": [
     {
       "author": {
-        "name": "FEATHERMC • НОВАЯ ГЛАВА",
+        "name": "Feather • НОВАЯ ГЛАВА",
         "url": "https://mcfeather.com/"
       },
-      "title": "🌅 FeatherMC открыт — твоё приключение начинается!",
+      "title": "🌅 Feather открыт — твоё приключение начинается!",
       "url": "https://mcfeather.com/",
       "description": "**Новый мир, новые знакомства и твоя собственная история.** ✨\n\nСобирай друзей, выбирай место для первых построек и заходи в Minecraft — **можно начинать играть прямо сейчас!**",
       "color": 16760928,
@@ -38,7 +38,7 @@
         "url": "https://mcfeather.com/assets/background-light.webp"
       },
       "footer": {
-        "text": "FeatherMC  ✦  Твой мир. Твоя история."
+        "text": "Feather  ✦  Твой мир. Твоя история."
       }
     }
   ]
