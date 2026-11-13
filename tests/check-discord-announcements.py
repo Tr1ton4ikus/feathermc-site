@@ -43,6 +43,11 @@ support = json.loads((ROOT / "discord" / "discohook-support-menu.json").read_tex
 assert len(support["embeds"]) == 2
 assert "image" in support["embeds"][0]
 assert "description" in support["embeds"][1]
+assert support["embeds"][0]["description"] == "✦"
+assert "Обжаловать блокировку" in support["embeds"][1]["fields"][0]["value"]
+full_support = json.loads((ROOT / "discord" / "support-menu.json").read_text(encoding="utf-8"))
+assert full_support["embeds"][0]["description"] == "✦"
+assert "Обжаловать блокировку" in full_support["embeds"][1]["fields"][0]["value"]
 assert support["embeds"][0]["image"]["url"].startswith("https://media.discordapp.net/attachments/")
 assert "components" not in support and "content" not in support
 assert support["allowed_mentions"]["parse"] == []
