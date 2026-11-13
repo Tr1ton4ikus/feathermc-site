@@ -1,9 +1,9 @@
-const { chromium } = require(process.env.PLAYWRIGHT_PATH || '../../feathermc-site/.qa/node_modules/playwright');
+const { chromium, launchOptions } = require('./browser-config.cjs');
 const assert = require('node:assert/strict');
 (async () => {
- const browser=await chromium.launch({executablePath:process.env.BROWSER_PATH || 'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe',headless:true});
+ const browser=await chromium.launch(launchOptions);
  const page=await browser.newPage(); const errors=[];page.on('pageerror',error=>errors.push(error.message));
- const base=process.env.SITE_URL || 'http://127.0.0.1:18766';
+ const base=process.env.SITE_URL || 'http://127.0.0.1:18765';
  await page.goto(base+'/wiki.html');
  await page.locator('#search').fill('/bank');await page.waitForTimeout(400);
  assert.ok(await page.locator('#wikiGrid .card:visible').count()>0,'full text command search');

@@ -56,3 +56,7 @@
 }
 
 .launch-spotlight .countdown-grid[hidden]{display:none;}
+
+/* Small supporting text retains AA contrast on warm light surfaces. */
+[data-theme="light"] :is(.ticker-inner>span,.footer-caption,.footer-love){color:#75604f;}
+[data-theme="light"] .footer-donate{color:#93520a!important;}

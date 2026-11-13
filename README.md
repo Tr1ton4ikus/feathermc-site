@@ -1,28 +1,37 @@
-# FeatherMC 🪶
+# FeatherMC
 
-Сайт Minecraft-сервера FeatherMC. IP: **mcfeather.com**.
+Static Russian-language Minecraft community website at https://mcfeather.com/.
+Minecraft address: **mcfeather.com**. Donation store: https://feather.trademc.org/.
 
-В комплекте: главная, FeatherWiki, карта «Скоро», редактор градиентов, две темы, таймер запуска и Discord. Без гардероба.
+## Development
 
-## GitHub Pages
+No application build or runtime framework is required. Serve the checkout over HTTP:
 
-1. Создайте **публичный** репозиторий, например `feathermc-site`.
-2. Загрузите **содержимое** этого архива в корень репозитория (файл `index.html` должен лежать в корне).
-3. Откройте **Settings → Pages → Build and deployment**.
-4. Выберите **Deploy from a branch**, затем **main** и **/(root)**, нажмите **Save**.
-5. Адрес сайта будет `https://ВАШ-ЛОГИН.github.io/feathermc-site/`.
+```sh
+python -m http.server 18765 --bind 127.0.0.1
+```
 
-> GitHub Pages размещает этот статический сайт. Для привязки собственного домена требуются дополнительные настройки DNS.
+The homepage supports existing `#wiki/<article>`, `#gradient`, and `#map` routes. Standalone `wiki.html`, `wiki/*.html`, `gradient.html`, and `map.html` remain available. Theme preference is shared across pages.
 
-## Локально
+## Validation
 
-Откройте `index.html` в браузере. Дополнительная сборка не требуется.
+Node 22+ and Python 3.11+:
 
-### Страницы
+```sh
+npm ci
+npx playwright install chromium
+npm run check:wiki
+npm test
+npm run test:wiki
+npm run test:supporting
+```
 
-- `index.html` — сайт и навигация
-- `wiki.html` — переадресация на раздел вики
-- `map.html` — переадресация на карту
-- `gradient.html` — переадресация на редактор градиентов
+Keep the HTTP server running for the wiki and supporting suites. `npm test` creates its own temporary local server. Browser tests use installed Microsoft Edge on Windows or Playwright Chromium elsewhere; `BROWSER_PATH` can override the executable. `SITE_URL` can target another served checkout.
 
-Фоновые изображения встроены в HTML, внешние шрифты требуют доступа к Google Fonts.
+See WIKI-MAINTENANCE.md for canonical article editing. Run both generator commands after catalog changes; `--check` verifies output without modifying files.
+
+## Deployment
+
+GitHub Actions validates documentation, JavaScript, links and browser behavior on PRs and main. The deploy job runs only after quality passes and only outside PR events. Only public HTML, assets, wiki, CNAME, robots.txt, sitemap.xml and .nojekyll enter the Pages artifact. DNS and domain settings are managed separately.
+
+Map availability remains marked as upcoming. The scheduled launch date is preserved from project content; expiry of the countdown does not prove that the Minecraft server is online. Status requests can fail independently of the website.

@@ -28,6 +28,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Momo+Trust+Display&amp;family=Tiny5+Duo:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
 <link href="assets/favicon.png" rel="icon" type="image/png"/>
 <link rel="stylesheet" href="assets/wiki-enhancements.css">
+<link rel="stylesheet" href="assets/app-quality.css">
 <script defer src="assets/wiki-enhancements.js"></script>
 <style>
     :root {
@@ -1589,9 +1590,11 @@
             petals=Array.from({length:w<640?17:37},()=>makePetal(true));
           }
           resize();window.addEventListener('resize',resize,{passive:true});
-          let last=0;
+          let last=0, particleFrame=0, heroVisible=true;
           function frame(t) {
-            if (t-last<25) {requestAnimationFrame(frame);return;}
+            particleFrame=0;
+            if(document.hidden || !heroVisible) return;
+            if (t-last<25) {particleFrame=requestAnimationFrame(frame);return;}
             const delta=Math.min((t-last||25)/25,2);last=t;
             ctx.clearRect(0,0,w,h);
             petals.forEach((p,i)=>{
@@ -1602,9 +1605,29 @@
               ctx.globalAlpha=p.alpha;ctx.fillStyle=i%3===0?'#ffc9e5':i%3===1?'#ff9dcf':'#ffb4db';
               ctx.beginPath();ctx.ellipse(0,0,p.s*.66,p.s*1.15,.3,0,Math.PI*2);ctx.fill();ctx.restore();
             });
-            requestAnimationFrame(frame);
+            particleFrame=requestAnimationFrame(frame);
           }
-          requestAnimationFrame(frame);
+          function syncParticles() {
+            if(document.hidden || !heroVisible) {
+              cancelAnimationFrame(particleFrame);
+              particleFrame=0;
+              return;
+            }
+            if(!particleFrame) {
+              last=0;
+              resize();
+              particleFrame=requestAnimationFrame(frame);
+            }
+          }
+          document.addEventListener('visibilitychange',syncParticles);
+          if('IntersectionObserver' in window) {
+            const heroObserver=new IntersectionObserver(entries=>{
+              heroVisible=entries[0].isIntersecting;
+              syncParticles();
+            });
+            heroObserver.observe(canvas.closest('.hero'));
+          }
+          syncParticles();
         }
       }
     })();
@@ -1619,7 +1642,7 @@ const appPages=document.querySelectorAll('.app-page');
 const nav=document.getElementById('main-menu');
 let lastRoute='';
 function showRoute(){
-  const raw=decodeURIComponent(location.hash.slice(1));const [page,articleId]=raw.split('/');
+  let raw;try{raw=decodeURIComponent(location.hash.slice(1));}catch(_){raw='';}const [page,articleId]=raw.split('/');
   const active=Object.prototype.hasOwnProperty.call(pageTitles,page)?page:null;
   document.body.classList.toggle('page-active',!!active);
   appPages.forEach(p=>p.classList.toggle('active',!!active&&p.id==='view-'+active));
@@ -1780,7 +1803,7 @@ function renderGradient(){const text=gText.value||'FeatherMC',colors=colorsForTe
   container.style.fontWeight=gb.checked?'900':'400';container.style.fontStyle=gi.checked?'italic':'normal';
   for(const [id,x] of [['hexC1',g1.value],['hexC2',g2.value],['hexC3',g3.value]])document.getElementById(id).textContent=x.toUpperCase();
   let starter=(gb.checked?'<bold>':'')+(gi.checked?'<italic>':'');let closer=(gi.checked?'</italic>':'')+(gb.checked?'</bold>':'');
-  gradientValues.mini=starter+'<gradient:'+[g1.value,...(gThird.checked?[g3.value]:[]),g2.value].join(':')+'>'+text.replaceAll('<','&lt;').replaceAll('>','&gt;')+'</gradient>'+closer;
+  gradientValues.mini=starter+'<gradient:'+[g1.value,...(gThird.checked?[g3.value]:[]),g2.value].join(':')+'>'+text.replace(/\\/g,'\\\\').replace(/</g,'\\<')+'</gradient>'+closer;
   gradientValues.legacy=Array.from(text).map((c,i)=>'&#'+colors[i].slice(1)+(gb.checked?'&l':'')+(gi.checked?'&o':'')+c).join('');
   gradientValues.css='background: linear-gradient('+document.getElementById('gradientAngle').value+'deg, '+[g1.value,...(gThird.checked?[g3.value]:[]),g2.value].join(', ')+'); background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent;';
   gradientValues.spigot=Array.from(text).map((c,i)=>'§x'+colors[i].slice(1).split('').map(x=>'§'+x).join('')+(gb.checked?'§l':'')+(gi.checked?'§o':'')+c).join('');
@@ -1792,7 +1815,7 @@ document.querySelectorAll('[data-colors]').forEach(x=>x.addEventListener('click'
  document.getElementById('gradSwap').addEventListener('click',()=>{const old=g1.value;g1.value=g2.value;g2.value=old;renderGradient();});
 document.getElementById('gradRandom').addEventListener('click',()=>{g1.value=rgbToHex(Array.from({length:3},()=>Math.floor(Math.random()*215)+35));g2.value=rgbToHex(Array.from({length:3},()=>Math.floor(Math.random()*215)+35));renderGradient();});
 document.getElementById('gradReset').addEventListener('click',()=>{g1.value='#ffb02e';g2.value='#ff6b34';g3.value='#ffe3a1';document.getElementById('gradientAngle').value='90';gThird.checked=false;gb.checked=true;gi.checked=false;gText.value='FeatherMC';renderGradient();});
-document.querySelectorAll('[data-copy-gradient]').forEach(b=>b.addEventListener('click',async()=>{await copyText(gradientValues[b.dataset.copyGradient]);document.getElementById('gradStatus').textContent='✓ Код '+b.parentElement.querySelector('strong').textContent+' скопирован в буфер обмена!';}));
+document.querySelectorAll('[data-copy-gradient]').forEach(b=>b.addEventListener('click',async()=>{const copied=await copyText(gradientValues[b.dataset.copyGradient]);document.getElementById('gradStatus').textContent=copied?'✓ Код '+b.parentElement.querySelector('strong').textContent+' скопирован в буфер обмена!':'Не удалось скопировать. Выдели код и скопируй вручную.';}));
 renderGradient();showRoute();
 })();
 </script></body>

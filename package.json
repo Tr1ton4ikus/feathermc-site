@@ -1,0 +1,12 @@
+{
+  "name": "feathermc-site",
+  "private": true,
+  "scripts": {
+    "test": "node tools/browser-regression.cjs",
+    "test:wiki": "node tests/wiki-browser.cjs && node tests/wiki-spa-browser.cjs",
+    "test:supporting": "node tests/supporting-browser.cjs",
+    "check:wiki": "python tools/build-wiki.py --check && python tests/check-wiki.py && node tools/check-site.cjs"
+  },
+  "devDependencies": { "playwright": "1.65.0" }
+}
+
