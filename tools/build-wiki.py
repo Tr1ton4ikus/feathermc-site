@@ -23,6 +23,7 @@ else:
  for doc in docs:
   path=ROOT/'wiki'/(doc['id']+'.html');source=path.read_text(encoding='utf-8')
   content=re.sub(r'^<h1>.*?</h1>\s*','',doc['html'],count=1,flags=re.S)
+  content=content.replace('<th>', '<th scope="col">')
   source,n=re.subn(r'(<div class="article-content">).*?(</div><hr)',lambda match:match[1]+content+match[2],source,count=1,flags=re.S)
   if n!=1:raise SystemExit(f'Unexpected article template: {path}')
   path.write_text(source,encoding='utf-8')
