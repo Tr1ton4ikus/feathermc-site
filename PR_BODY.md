@@ -5,7 +5,7 @@ independent "Player" critique (evaluating the real rendered site on desktop + mo
 round) followed by implementation and in-browser verification. Final Player satisfaction
 rose from **5/10 → 9/10** with **no production-blockers**.
 
-Static GitHub Pages compatibility, the server IP (`feathermc.com`), the launch date
+Static GitHub Pages compatibility, the server IP (`mcfeather.com`), the launch date
 (14 Nov 2026, 17:00 MSK), the Russian content language, and all real server info are
 preserved. **No invented player counts, screenshots, features, or statistics.**
 

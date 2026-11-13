@@ -1,6 +1,6 @@
 # FeatherMC 🪶
 
-Сайт Minecraft-сервера FeatherMC. IP: **feathermc.com**.
+Сайт Minecraft-сервера FeatherMC. IP: **mcfeather.com**.
 
 В комплекте: главная, FeatherWiki, карта «Скоро», редактор градиентов, две темы, таймер запуска и Discord. Без гардероба.
 

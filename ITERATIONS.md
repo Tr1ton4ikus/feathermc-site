@@ -7,7 +7,7 @@ desktop + mobile screenshots) each round and returns a brutal, structured critiq
 + a 0–10 satisfaction score. The **Developer** (orchestrator) then implements real
 code changes, which are verified in a browser and committed. Ten iterations.
 
-Honesty constraints respected throughout: the server IP (`feathermc.com`), launch
+Honesty constraints respected throughout: the server IP (`mcfeather.com`), launch
 date (14 Nov 2026, 17:00 MSK), Russian content language, and all real server info
 are preserved. **No invented player counts, screenshots, features, or statistics.**
 
@@ -314,7 +314,7 @@ constraint (can't show a live community) — deliberately honored, not a flaw.
 4. The **live ticking countdown with a digit-roll** — a heartbeat and urgency.
 
 **Honesty upheld throughout:** no invented player counts, in-game screenshots, features, or
-statistics. The server IP (`feathermc.com`), launch date (14 Nov 2026, 17:00 MSK), Russian
+statistics. The server IP (`mcfeather.com`), launch date (14 Nov 2026, 17:00 MSK), Russian
 language, and all real server info were preserved; concrete card copy references only features
 documented in the server's own wiki (приваты/антигриф, голосовой чат, кланы).
 
