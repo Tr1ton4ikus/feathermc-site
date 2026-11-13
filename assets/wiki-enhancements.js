@@ -62,7 +62,7 @@
   if(title&&title.tagName!=='H1'){const heading=document.createElement('h1');heading.className=title.className;heading.textContent=title.textContent;title.replaceWith(heading);}
   content.querySelectorAll('th:not([scope])').forEach(cell=>cell.setAttribute('scope','col'));
   const id=location.hash.split('/')[1];const index=docs.findIndex(doc=>doc.id===id);
-  if(index>=0)document.title=docs[index].title+' — FeatherWiki | FeatherMC';
+  if(index>=0)document.title=docs[index].title+' — FeatherWiki | Feather';
   const pagination=document.createElement('nav');pagination.className='wiki-article-pagination';pagination.setAttribute('aria-label','Соседние статьи');
   for(const[offset,label]of[[-1,'← Предыдущая статья'],[1,'Следующая статья →']]){
    const doc=docs[index+offset];if(index<0||!doc)continue;
