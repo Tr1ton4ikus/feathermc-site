@@ -751,6 +751,20 @@
 /* P2 — CTA hierarchy: the gold "Скопировать IP" clearly wins; the secondary recedes to a ghost. */
 .hero-buttons .button-secondary{ background:transparent; border:1px solid var(--border); }
 .hero-buttons .button-secondary:hover{ background:var(--chip); }
+
+/* ---------- Iteration 9 — refinement: contrast (WCAG AA) + consistent elevation ---------- */
+/* P0 — lift sub-AA text to a legible level */
+.connect-footnote{ color:var(--muted) !important; }                               /* status disclaimer */
+.scroll-marker{ color:var(--text); opacity:.82; text-shadow:0 1px 10px rgba(0,0,0,.5); } /* legible over bright sunset */
+.count-unit small{ color:var(--text); opacity:.74; }                              /* ДНЕЙ/ЧАСОВ labels */
+.feature-card p{ color:#d9d4e0; }                                                 /* card body copy to clear AA */
+
+/* P0/P1 — even triptych: equalize the corner glow and harmonize icon-chip luminance
+   so card 01 (amber) no longer feels heavier/closer than 02/03. */
+.features-grid .feature-card::before{ opacity:.6 !important; }
+.features-grid .feature-card:nth-child(1) .feature-icon{ background:linear-gradient(140deg,#ffac3c,#ff7c42); }
+.features-grid .feature-card:nth-child(2) .feature-icon{ background:linear-gradient(140deg,#ff92b6,#ff66a0); }
+.features-grid .feature-card:nth-child(3) .feature-icon{ background:linear-gradient(140deg,#c49bff,#9a72f0); }
 </style>
 </head>
 <body>

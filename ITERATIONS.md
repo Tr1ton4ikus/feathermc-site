@@ -239,3 +239,31 @@ scroll-driven sunset→dusk→night background (the site's sections are opaque, 
 
 **Verification:** 1366px render — voxel town visible with glowing windows beneath the floating
 IP/launch pills; ghost secondary button; no console errors.
+
+---
+
+## Iteration 9 — Full-site refinement, consistency, accessibility, performance
+
+**Player score: 8/10** (highest yet). "Cohesive, warm, bespoke, and clearly finished at a glance.
+Held back by uneven elevation, a couple of genuinely sub-AA text spots, and placeholder states."
+
+**Technical audit first (passed):** all `<img>` have alt text + width/height (no CLS); `lang="ru"`;
+`:focus-visible` amber outlines on all interactive elements + a skip-link; 9 `prefers-reduced-motion`
+blocks; wiki images lazy-loaded. So this round was fine-grain polish, not structural.
+
+**Implemented:**
+- **Contrast lifted to WCAG AA (P0).** The status disclaimer, the "ЛИСТАЙ ВНИЗ" sidebar label (now
+  light + text-shadow so it reads over the bright sunset), the countdown unit labels, and the
+  feature-card body copy were all raised. **Measured ratios after:** disclaimer 9.34:1, card body
+  10.66:1, hero description 10.13:1 — all far above the 4.5:1 AA threshold.
+- **Even feature-card triptych (P0/P1).** Equalized the three cards' corner-glow opacity and
+  harmonized the icon-chip gradient luminances (toned the punchy amber down, brightened the dusk
+  violet so it no longer recedes) — card 01 no longer feels heavier/closer than 02/03.
+
+**Judged acceptable as-is** (change risk outweighed benefit this late): a full radius/border token
+refactor and consolidating the four copy affordances into one style — the current treatments are
+contextually distinct (persistent nav action, hero CTA, IP display, connect action) and already
+cohesive.
+
+**Verification:** cache-busted render — measured contrast ratios ≥9:1 on the fixed text; even
+icon triptych confirmed visually; no console errors.
