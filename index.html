@@ -568,6 +568,56 @@
 .live-status.is-online { color:#8bedb1; }
 .live-status.is-online .status-dot { background:#5fdd92; box-shadow:0 0 0 4px rgba(95,221,146,.22); }
 @keyframes pulseDot { 0%,100%{opacity:1} 50%{opacity:.45} }
+
+/* ---------- Iteration 2 — identity: tame pixel font, deepen palette, vignette cards ---------- */
+
+/* Sunset palette tokens — echo the hero's pastel feather chips across the UI */
+:root{ --fx-rose:#ff8db0; --fx-amber:#ffb63f; --fx-dusk:#b78cf2; --fx-peach:#ffc98a; }
+
+/* Pixel font is now a spice, not the house voice: clean sans on buttons + small
+   UI labels; pixel stays on kickers (eyebrows) and the countdown only. */
+.button, .button-primary, .button-secondary, .nav-cta{
+  font-family: var(--font-body); font-weight:800; letter-spacing:.2px;
+}
+.micro-label, .connect-info .info-label{ font-family: var(--font-body); font-weight:700; }
+
+/* Feature cards: generic icon-boxes -> warm sunset vignettes, each a distinct
+   dusk hue that pulls the hero's pastel language down the page. */
+.features-grid .feature-card{
+  background: linear-gradient(165deg, rgba(255,255,255,.05), rgba(255,255,255,0) 42%), var(--card);
+}
+.features-grid .feature-card::before{ width:230px;height:230px;right:-110px;top:-120px;filter:blur(6px);opacity:.95; }
+.features-grid .feature-card .feature-icon{ color:#fff; box-shadow:0 10px 24px rgba(0,0,0,.28); }
+
+.features-grid .feature-card:nth-child(1){ border-color:rgba(255,182,63,.34); }
+.features-grid .feature-card:nth-child(1)::before{ background:radial-gradient(circle,rgba(255,182,63,.42),transparent 70%); }
+.features-grid .feature-card:nth-child(1) .feature-icon{ background:linear-gradient(140deg,var(--fx-amber),#ff7e3d); }
+.features-grid .feature-card:nth-child(1):hover{ border-color:var(--fx-amber); }
+.features-grid .feature-card:nth-child(1) .feature-index{ color:var(--fx-amber); }
+
+.features-grid .feature-card:nth-child(2){ border-color:rgba(255,141,176,.34); }
+.features-grid .feature-card:nth-child(2)::before{ background:radial-gradient(circle,rgba(255,141,176,.40),transparent 70%); }
+.features-grid .feature-card:nth-child(2) .feature-icon{ background:linear-gradient(140deg,var(--fx-rose),#ff5f98); }
+.features-grid .feature-card:nth-child(2):hover{ border-color:var(--fx-rose); }
+.features-grid .feature-card:nth-child(2) .feature-index{ color:var(--fx-rose); }
+
+.features-grid .feature-card:nth-child(3){ border-color:rgba(183,140,242,.34); }
+.features-grid .feature-card:nth-child(3)::before{ background:radial-gradient(circle,rgba(183,140,242,.42),transparent 70%); }
+.features-grid .feature-card:nth-child(3) .feature-icon{ background:linear-gradient(140deg,var(--fx-dusk),#8b63e6); }
+.features-grid .feature-card:nth-child(3):hover{ border-color:var(--fx-dusk); }
+.features-grid .feature-card:nth-child(3) .feature-index{ color:var(--fx-dusk); }
+
+/* Deepen the under-fold ambience with rose + dusk, not just amber */
+.features-section::after{
+  background:
+    radial-gradient(120% 80% at 90% -10%, rgba(255,141,176,.10), transparent 55%),
+    radial-gradient(90% 70% at 8% 115%, rgba(183,140,242,.09), transparent 60%);
+}
+.join-section::after{
+  background:
+    radial-gradient(120% 85% at 85% -12%, rgba(255,182,63,.12), transparent 55%),
+    radial-gradient(95% 72% at 6% 112%, rgba(255,141,176,.08), transparent 62%);
+}
 </style>
 </head>
 <body>
@@ -616,7 +666,7 @@
 <p class="hero-description">Твой новый Minecraft-мир под золотым закатом. Создавай истории, находи друзей и оставляй свой след в FeatherMC.</p>
 <div class="hero-buttons">
 <button class="button button-primary" data-copy="" type="button"> <svg aria-hidden="true"><use href="#i-copy"></use></svg> Скопировать IP </button>
-<a class="button button-secondary" href="#about">Открыть мир <svg aria-hidden="true"><use href="#i-arrow"></use></svg></a>
+<a class="button button-secondary" href="#about">Что тебя ждёт <svg aria-hidden="true"><use href="#i-arrow"></use></svg></a>
 </div>
 <div class="hero-small"><span aria-hidden="true" class="mini-icons"><span>✿</span><span>✦</span><span>♡</span></span><span>Место для твоих новых воспоминаний</span></div>
 </div><aside aria-label="Обратный отсчёт до открытия FeatherMC" class="launch-spotlight" id="launch">

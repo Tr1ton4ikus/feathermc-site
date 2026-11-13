@@ -39,3 +39,31 @@ real in-game screenshot gallery, and a live "127 игроков ждут" social
 
 **Verification:** rendered at 1280px desktop — no console errors; launch pill, single
 gold CTA, feature/join sections all readable; reveal-on-scroll intact.
+
+---
+
+## Iteration 2 — Visual identity: typography, palette, feature cards
+
+**Player score: 6.5/10** (up from 5). "Genuinely attractive, cohesive, usable — a clear
+step above generic. But it's a polished template with a gorgeous photo, not yet a place
+with a soul." Three P0s: the pixel font is overused as the house voice (buttons, labels);
+the palette is "one gold deep" — the sunset lives only in the photo, not the UI; and the
+three feature cards are a generic SaaS icon-box grid.
+
+**Implemented:**
+- **Pixel font demoted to a spice.** Buttons (`.button*`, `.nav-cta`) and small UI labels
+  (`.micro-label`, `.info-label`) now use the clean Trebuchet sans. Pixel font (`Tiny5 Duo`)
+  is kept only where it reads as intentional retro flavor: section kickers/eyebrows and the
+  countdown. Verified via computed styles (button font-family → Trebuchet MS).
+- **Deeper sunset palette.** Added real secondary tokens — `--fx-rose #ff8db0`,
+  `--fx-amber #ffb63f`, `--fx-dusk #b78cf2`, `--fx-peach` — echoing the hero's pastel
+  feather chips (previously the page's best colour, used only once).
+- **Feature cards → sunset vignettes.** Each of the three cards now owns a distinct dusk
+  hue: card 1 amber, card 2 rose, card 3 dusk-violet — bold gradient-filled icons (white
+  glyph on coloured gradient), matching tinted `/01 /02 /03` indices and corner glows.
+- **Under-fold ambience deepened** with rose + dusk radial glows (not just amber).
+- **"Открыть мир" → "Что тебя ждёт"** — clearer that the secondary button leads into content.
+
+**Verification:** cache-busted render confirms icon gradients (amber/rose/dusk), sans button
+font, tinted indices; no console errors. (Note: browser pane needed a tab recreate after
+heavy viewport toggling — unrelated to the site.)
