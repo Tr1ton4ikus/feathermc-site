@@ -96,3 +96,31 @@ content. Removed it; a JS-triggered safe version is deferred to the animations i
 
 **Verification:** desktop 1366px — countdown beside hero, scrim + gold shimmer present, no
 console errors. Mobile 375px — full hero visible, countdown immediately under the buttons.
+
+---
+
+## Iteration 4 — Navigation, information architecture, intuitive UX
+
+**Player score: 7.5/10** (up from 6.5). "Best version yet… held back purely by the nav
+ordering fighting the journey: a not-yet-launched server showcasing tools above the join
+path." P0s: reorder the nav to the visitor's mental model (join second, tools right) and make
+"Как играть" visually distinct.
+
+**Implemented:**
+- **Join-first nav.** Reordered from `О сервере · FeatherWiki · Карта · Градиенты · Как играть ·
+  Discord` → `О сервере · Как играть · FeatherWiki · Градиенты · Карта · Discord`. The join
+  path is now second; the (real, working) tools move right where they reward the curious
+  without outranking the primary pre-launch action.
+- **"Как играть" is the anchor.** It now carries an amber colour + a gradient underline
+  accent, so the pre-launch primary journey link is unmissable.
+- **Calmer countdown (P2).** Dialed back the sparkle flare and the card's outer glow so the
+  countdown supports the wordmark instead of competing with it.
+- **Sharper card copy (P1).** Card 3 now names concrete, real social features —
+  "Голосовой чат, кланы и общие приключения…" — drawn from the server's own wiki (Plasmo
+  Voice, clans), giving a tangible hook without inventing anything.
+
+**Deferred to iteration 5** (fits sections/components): bespoke feather/sunset card icons
+replacing the three stock marks; a blurred teaser for the "Скоро" map page.
+
+**Verification:** desktop render — nav reordered, "Как играть" amber + underlined, card copy
+updated, sparkles calmed; no console errors.
