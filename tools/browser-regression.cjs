@@ -108,6 +108,14 @@ const server = http.createServer((req, res) => {
     assert(await page.locator('#wikiNothing').isVisible());
     await page.locator('#wikiSearchClear').click();
     assert.equal(await page.locator('#wikiSearch').inputValue(), '');
+    await page.setViewportSize({ width: 320, height: 900 });
+    const wikiToggle = page.locator('.wiki-mobile-toggle');
+    assert.equal(await wikiToggle.getAttribute('aria-expanded'), 'false');
+    assert(!await page.locator('#wikiNavigation').isVisible());
+    await wikiToggle.click();
+    assert(await page.locator('#wikiNavigation').isVisible());
+    await page.locator('#wikiNavigation a').first().click();
+    assert.equal(await wikiToggle.getAttribute('aria-expanded'), 'false');
     await page.evaluate(() => location.hash = '%E0%A4%A');
     await page.waitForTimeout(100);
     assert(!await page.locator('body').evaluate(e => e.classList.contains('page-active')));

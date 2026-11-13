@@ -2,3 +2,12 @@
 @media(max-width:600px){.wiki-article-pagination{grid-template-columns:1fr}.wiki-library-filters{gap:6px}.wiki-library-filters button{font-size:11px;padding:8px 11px}#wikiArticle h1.article-title{font-size:30px}}
 @media(prefers-reduced-motion:reduce){#view-wiki *{scroll-behavior:auto!important}}
 #view-wiki [hidden]{display:none!important}
+.wiki-mobile-toggle{display:none;}
+@media(max-width:1024px){
+ .wiki-mobile-toggle{display:flex;justify-content:space-between;align-items:center;width:100%;min-height:44px;margin-top:12px;padding:10px 12px;border:1px solid var(--border);border-radius:11px;background:var(--accent-faint);color:var(--text);font:600 13px var(--font-body);cursor:pointer;}
+ .wiki-mobile-toggle::after{content:'+';font-size:20px;}
+ .wiki-mobile-toggle[aria-expanded=true]::after{content:'−';}
+ #wikiNavigation:not(.mobile-expanded){display:none!important;}
+ #view-wiki .wiki-rail-help{display:none;}
+ .wiki-mobile-toggle:focus-visible{outline:2px solid var(--accent);outline-offset:3px;}
+}

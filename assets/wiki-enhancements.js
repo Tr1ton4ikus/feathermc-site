@@ -8,6 +8,17 @@
  const article=document.getElementById('wikiArticle');
  const search=document.getElementById('wikiSearch');
  const landing=document.getElementById('wikiLanding');
+ // Keep the article close to the top on small screens, with navigation one tap away.
+ const compact=matchMedia('(max-width:1024px)');
+ const toggle=document.createElement('button');toggle.type='button';toggle.className='wiki-mobile-toggle';toggle.textContent='Разделы и статьи';toggle.setAttribute('aria-controls','wikiNavigation');
+ navigation.before(toggle);
+ const setExpanded=open=>{navigation.classList.toggle('mobile-expanded',open);toggle.setAttribute('aria-expanded',String(open));};
+ setExpanded(!compact.matches);
+ toggle.addEventListener('click',()=>setExpanded(toggle.getAttribute('aria-expanded')!=='true'));
+ compact.addEventListener('change',()=>setExpanded(!compact.matches));
+ search.addEventListener('focus',()=>{if(compact.matches)setExpanded(true);});
+ navigation.addEventListener('click',event=>{if(compact.matches&&event.target.closest('a')){toggle.focus({preventScroll:true});setExpanded(false);}});
+ window.addEventListener('hashchange',()=>{if(compact.matches)setExpanded(false);});
  const groups=new Map();
  docs.forEach(doc=>{if(!groups.has(doc.cat))groups.set(doc.cat,[]);groups.get(doc.cat).push(doc);});
  const existing=new Map([...navigation.querySelectorAll('[data-article-id]')].map(link=>[link.dataset.articleId,link]));
