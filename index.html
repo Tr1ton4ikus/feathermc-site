@@ -537,6 +537,239 @@
 @media (max-width: 820px) { #view-wiki .wiki-doc-layout { padding-top: 112px; } }
 @media (max-width: 520px) { #view-wiki .wiki-doc-layout { padding-top: 104px; } }
 </style>
+<style id="feather-redesign">
+/* ============================================================
+   FeatherMC — Player-Driven Redesign (branch: redesign)
+   Iteration 1 — first-impression P0 fixes
+   ============================================================ */
+
+/* -- The sunset no longer vanishes after the hero. Warm horizon glow
+      threads the whole page so it stops reading as flat-black boxes. -- */
+.welcome, .features-section, .join-section, .last-cta { position: relative; isolation: isolate; }
+.welcome::after, .features-section::after, .join-section::after {
+  content:""; position:absolute; inset:0; z-index:-1; pointer-events:none;
+  background:
+    radial-gradient(135% 85% at 88% -15%, rgba(255,150,27,.13), transparent 55%),
+    radial-gradient(95% 75% at 6% 115%, rgba(255,110,120,.07), transparent 62%);
+}
+.last-cta::after {
+  content:""; position:absolute; inset:0; z-index:-1; pointer-events:none;
+  background: radial-gradient(130% 150% at 50% 125%, rgba(255,160,45,.22), transparent 60%);
+}
+
+/* -- Launch pill replaces the confidence-killing "Не в сети" in the hero.
+      Encouraging pre-launch; turns green only when the server is truly online. -- */
+.live-status.is-launch {
+  color: var(--text); background: var(--accent-faint);
+  border:1px solid var(--border); border-radius:40px; padding:7px 15px;
+  font-family: var(--font-display); font-size:15px; letter-spacing:.2px;
+}
+.live-status.is-launch .status-dot { background: var(--accent); box-shadow:0 0 0 4px rgba(255,176,54,.18); animation:pulseDot 2.4s ease-in-out infinite; }
+.live-status.is-online { color:#8bedb1; }
+.live-status.is-online .status-dot { background:#5fdd92; box-shadow:0 0 0 4px rgba(95,221,146,.22); }
+@keyframes pulseDot { 0%,100%{opacity:1} 50%{opacity:.45} }
+
+/* ---------- Iteration 2 — identity: tame pixel font, deepen palette, vignette cards ---------- */
+
+/* Sunset palette tokens — echo the hero's pastel feather chips across the UI */
+:root{ --fx-rose:#ff8db0; --fx-amber:#ffb63f; --fx-dusk:#b78cf2; --fx-peach:#ffc98a; }
+
+/* Pixel font is now a spice, not the house voice: clean sans on buttons + small
+   UI labels; pixel stays on kickers (eyebrows) and the countdown only. */
+.button, .button-primary, .button-secondary, .nav-cta{
+  font-family: var(--font-body); font-weight:800; letter-spacing:.2px;
+}
+.micro-label, .connect-info .info-label{ font-family: var(--font-body); font-weight:700; }
+
+/* Feature cards: generic icon-boxes -> warm sunset vignettes, each a distinct
+   dusk hue that pulls the hero's pastel language down the page. */
+.features-grid .feature-card{
+  background: linear-gradient(165deg, rgba(255,255,255,.05), rgba(255,255,255,0) 42%), var(--card);
+}
+.features-grid .feature-card::before{ width:230px;height:230px;right:-110px;top:-120px;filter:blur(6px);opacity:.95; }
+.features-grid .feature-card .feature-icon{ color:#fff; box-shadow:0 10px 24px rgba(0,0,0,.28); }
+
+.features-grid .feature-card:nth-child(1){ border-color:rgba(255,182,63,.34); }
+.features-grid .feature-card:nth-child(1)::before{ background:radial-gradient(circle,rgba(255,182,63,.42),transparent 70%); }
+.features-grid .feature-card:nth-child(1) .feature-icon{ background:linear-gradient(140deg,var(--fx-amber),#ff7e3d); }
+.features-grid .feature-card:nth-child(1):hover{ border-color:var(--fx-amber); }
+.features-grid .feature-card:nth-child(1) .feature-index{ color:var(--fx-amber); }
+
+.features-grid .feature-card:nth-child(2){ border-color:rgba(255,141,176,.34); }
+.features-grid .feature-card:nth-child(2)::before{ background:radial-gradient(circle,rgba(255,141,176,.40),transparent 70%); }
+.features-grid .feature-card:nth-child(2) .feature-icon{ background:linear-gradient(140deg,var(--fx-rose),#ff5f98); }
+.features-grid .feature-card:nth-child(2):hover{ border-color:var(--fx-rose); }
+.features-grid .feature-card:nth-child(2) .feature-index{ color:var(--fx-rose); }
+
+.features-grid .feature-card:nth-child(3){ border-color:rgba(183,140,242,.34); }
+.features-grid .feature-card:nth-child(3)::before{ background:radial-gradient(circle,rgba(183,140,242,.42),transparent 70%); }
+.features-grid .feature-card:nth-child(3) .feature-icon{ background:linear-gradient(140deg,var(--fx-dusk),#8b63e6); }
+.features-grid .feature-card:nth-child(3):hover{ border-color:var(--fx-dusk); }
+.features-grid .feature-card:nth-child(3) .feature-index{ color:var(--fx-dusk); }
+
+/* Deepen the under-fold ambience with rose + dusk, not just amber */
+.features-section::after{
+  background:
+    radial-gradient(120% 80% at 90% -10%, rgba(255,141,176,.10), transparent 55%),
+    radial-gradient(90% 70% at 8% 115%, rgba(183,140,242,.09), transparent 60%);
+}
+.join-section::after{
+  background:
+    radial-gradient(120% 85% at 85% -12%, rgba(255,182,63,.12), transparent 55%),
+    radial-gradient(95% 72% at 6% 112%, rgba(255,141,176,.08), transparent 62%);
+}
+
+/* ---------- Iteration 3 — hero composition + WOW ---------- */
+/* Hero scrim tokens — dark tint in dark theme, soft light tint in light theme,
+   so the lower-left copy stays crisp over the sky in both themes (iter 10 polish). */
+:root,:root[data-theme="dark"]{ --hero-scrim-a:rgba(9,7,14,.58); --hero-scrim-b:rgba(9,7,14,.16); --hero-scrim-c:rgba(9,7,14,.42); }
+:root[data-theme="light"]{ --hero-scrim-a:rgba(255,248,238,.72); --hero-scrim-b:rgba(255,248,238,.24); --hero-scrim-c:rgba(255,248,238,.58); }
+
+/* Scrim anchors the type to the sky so the lower-left text reads crisp over bright clouds.
+   Desktop only — on phones the text already sits over darker sky, and a boxy scrim looks
+   like a stray panel, so it fades out below the fold-width. */
+@media(min-width:1141px){
+  .hero.homepage .hero-content{
+    padding:clamp(8px,1.6vw,22px) clamp(16px,2.6vw,34px) clamp(14px,2.4vw,30px);
+    margin-left:calc(-1 * clamp(16px,2.6vw,34px));
+    border-radius:30px;
+    background:radial-gradient(130% 125% at 16% 60%, var(--hero-scrim-a), var(--hero-scrim-b) 52%, transparent 72%);
+  }
+}
+@media(min-width:641px) and (max-width:1140px){
+  .hero.homepage .hero-content{
+    padding:4px 20px 10px; border-radius:26px;
+    background:radial-gradient(120% 90% at 26% 48%, var(--hero-scrim-c), transparent 72%);
+  }
+}
+
+/* Living gold-fade — the "MC" shimmers like late sun catching gold. Text is always
+   fully painted (shimmer only animates the fill colour), so it can never render blank. */
+@media(prefers-reduced-motion:no-preference){
+  .hero-title .mc{
+    background:linear-gradient(100deg,#ffd98c 0%,#ffb02a 28%,#ff8f18 50%,#ffd98c 72%,#ffb02a 100%);
+    background-size:220% 100%;
+    -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; color:transparent;
+    animation:goldSweep 7.5s ease-in-out infinite;
+  }
+  @keyframes goldSweep{ 0%,100%{background-position:0% 50%} 50%{background-position:100% 50%} }
+}
+
+/* ---------- Iteration 4 — navigation / IA: join-first order ---------- */
+/* "Как играть" is the pre-launch primary journey link — give it an amber anchor so the
+   path to playing is unmissable, while the tools (Wiki/Градиенты/Карта) move to the right. */
+.nav-links a.nav-join{ color:var(--accent); font-weight:800; }
+.nav-links a.nav-join::after{
+  content:""; display:block; height:2px; margin-top:2px; border-radius:3px;
+  background:linear-gradient(90deg,var(--fx-amber),var(--fx-rose)); opacity:.85; transition:opacity .25s;
+}
+.nav-links a.nav-join:hover{ background:var(--accent-faint); }
+.nav-links a.nav-join:hover::after{ opacity:1; }
+
+/* P2 — let the countdown support the wordmark rather than fight it:
+   calm the sparkle flare and soften the card's outer glow. */
+.launch-flare{ opacity:.15 !important; }
+.launch-spotlight::before{ opacity:.13 !important; }
+
+/* ---------- Iteration 5 — sections/components: honest pre-launch status ---------- */
+/* The CONNECT card reads "almost here" (warm amber), not a cold "dead" red, before launch. */
+[data-online="soon"] .status-dot{ background:var(--fx-amber) !important; box-shadow:0 0 0 4px rgba(255,182,63,.20); animation:pulseDot 2.4s ease-in-out infinite; }
+.status-inline[data-online="soon"], .live-status[data-online="soon"]{ color:#ffd79a; }
+
+/* ---------- Iteration 6 — motion & microinteractions ---------- */
+@media(prefers-reduced-motion:no-preference){
+  /* Countdown centerpiece: the digit that changes rolls up, so time visibly falls away. */
+  @keyframes digitRoll{ 0%{transform:translateY(-62%);opacity:0} 55%{opacity:1} 100%{transform:translateY(0);opacity:1} }
+  .count-unit strong.rolling{ animation:digitRoll .2s var(--round); }
+  /* Feather logo breathes — the site's signature move. */
+  .brand-icon img{ animation:featherSway 6s ease-in-out infinite; transform-origin:52% 86%; }
+  @keyframes featherSway{ 0%,100%{transform:rotate(-2.2deg) translateY(0)} 50%{transform:rotate(2.2deg) translateY(-2px)} }
+  /* Copy success pops the button. */
+  .button.copied,.copy-mini.copied,.address-field button.copied,.nav-cta.copied{ animation:copyPop .36s var(--round); }
+  @keyframes copyPop{ 0%{transform:scale(1)} 42%{transform:scale(1.06)} 100%{transform:scale(1)} }
+}
+
+/* Tactile press — every CTA depresses, not only lifts. */
+.button:active,.nav-cta:active,.copy-mini:active,.address-field button:active,.theme-toggle:active{ transform:scale(.96); }
+
+/* Copy→check morph reads green on success. */
+.button.copied use,.copy-mini.copied use,.address-field button.copied use,.nav-cta.copied use{ color:#56d98a; }
+
+/* Calmer marquee: slower, with faded edges, so it supports the mood instead of fighting it. */
+.ticker{ -webkit-mask-image:linear-gradient(90deg,transparent,#000 9%,#000 91%,transparent); mask-image:linear-gradient(90deg,transparent,#000 9%,#000 91%,transparent); }
+.ticker-inner{ animation-duration:62s !important; }
+
+/* Gentler "breathing" glow for pre-launch dots (not an urgent pulse). */
+@keyframes pulseDot{ 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.72;transform:scale(.9)} }
+.live-status.is-launch .status-dot,[data-online="soon"] .status-dot{ animation-duration:3.2s !important; }
+
+/* Launch-hour payoff: a warm gold bloom when the countdown reaches zero. */
+.launch-spotlight.launched{ animation:launchGlow 1.6s ease-out; }
+@keyframes launchGlow{ 0%{box-shadow:0 0 0 0 rgba(255,181,78,.0)} 35%{box-shadow:0 0 60px 8px rgba(255,181,78,.55)} 100%{box-shadow:0 26px 80px rgba(15,10,12,.33)} }
+
+@media(prefers-reduced-motion:reduce){
+  .ticker-inner{ animation:none !important; transform:none !important; }
+  .count-unit strong.rolling{ animation:none !important; }
+  .brand-icon img{ animation:none !important; }
+  .status-dot{ animation:none !important; }
+}
+
+/* ---------- Iteration 7 — mobile responsiveness: eliminate CONNECT overflow ---------- */
+@media(max-width:640px){
+  /* Root cause: grid items default to min-width:auto and overran their 1fr track,
+     then the card's overflow:hidden clipped the copy button + "ВЕРСИЯ" column. */
+  .join-grid > *, .welcome-grid > *, .features-grid > *{ min-width:0; }
+  .connect-card{ padding:24px 18px; max-width:100%; }
+  /* Address + copy become one full-width, thumb-friendly tap block. */
+  .address-field{ flex-wrap:wrap; padding:14px; min-height:0; gap:12px; }
+  .address-field code{ flex:1 1 100%; text-align:center; font-size:22px; }
+  .address-field button{ flex:1 1 100%; width:100%; justify-content:center; min-height:50px; }
+  /* Status rows stack to a single column so every label + value shows in full. */
+  .connect-info{ flex-direction:column; align-items:stretch; gap:13px; }
+  .connect-info > div{ display:flex; align-items:baseline; justify-content:space-between; gap:12px; }
+  .connect-info .info-label{ margin-bottom:0; }
+  .connect-info .info-value{ white-space:normal; word-break:break-word; text-align:right; }
+}
+/* Disclaimer reads better in the body sans than the pixel font at small sizes. */
+.connect-footnote{ font:400 12.5px/1.6 var(--font-body) !important; letter-spacing:.2px; }
+
+/* ---------- Iteration 8 — signature voxel skyline at the hero's base ---------- */
+/* A crisp pixel town against the sunset, windows glowing like an evening settling in —
+   the one true "Minecraft world" screenshot moment. Wide-desktop hero only (where the
+   hero is tall and absolutely composed); hidden on stacked layouts to avoid overlap. */
+.hero.homepage .voxel-town{ position:absolute; left:0; right:0; bottom:0; height:clamp(66px,8vw,116px); z-index:0; pointer-events:none; overflow:hidden; }
+.hero.homepage .voxel-town svg{ position:absolute; bottom:-1px; left:0; width:100%; height:100%; display:block; }
+.voxel-town .blds rect{ fill:#140e1d; }
+.voxel-town .wins rect{ fill:#ffc25c; filter:drop-shadow(0 0 3px rgba(255,180,70,.75)); }
+@media(prefers-reduced-motion:no-preference){
+  .voxel-town .wins rect{ animation:townWin 6s ease-in-out infinite; }
+  @keyframes townWin{ 0%,100%{opacity:.95} 46%{opacity:.2} }
+  .voxel-town .wins rect:nth-child(3n){ animation-duration:7.6s; animation-delay:.7s; }
+  .voxel-town .wins rect:nth-child(3n+1){ animation-duration:5.1s; animation-delay:1.4s; }
+  .voxel-town .wins rect:nth-child(4n){ animation-delay:2.2s; }
+  .voxel-town .wins rect:nth-child(5n){ animation-delay:3.1s; }
+}
+@media(prefers-reduced-motion:reduce){ .voxel-town .wins rect{ opacity:.9; } }
+@media(max-width:1140px){ .hero.homepage .voxel-town{ display:none; } }
+
+/* P2 — CTA hierarchy: the gold "Скопировать IP" clearly wins; the secondary recedes to a ghost. */
+.hero-buttons .button-secondary{ background:transparent; border:1px solid var(--border); }
+.hero-buttons .button-secondary:hover{ background:var(--chip); }
+
+/* ---------- Iteration 9 — refinement: contrast (WCAG AA) + consistent elevation ---------- */
+/* P0 — lift sub-AA text to a legible level */
+.connect-footnote{ color:var(--muted) !important; }                               /* status disclaimer */
+.scroll-marker{ color:var(--text); opacity:.82; text-shadow:0 1px 10px rgba(0,0,0,.5); } /* legible over bright sunset */
+.count-unit small{ color:var(--text); opacity:.74; }                              /* ДНЕЙ/ЧАСОВ labels */
+.feature-card p{ color:#d9d4e0; }                                                 /* card body copy to clear AA */
+
+/* P0/P1 — even triptych: equalize the corner glow and harmonize icon-chip luminance
+   so card 01 (amber) no longer feels heavier/closer than 02/03. */
+.features-grid .feature-card::before{ opacity:.6 !important; }
+.features-grid .feature-card:nth-child(1) .feature-icon{ background:linear-gradient(140deg,#ffac3c,#ff7c42); }
+.features-grid .feature-card:nth-child(2) .feature-icon{ background:linear-gradient(140deg,#ff92b6,#ff66a0); }
+.features-grid .feature-card:nth-child(3) .feature-icon{ background:linear-gradient(140deg,#c49bff,#9a72f0); }
+</style>
 </head>
 <body>
 <a class="skip-link" href="#main">Перейти к содержимому</a>
@@ -548,6 +781,9 @@
 <symbol id="i-sun" viewbox="0 0 24 24"><circle cx="12" cy="12" fill="none" r="4" stroke="currentColor" stroke-width="2"></circle><path d="M12 2v2m0 16v2M4.93 4.93l1.41 1.41m11.32 11.32 1.41 1.41M2 12h2m16 0h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2"></path></symbol>
 <symbol id="i-moon" viewbox="0 0 24 24"><path d="M20.5 13A8.5 8.5 0 0 1 11 3.5 8.5 8.5 0 1 0 20.5 13Z" fill="none" stroke="currentColor" stroke-linejoin="round" stroke-width="2"></path></symbol>
 <symbol id="i-menu" viewbox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2"></path></symbol>
+<symbol id="i-build" viewbox="0 0 24 24"><path d="M3 11.4 12 4l9 7.4M5 9.8V20h14V9.8M9.5 20v-4.6a2.5 2.5 0 0 1 5 0V20M12 2.4v1.3" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.7"></path></symbol>
+<symbol id="i-sunset" viewbox="0 0 24 24"><path d="M3 18.5h18M6.6 18.5a5.4 5.4 0 0 1 10.8 0M12 5.4V8M5.3 8.3l1.5 1.5M18.7 8.3l-1.5 1.5M2.6 13.6H4.2M19.8 13.6h1.6M9 21.2h6" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.7"></path></symbol>
+<symbol id="i-friends" viewbox="0 0 24 24"><circle cx="8.6" cy="8" fill="none" r="3" stroke="currentColor" stroke-width="1.7"></circle><circle cx="16.5" cy="9.4" fill="none" r="2.3" stroke="currentColor" stroke-width="1.7"></circle><path d="M3.2 19c0-3 2.4-5.2 5.4-5.2S14 16 14 19M15 13.8c2.5.2 4.5 2.3 4.5 5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.7"></path></symbol>
 <symbol id="i-block" viewbox="0 0 24 24"><path d="m12 2 9 5v10l-9 5-9-5V7l9-5Zm0 10 9-5m-9 5L3 7m9 5v10" fill="none" stroke="currentColor" stroke-linejoin="round" stroke-width="1.7"></path></symbol>
 <symbol id="i-flower" viewbox="0 0 24 24"><path d="M12 8.5c-1.5-5-6.5-4.2-6.5-.8 0 1.8 1 3.2 3.2 4C4.1 10 2 14 4.8 15.5c1.8 1 3.6.7 5.2-.7-2 4.5 1.2 7.5 3.8 5.7 1.4-.9 1.8-2.5 1.2-4.4 3.8 2.9 8 0 6.2-3.2-.8-1.5-2.6-2.1-4.5-1.5 4.1-2.1 5-6.7 2.6-7.7-1.4-.6-3 .4-4.5 1.4Z" fill="none" stroke="currentColor" stroke-linejoin="round" stroke-width="1.3"></path><circle cx="12" cy="12" fill="currentColor" r="1.7"></circle></symbol>
 <symbol id="i-heart" viewbox="0 0 24 24"><path d="M20.8 5.8a5.5 5.5 0 0 0-7.7 0L12 6.9l-1.1-1.1a5.5 5.5 0 0 0-7.7 7.8L12 22l8.8-8.4a5.5 5.5 0 0 0 0-7.8Z" fill="none" stroke="currentColor" stroke-linejoin="round" stroke-width="1.7"></path></symbol>
@@ -559,14 +795,14 @@
 <span class="brand-icon"><img alt="" decoding="async" height="43" src="assets/feather-logo.webp" width="30"/></span>
 <span><span class="brand-name">feather<span>mc.</span></span><span class="brand-caption">MINECRAFT WORLD</span></span>
 </a>
-<div class="nav-links" id="navLinks"><a href="#about">О сервере</a><a href="#wiki">FeatherWiki</a><a href="#map">Карта</a><a href="#gradient">Градиенты</a><a href="#join">Как играть</a><a class="nav-discord" href="https://discord.gg/afb4uxe3GP" rel="noopener noreferrer" target="_blank">Discord ↗</a></div>
+<div class="nav-links" id="navLinks"><a href="#about">О сервере</a><a class="nav-join" href="#join">Как играть</a><a href="#wiki">FeatherWiki</a><a href="#gradient">Градиенты</a><a href="#map">Карта</a><a class="nav-discord" href="https://discord.gg/afb4uxe3GP" rel="noopener noreferrer" target="_blank">Discord ↗</a></div>
 <div class="nav-actions">
 <button aria-label="Переключить тему" class="theme-toggle" id="themeToggle" title="Переключить тему" type="button">
 <span class="toggle-bubble"></span>
 <svg aria-hidden="true" class="sun"><use href="#i-sun"></use></svg>
 <svg aria-hidden="true" class="moon"><use href="#i-moon"></use></svg>
 </button>
-<a class="nav-cta" href="#join">ИГРАТЬ <svg aria-hidden="true"><use href="#i-arrow"></use></svg></a>
+<button class="nav-cta" data-copy="" type="button">Скопировать IP <svg aria-hidden="true"><use href="#i-copy"></use></svg></button>
 <button aria-controls="navLinks" aria-expanded="false" aria-label="Открыть меню" class="menu-button" id="menuButton" type="button"><svg><use href="#i-menu"></use></svg></button>
 </div>
 </nav>
@@ -584,10 +820,8 @@
 <p class="hero-description">Твой новый Minecraft-мир под золотым закатом. Создавай истории, находи друзей и оставляй свой след в FeatherMC.</p>
 <div class="hero-buttons">
 <button class="button button-primary" data-copy="" type="button"> <svg aria-hidden="true"><use href="#i-copy"></use></svg> Скопировать IP </button>
-<a class="button button-secondary" href="#about">Открыть мир <svg aria-hidden="true"><use href="#i-arrow"></use></svg></a>
-</div>
-<div class="hero-small"><span aria-hidden="true" class="mini-icons"><span>✿</span><span>✦</span><span>♡</span></span><span>Место для твоих новых воспоминаний</span></div>
-</div><aside aria-label="Обратный отсчёт до открытия FeatherMC" class="launch-spotlight" id="launch">
+<a class="button button-secondary" href="#about">Что тебя ждёт <svg aria-hidden="true"><use href="#i-arrow"></use></svg></a>
+</div></div><aside aria-label="Обратный отсчёт до открытия FeatherMC" class="launch-spotlight" id="launch">
 <div aria-hidden="true" class="launch-flare">✦ <span>✧</span></div>
 <div class="launch-topline"><span class="launch-live-dot"></span> FEATHERMC • НАЧАЛО ИСТОРИИ <span class="launch-ticket">14 / 11</span></div>
 <div class="launch-copy"><span class="launch-pretitle">СОВСЕМ СКОРО</span><h2>Мир откроется<br/><em>для тебя.</em></h2><p>14 ноября 2026 · 17:00 МСК</p></div>
@@ -602,13 +836,14 @@
 <div class="server-pill-text"><span class="micro-label">АДРЕС СЕРВЕРА / SERVER IP</span><strong>feathermc.com</strong></div>
 <button aria-label="Скопировать feathermc.com" class="copy-mini" data-copy="" title="Скопировать адрес" type="button"><svg aria-hidden="true"><use href="#i-copy"></use></svg></button>
 </div>
-<div class="live-status" data-online="unknown" id="heroStatus"><span class="status-dot"></span><span id="heroStatusText">Проверяем сервер...</span></div>
+<div class="live-status is-launch" data-online="unknown" id="heroStatus"><span class="status-dot"></span><span id="heroStatusText">Открытие 14 ноября · 17:00 МСК</span></div>
 </div>
 <div aria-hidden="true" class="scroll-marker">ЛИСТАЙ ВНИЗ</div>
+<div aria-hidden="true" class="voxel-town"><svg preserveAspectRatio="xMidYMax slice" viewBox="0 0 1440 120" xmlns="http://www.w3.org/2000/svg"><g class="blds"><rect height="70" width="120" x="0" y="50"></rect><rect height="95" width="90" x="120" y="25"></rect><rect height="55" width="70" x="210" y="65"></rect><rect height="80" width="110" x="280" y="40"></rect><rect height="60" width="80" x="390" y="60"></rect><rect height="100" width="130" x="470" y="20"></rect><rect height="70" width="90" x="600" y="50"></rect><rect height="85" width="100" x="690" y="35"></rect><rect height="55" width="75" x="790" y="65"></rect><rect height="92" width="120" x="865" y="28"></rect><rect height="65" width="95" x="985" y="55"></rect><rect height="105" width="140" x="1080" y="15"></rect><rect height="72" width="100" x="1220" y="48"></rect><rect height="88" width="120" x="1320" y="32"></rect></g><g class="wins"><rect height="11" width="9" x="140" y="45"></rect><rect height="11" width="9" x="167" y="45"></rect><rect height="11" width="9" x="140" y="72"></rect><rect height="11" width="9" x="167" y="72"></rect><rect height="11" width="9" x="300" y="60"></rect><rect height="11" width="9" x="330" y="60"></rect><rect height="11" width="9" x="360" y="60"></rect><rect height="11" width="9" x="300" y="88"></rect><rect height="11" width="9" x="330" y="88"></rect><rect height="11" width="9" x="495" y="45"></rect><rect height="11" width="9" x="525" y="45"></rect><rect height="11" width="9" x="555" y="45"></rect><rect height="11" width="9" x="495" y="75"></rect><rect height="11" width="9" x="525" y="75"></rect><rect height="11" width="9" x="555" y="75"></rect><rect height="11" width="9" x="712" y="58"></rect><rect height="11" width="9" x="742" y="58"></rect><rect height="11" width="9" x="772" y="58"></rect><rect height="11" width="9" x="712" y="88"></rect><rect height="11" width="9" x="890" y="50"></rect><rect height="11" width="9" x="920" y="50"></rect><rect height="11" width="9" x="950" y="50"></rect><rect height="11" width="9" x="890" y="80"></rect><rect height="11" width="9" x="920" y="80"></rect><rect height="11" width="9" x="1105" y="40"></rect><rect height="11" width="9" x="1140" y="40"></rect><rect height="11" width="9" x="1175" y="40"></rect><rect height="11" width="9" x="1105" y="72"></rect><rect height="11" width="9" x="1140" y="72"></rect><rect height="11" width="9" x="1175" y="72"></rect><rect height="11" width="9" x="1342" y="55"></rect><rect height="11" width="9" x="1372" y="55"></rect><rect height="11" width="9" x="1402" y="55"></rect><rect height="11" width="9" x="1342" y="85"></rect></g></svg></div>
 </section>
 <div aria-hidden="true" class="ticker homepage"><div class="ticker-inner">
-<span>FEATHERMC</span><b>✦</b><span>YOUR STORY STARTS HERE</span><b>✿</b><span>BUILD YOUR DREAM</span><b>✦</b><span>EXPLORE TOGETHER</span><b>✿</b><span>JUST ONE MORE SUNSET</span><b>✦</b>
-<span>FEATHERMC</span><b>✦</b><span>YOUR STORY STARTS HERE</span><b>✿</b><span>BUILD YOUR DREAM</span><b>✦</b><span>EXPLORE TOGETHER</span><b>✿</b><span>JUST ONE MORE SUNSET</span><b>✦</b>
+<span>FEATHERMC</span><b>✦</b><span>ТВОЯ ИСТОРИЯ НАЧИНАЕТСЯ ЗДЕСЬ</span><b>✿</b><span>СТРОЙ СВОЮ МЕЧТУ</span><b>✦</b><span>ИССЛЕДУЙ ВМЕСТЕ</span><b>✿</b><span>ЕЩЁ ОДИН ЗАКАТ</span><b>✦</b>
+<span>FEATHERMC</span><b>✦</b><span>ТВОЯ ИСТОРИЯ НАЧИНАЕТСЯ ЗДЕСЬ</span><b>✿</b><span>СТРОЙ СВОЮ МЕЧТУ</span><b>✦</b><span>ИССЛЕДУЙ ВМЕСТЕ</span><b>✿</b><span>ЕЩЁ ОДИН ЗАКАТ</span><b>✦</b>
 </div></div>
 <section class="section welcome homepage" id="about">
 <div class="container welcome-grid">
@@ -634,9 +869,9 @@
 <p class="section-lead">Большие приключения начинаются с маленьких шагов. Какой будет твоя следующая история?</p>
 </div>
 <div class="features-grid">
-<article class="feature-card reveal"><div class="feature-top"><span class="feature-icon"><svg aria-hidden="true"><use href="#i-block"></use></svg></span><span class="feature-index">/ 01</span></div><h3>Создавай своё</h3><p>От маленького уютного домика до проекта мечты — дай волю воображению.</p><span aria-hidden="true" class="feature-bottom">✧</span></article>
-<article class="feature-card reveal"><div class="feature-top"><span class="feature-icon"><svg aria-hidden="true"><use href="#i-flower"></use></svg></span><span class="feature-index">/ 02</span></div><h3>Лови красоту</h3><p>Рассветы, цветущие пейзажи и та самая атмосфера, ради которой хочется остаться.</p><span aria-hidden="true" class="feature-bottom">✿</span></article>
-<article class="feature-card reveal"><div class="feature-top"><span class="feature-icon"><svg aria-hidden="true"><use href="#i-heart"></use></svg></span><span class="feature-index">/ 03</span></div><h3>Делись моментами</h3><p>Зови друзей, придумывай приключения и собирай воспоминания вместе.</p><span aria-hidden="true" class="feature-bottom">♡</span></article>
+<article class="feature-card reveal"><div class="feature-top"><span class="feature-icon"><svg aria-hidden="true"><use href="#i-build"></use></svg></span><span class="feature-index">/ 01</span></div><h3>Создавай своё</h3><p>От уютного домика до проекта мечты — приваты и антигриф берегут всё, что ты построишь.</p><span aria-hidden="true" class="feature-bottom">✧</span></article>
+<article class="feature-card reveal"><div class="feature-top"><span class="feature-icon"><svg aria-hidden="true"><use href="#i-sunset"></use></svg></span><span class="feature-index">/ 02</span></div><h3>Лови красоту</h3><p>Рассветы, цветущие пейзажи и та самая атмосфера, ради которой хочется остаться.</p><span aria-hidden="true" class="feature-bottom">✿</span></article>
+<article class="feature-card reveal"><div class="feature-top"><span class="feature-icon"><svg aria-hidden="true"><use href="#i-friends"></use></svg></span><span class="feature-index">/ 03</span></div><h3>Делись моментами</h3><p>Голосовой чат, кланы и общие приключения — зови друзей и собирай воспоминания вместе.</p><span aria-hidden="true" class="feature-bottom">♡</span></article>
 </div>
 </div>
 </section>
@@ -649,7 +884,7 @@
 <div class="join-steps">
 <div class="join-step"><span class="step-number">01</span><div><h3>Открой Minecraft</h3><p>Запусти игру и перейди в раздел «Сетевая игра».</p></div></div>
 <div class="join-step"><span class="step-number">02</span><div><h3>Добавь сервер</h3><p>Нажми «Добавить сервер» и введи адрес <strong>feathermc.com</strong>.</p></div></div>
-<div class="join-step"><span class="step-number">03</span><div><h3>Отправляйся навстречу приключениям</h3><p>Сохрани адрес, выбери сервер в списке и подключайся, когда он доступен.</p></div></div>
+<div class="join-step"><span class="step-number">03</span><div><h3>Будь готов к старту</h3><p>Сохрани адрес — 14 ноября в 17:00 МСК мир откроется, и можно заходить!</p></div></div>
 </div>
 </div>
 <div class="reveal">
@@ -793,6 +1028,8 @@
         if (copied) {
           showToast('IP скопирован: feathermc.com');
           button.classList.add('copied');
+          const u = button.querySelector('use');
+          if (u) { const orig = u.getAttribute('href'); u.setAttribute('href', '#i-check'); setTimeout(() => u.setAttribute('href', orig), 1200); }
           setTimeout(() => button.classList.remove('copied'), 1200);
         } else {
           showToast('Скопируй адрес: feathermc.com');
@@ -827,14 +1064,24 @@
       const heroStatus = document.getElementById('heroStatus');
       const joinStatus = document.getElementById('joinStatus');
       function renderStatus(kind, status, players, version) {
-        const text = kind === 'online' ? 'В сети' : kind === 'offline' ? 'Не в сети' : 'Статус недоступен';
-        const flag = kind === 'online' ? 'true' : kind === 'offline' ? 'false' : 'unknown';
-        heroStatus.dataset.online = flag;
+        const preLaunch = Date.now() < Date.parse('2026-11-14T17:00:00+03:00');
+        // Honest but anticipatory: before launch a non-online server reads "almost here",
+        // not a cold "dead" red dot. After launch the real offline state shows through.
+        const joinText = kind === 'online' ? 'В сети'
+          : preLaunch ? 'Открытие 14 ноября · 17:00'
+          : kind === 'offline' ? 'Не в сети' : 'Статус недоступен';
+        const flag = kind === 'online' ? 'true' : preLaunch ? 'soon' : kind === 'offline' ? 'false' : 'unknown';
         joinStatus.dataset.online = flag;
-        document.getElementById('heroStatusText').textContent = text;
-        document.getElementById('joinStatusText').textContent = text;
-        document.getElementById('playersOnline').textContent = kind === 'online' && Number.isInteger(players) ? String(players) : '—';
-        document.getElementById('serverVersion').textContent = kind === 'online' && version ? String(version).slice(0,20) : '—';
+        document.getElementById('joinStatusText').textContent = joinText;
+        // Hero stays encouraging before launch — never a bare "Не в сети".
+        heroStatus.dataset.online = flag;
+        heroStatus.classList.toggle('is-online', kind === 'online');
+        heroStatus.classList.toggle('is-launch', kind !== 'online');
+        document.getElementById('heroStatusText').textContent =
+          kind === 'online' ? 'Сервер онлайн — заходи!' : 'Открытие 14 ноября · 17:00 МСК';
+        const soonDash = preLaunch ? 'Скоро' : '—';
+        document.getElementById('playersOnline').textContent = kind === 'online' && Number.isInteger(players) ? String(players) : soonDash;
+        document.getElementById('serverVersion').textContent = kind === 'online' && version ? String(version).slice(0,20) : soonDash;
       }
       async function checkServer() {
         const abort = new AbortController();
@@ -1014,8 +1261,8 @@ buildWikiNav();filterWiki();
 const launch=Date.parse('2026-11-14T17:00:00+03:00');
 const boxes=['cDays','cHours','cMinutes','cSeconds'].map(id=>document.getElementById(id));
 function tick(){let remaining=Math.max(0,launch-Date.now());const values=[Math.floor(remaining/86400000),Math.floor(remaining/3600000)%24,Math.floor(remaining/60000)%60,Math.floor(remaining/1000)%60];
-  values.forEach((v,i)=>boxes[i].textContent=String(v).padStart(2,'0'));
-  if(remaining===0){document.querySelector('.launch-copy h2').innerHTML='Приключение <em>началось!</em>';}
+  values.forEach((v,i)=>{const s=String(v).padStart(2,'0'); if(boxes[i].textContent!==s){boxes[i].textContent=s; boxes[i].classList.remove('rolling'); void boxes[i].offsetWidth; boxes[i].classList.add('rolling');}});
+  if(remaining===0){document.querySelector('.launch-copy h2').innerHTML='Приключение <em>началось!</em>'; const l=document.getElementById('launch'); if(l) l.classList.add('launched');}
 }
 tick();setInterval(tick,1000);
 
