@@ -537,6 +537,38 @@
 @media (max-width: 820px) { #view-wiki .wiki-doc-layout { padding-top: 112px; } }
 @media (max-width: 520px) { #view-wiki .wiki-doc-layout { padding-top: 104px; } }
 </style>
+<style id="feather-redesign">
+/* ============================================================
+   FeatherMC — Player-Driven Redesign (branch: redesign)
+   Iteration 1 — first-impression P0 fixes
+   ============================================================ */
+
+/* -- The sunset no longer vanishes after the hero. Warm horizon glow
+      threads the whole page so it stops reading as flat-black boxes. -- */
+.welcome, .features-section, .join-section, .last-cta { position: relative; isolation: isolate; }
+.welcome::after, .features-section::after, .join-section::after {
+  content:""; position:absolute; inset:0; z-index:-1; pointer-events:none;
+  background:
+    radial-gradient(135% 85% at 88% -15%, rgba(255,150,27,.13), transparent 55%),
+    radial-gradient(95% 75% at 6% 115%, rgba(255,110,120,.07), transparent 62%);
+}
+.last-cta::after {
+  content:""; position:absolute; inset:0; z-index:-1; pointer-events:none;
+  background: radial-gradient(130% 150% at 50% 125%, rgba(255,160,45,.22), transparent 60%);
+}
+
+/* -- Launch pill replaces the confidence-killing "Не в сети" in the hero.
+      Encouraging pre-launch; turns green only when the server is truly online. -- */
+.live-status.is-launch {
+  color: var(--text); background: var(--accent-faint);
+  border:1px solid var(--border); border-radius:40px; padding:7px 15px;
+  font-family: var(--font-display); font-size:15px; letter-spacing:.2px;
+}
+.live-status.is-launch .status-dot { background: var(--accent); box-shadow:0 0 0 4px rgba(255,176,54,.18); animation:pulseDot 2.4s ease-in-out infinite; }
+.live-status.is-online { color:#8bedb1; }
+.live-status.is-online .status-dot { background:#5fdd92; box-shadow:0 0 0 4px rgba(95,221,146,.22); }
+@keyframes pulseDot { 0%,100%{opacity:1} 50%{opacity:.45} }
+</style>
 </head>
 <body>
 <a class="skip-link" href="#main">Перейти к содержимому</a>
@@ -566,7 +598,7 @@
 <svg aria-hidden="true" class="sun"><use href="#i-sun"></use></svg>
 <svg aria-hidden="true" class="moon"><use href="#i-moon"></use></svg>
 </button>
-<a class="nav-cta" href="#join">ИГРАТЬ <svg aria-hidden="true"><use href="#i-arrow"></use></svg></a>
+<button class="nav-cta" data-copy="" type="button">Скопировать IP <svg aria-hidden="true"><use href="#i-copy"></use></svg></button>
 <button aria-controls="navLinks" aria-expanded="false" aria-label="Открыть меню" class="menu-button" id="menuButton" type="button"><svg><use href="#i-menu"></use></svg></button>
 </div>
 </nav>
@@ -602,13 +634,13 @@
 <div class="server-pill-text"><span class="micro-label">АДРЕС СЕРВЕРА / SERVER IP</span><strong>feathermc.com</strong></div>
 <button aria-label="Скопировать feathermc.com" class="copy-mini" data-copy="" title="Скопировать адрес" type="button"><svg aria-hidden="true"><use href="#i-copy"></use></svg></button>
 </div>
-<div class="live-status" data-online="unknown" id="heroStatus"><span class="status-dot"></span><span id="heroStatusText">Проверяем сервер...</span></div>
+<div class="live-status is-launch" data-online="unknown" id="heroStatus"><span class="status-dot"></span><span id="heroStatusText">Открытие 14 ноября · 17:00 МСК</span></div>
 </div>
 <div aria-hidden="true" class="scroll-marker">ЛИСТАЙ ВНИЗ</div>
 </section>
 <div aria-hidden="true" class="ticker homepage"><div class="ticker-inner">
-<span>FEATHERMC</span><b>✦</b><span>YOUR STORY STARTS HERE</span><b>✿</b><span>BUILD YOUR DREAM</span><b>✦</b><span>EXPLORE TOGETHER</span><b>✿</b><span>JUST ONE MORE SUNSET</span><b>✦</b>
-<span>FEATHERMC</span><b>✦</b><span>YOUR STORY STARTS HERE</span><b>✿</b><span>BUILD YOUR DREAM</span><b>✦</b><span>EXPLORE TOGETHER</span><b>✿</b><span>JUST ONE MORE SUNSET</span><b>✦</b>
+<span>FEATHERMC</span><b>✦</b><span>ТВОЯ ИСТОРИЯ НАЧИНАЕТСЯ ЗДЕСЬ</span><b>✿</b><span>СТРОЙ СВОЮ МЕЧТУ</span><b>✦</b><span>ИССЛЕДУЙ ВМЕСТЕ</span><b>✿</b><span>ЕЩЁ ОДИН ЗАКАТ</span><b>✦</b>
+<span>FEATHERMC</span><b>✦</b><span>ТВОЯ ИСТОРИЯ НАЧИНАЕТСЯ ЗДЕСЬ</span><b>✿</b><span>СТРОЙ СВОЮ МЕЧТУ</span><b>✦</b><span>ИССЛЕДУЙ ВМЕСТЕ</span><b>✿</b><span>ЕЩЁ ОДИН ЗАКАТ</span><b>✦</b>
 </div></div>
 <section class="section welcome homepage" id="about">
 <div class="container welcome-grid">
@@ -829,10 +861,14 @@
       function renderStatus(kind, status, players, version) {
         const text = kind === 'online' ? 'В сети' : kind === 'offline' ? 'Не в сети' : 'Статус недоступен';
         const flag = kind === 'online' ? 'true' : kind === 'offline' ? 'false' : 'unknown';
-        heroStatus.dataset.online = flag;
         joinStatus.dataset.online = flag;
-        document.getElementById('heroStatusText').textContent = text;
         document.getElementById('joinStatusText').textContent = text;
+        // Hero stays encouraging before launch — never a bare "Не в сети".
+        heroStatus.dataset.online = flag;
+        heroStatus.classList.toggle('is-online', kind === 'online');
+        heroStatus.classList.toggle('is-launch', kind !== 'online');
+        document.getElementById('heroStatusText').textContent =
+          kind === 'online' ? 'Сервер онлайн — заходи!' : 'Открытие 14 ноября · 17:00 МСК';
         document.getElementById('playersOnline').textContent = kind === 'online' && Number.isInteger(players) ? String(players) : '—';
         document.getElementById('serverVersion').textContent = kind === 'online' && version ? String(version).slice(0,20) : '—';
       }
