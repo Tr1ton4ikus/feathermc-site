@@ -267,3 +267,57 @@ cohesive.
 
 **Verification:** cache-busted render — measured contrast ratios ≥9:1 on the fixed text; even
 icon triptych confirmed visually; no console errors.
+
+---
+
+## Iteration 10 — Final ruthless evaluation & production-quality polish
+
+**Player score: 9/10** (up from the baseline 5/10). *"Every real problem is fixed, the journey is
+airtight, and it looks like a server I'd trust and want to join… Ship it with pride."*
+**Remaining production-blockers: none.** The only thing between it and a 10 is the no-fabrication
+constraint (can't show a live community) — deliberately honored, not a flaw.
+
+**Production QA sweep (all passed):**
+- Homepage, FeatherWiki (sidebar/search/articles), Gradient Studio (outputs valid MiniMessage),
+  and the Map "Скоро" page all render with **no console errors**.
+- **Light and dark themes** both cohesive; theme toggle persists.
+- Mobile 375px: no overflow; copy flow works.
+- WCAG-AA contrast; focus rings + skip-link present.
+
+**Final polish implemented:**
+- **Theme-aware hero scrim.** The lower-left scrim was a fixed dark tint (built for dark mode). It
+  now uses tokens — dark tint in dark theme, a soft warm-white wash in light theme — so the dark
+  hero copy stays crisp over the bright sky in light mode (confirmed `--hero-scrim-a` resolves to
+  `rgba(255,248,238,.72)` under `data-theme="light"`).
+
+---
+
+# Summary — before & after
+
+| Iter | Focus | Player score |
+|---|---|:---:|
+| 1 | First-impression audit | 5.0 |
+| 2 | Visual identity / typography | 6.5 |
+| 3 | Hero WOW factor | 6.5 |
+| 4 | Navigation / IA | 7.5 |
+| 5 | Sections / components | 6.5 |
+| 6 | Animation / microinteractions | 6.5 |
+| 7 | Mobile & responsiveness | 4.0 → fixed |
+| 8 | Creative / bold | 7.0 |
+| 9 | Refinement / consistency / a11y | 8.0 |
+| 10 | Final verdict & polish | **9.0** |
+
+**The transformation (Player's "biggest wins"):**
+1. The **voxel pixel-town skyline** — turned a pretty gradient page into an unmistakably *Minecraft* one.
+2. The **honest, anticipatory CONNECT/launch framing** — "your ticket is ready" instead of a cold "offline" dot.
+3. **CTA discipline** — one dominant gold "Скопировать IP"; everything else demoted. The page gained a spine.
+4. The **live ticking countdown with a digit-roll** — a heartbeat and urgency.
+
+**Honesty upheld throughout:** no invented player counts, in-game screenshots, features, or
+statistics. The server IP (`feathermc.com`), launch date (14 Nov 2026, 17:00 MSK), Russian
+language, and all real server info were preserved; concrete card copy references only features
+documented in the server's own wiki (приваты/антигриф, голосовой чат, кланы).
+
+**Remaining limitations:** the site can't convey a live community pre-launch (no real data to
+show); the feature-card copy stays intentionally cozy rather than naming specific game modes
+beyond what the wiki documents.

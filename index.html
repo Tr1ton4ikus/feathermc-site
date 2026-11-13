@@ -620,6 +620,10 @@
 }
 
 /* ---------- Iteration 3 — hero composition + WOW ---------- */
+/* Hero scrim tokens — dark tint in dark theme, soft light tint in light theme,
+   so the lower-left copy stays crisp over the sky in both themes (iter 10 polish). */
+:root,:root[data-theme="dark"]{ --hero-scrim-a:rgba(9,7,14,.58); --hero-scrim-b:rgba(9,7,14,.16); --hero-scrim-c:rgba(9,7,14,.42); }
+:root[data-theme="light"]{ --hero-scrim-a:rgba(255,248,238,.72); --hero-scrim-b:rgba(255,248,238,.24); --hero-scrim-c:rgba(255,248,238,.58); }
 
 /* Scrim anchors the type to the sky so the lower-left text reads crisp over bright clouds.
    Desktop only — on phones the text already sits over darker sky, and a boxy scrim looks
@@ -629,13 +633,13 @@
     padding:clamp(8px,1.6vw,22px) clamp(16px,2.6vw,34px) clamp(14px,2.4vw,30px);
     margin-left:calc(-1 * clamp(16px,2.6vw,34px));
     border-radius:30px;
-    background:radial-gradient(130% 125% at 16% 60%, rgba(9,7,14,.58), rgba(9,7,14,.16) 52%, transparent 72%);
+    background:radial-gradient(130% 125% at 16% 60%, var(--hero-scrim-a), var(--hero-scrim-b) 52%, transparent 72%);
   }
 }
 @media(min-width:641px) and (max-width:1140px){
   .hero.homepage .hero-content{
     padding:4px 20px 10px; border-radius:26px;
-    background:radial-gradient(120% 90% at 26% 48%, rgba(9,7,14,.42), transparent 72%);
+    background:radial-gradient(120% 90% at 26% 48%, var(--hero-scrim-c), transparent 72%);
   }
 }
 
