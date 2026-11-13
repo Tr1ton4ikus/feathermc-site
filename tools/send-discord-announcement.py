@@ -17,6 +17,7 @@ ROOT = Path(__file__).resolve().parents[1]
 ANNOUNCEMENTS = {
     "how-to-play": ROOT / "discord" / "how-to-play.json",
     "opening": ROOT / "discord" / "launch-announcement.json",
+    "support": ROOT / "discord" / "support-menu.json",
 }
 
 

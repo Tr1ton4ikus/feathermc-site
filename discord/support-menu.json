@@ -1,0 +1,77 @@
+{
+  "username": "Feather • Поддержка",
+  "avatar_url": "https://mcfeather.com/assets/feather-logo.webp",
+  "allowed_mentions": {
+    "parse": []
+  },
+  "embeds": [
+    {
+      "color": 15966133,
+      "image": {
+        "url": "https://media.discordapp.net/attachments/1562108707884638418/1570800474515443846/image.png?ex=6af86971&is=6af717f1&hm=b718153202936ab587beaf13b764afedace140c45df2f90c528839e4c82f0fcc&=&format=webp&quality=lossless&width=1536&height=864"
+      }
+    },
+    {
+      "color": 15966133,
+      "title": "🩷 Меню поддержки Feather",
+      "description": "**Нужна помощь? Мы рядом!**\n\nРасскажи, что случилось, — команда Feather постарается разобраться как можно быстрее.\n\n**Пожалуйста, не пингуй модерацию повторно.** Дождись ответа в своём обращении: время ответа зависит от количества запросов.\n\n━━━━━━━━━━━━━━━━━━━━",
+      "fields": [
+        {
+          "name": "📂 Категории обращений",
+          "value": "🛠️ **Техническая проблема** — ошибки входа, соединения и игры\n👥 **Жалоба на игрока** — нарушение правил и спорные ситуации\n🎁 **Донат и покупки** — вопросы по оплате и привилегиям\n💬 **Другой вопрос** — всё, что не подходит под категории выше",
+          "inline": false
+        },
+        {
+          "name": "📝 Что написать в обращении",
+          "value": "Укажи игровой ник, подробно опиши ситуацию и при необходимости приложи скриншот. **Никогда не отправляй пароль, токен или код входа в аккаунт.**",
+          "inline": false
+        },
+        {
+          "name": "🌐 Адрес сервера",
+          "value": "`play.mcfeather.com`",
+          "inline": false
+        }
+      ],
+      "thumbnail": {
+        "url": "https://mcfeather.com/assets/feather-logo.webp"
+      },
+      "footer": {
+        "text": "Feather • Мы на связи"
+      }
+    }
+  ],
+  "components": [
+    {
+      "type": 1,
+      "components": [
+        {
+          "type": 2,
+          "style": 5,
+          "label": "Discord",
+          "emoji": {
+            "name": "💬"
+          },
+          "url": "https://discord.gg/afb4uxe3GP"
+        },
+        {
+          "type": 2,
+          "style": 5,
+          "label": "FeatherWiki",
+          "emoji": {
+            "name": "📖"
+          },
+          "url": "https://mcfeather.com/wiki.html"
+        },
+        {
+          "type": 2,
+          "style": 5,
+          "label": "Сайт",
+          "emoji": {
+            "name": "🌐"
+          },
+          "url": "https://mcfeather.com/"
+        }
+      ]
+    }
+  ]
+}

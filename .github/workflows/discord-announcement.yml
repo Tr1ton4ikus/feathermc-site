@@ -11,6 +11,7 @@ on:
         options:
           - how-to-play
           - opening
+          - support
 
 permissions:
   contents: read

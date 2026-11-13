@@ -58,3 +58,11 @@ avoid repeated Discord announcements. Never commit your webhook URL.
 Paste `discord/discohook-how-to-play.json` into Discohook's JSON editor. It intentionally omits the raw Discord `components` key (which Discohook may reject) and contains no empty `content`. Use `discord/how-to-play.json` with the GitHub Actions webhook sender for real link buttons.
 
 The guide's image currently references a **temporary signed Discord CDN URL** supplied for this update. It expires on **2026-11-14 at 13:42:54 UTC**; for a durable banner, upload the original image to the repository or another permanent public host and replace the `image.url` value in both templates.
+
+## Support panel / ticket menu
+
+Use `discord/discohook-support-menu.json` for a Discohook-compatible support announcement. The banner lives in **the first image-only embed**, while the title, description and categories live in a **second embed** — this ensures the image is ABOVE the text. `discord/support-menu.json` contains the full webhook version with link buttons. To post via GitHub Actions select **support** in the **Send Feather Discord announcement** workflow.
+
+Note: a webhook cannot process an interactive ticket-category dropdown or create tickets. To implement a working selection menu, configure a Discord ticket bot and its interactions separately. The static embed lists categories, not a functional selector.
+
+The support banner is referenced from the signed Discord CDN URL supplied by the user. It is temporary and expires at **2026-11-14 14:00:17 UTC**. The image could not be downloaded into the repository in this environment. Upload a durable banner and replace the `image.url` in both support templates; the how-to-play banner also uses a signed URL.

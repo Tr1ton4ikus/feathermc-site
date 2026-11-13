@@ -6,6 +6,12 @@
   },
   "embeds": [
     {
+      "color": 16760928,
+      "image": {
+        "url": "https://media.discordapp.net/attachments/1562108707884638418/1570796101550735370/image.png?ex=6af8655e&is=6af713de&hm=fc64c0cd775a4d31b7fe7f4285d9e2a874e3964290672db47b37dc364330b77c&=&format=webp&quality=lossless&width=1536&height=864"
+      }
+    },
+    {
       "title": "🎮 КАК НАЧАТЬ ИГРАТЬ НА Feather?",
       "url": "https://mcfeather.com/",
       "description": "**Вход бесплатный — никаких заявок и проходок.** ✨\n\n**01**  Запустите Minecraft и откройте «Сетевая игра».\n**02**  Добавьте сервер с адресом ниже.\n**03**  Зайдите на Feather. Если сервер выдаст код подтверждения, скопируйте его.\n**04**  **ОТПРАВЬТЕ КОД В ЭТОТ ЧАТ** отдельным сообщением.\n\n*Отправляйте только игровой код, выданный Feather. Не публикуйте пароли и коды от Discord, почты или других аккаунтов.*",
@@ -42,9 +48,6 @@
         "name": "Feather  •  ИНСТРУКЦИЯ ПО ВХОДУ",
         "url": "https://mcfeather.com/",
         "icon_url": "https://mcfeather.com/assets/feather-logo.webp"
-      },
-      "image": {
-        "url": "https://media.discordapp.net/attachments/1562108707884638418/1570796101550735370/image.png?ex=6af8655e&is=6af713de&hm=fc64c0cd775a4d31b7fe7f4285d9e2a874e3964290672db47b37dc364330b77c&=&format=webp&quality=lossless&width=1536&height=864"
       }
     }
   ],

@@ -36,4 +36,15 @@ assert discohook["username"].startswith("Feather ")
 assert "play.mcfeather.com" in json.dumps(discohook)
 assert discohook["embeds"][0]["image"]["url"].startswith("https://media.discordapp.net/attachments/")
 assert all("FeatherMC" not in json.dumps(d, ensure_ascii=False) for d in [discohook])
+assert len(discohook["embeds"]) == 2
+assert "image" in discohook["embeds"][0]
+assert "description" in discohook["embeds"][1]
+support = json.loads((ROOT / "discord" / "discohook-support-menu.json").read_text(encoding="utf-8"))
+assert len(support["embeds"]) == 2
+assert "image" in support["embeds"][0]
+assert "description" in support["embeds"][1]
+assert support["embeds"][0]["image"]["url"].startswith("https://media.discordapp.net/attachments/")
+assert "components" not in support and "content" not in support
+assert support["allowed_mentions"]["parse"] == []
+
 print("PASS: Discord templates, webhooks, and link buttons are valid.")
