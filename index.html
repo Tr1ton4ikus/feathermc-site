@@ -1162,6 +1162,8 @@
 </style>
 <link rel="stylesheet" href="assets/home-polish.css"/>
 <link rel="stylesheet" href="assets/feather-header.css">
+<link rel="stylesheet" href="assets/showcase.css">
+<script defer src="assets/showcase.js"></script>
 </head>
 <body>
 <a class="skip-link" href="#main">Перейти к содержимому</a>
@@ -1217,7 +1219,7 @@
 <canvas aria-hidden="true" class="hero-petals" id="petals"></canvas>
 <div class="container hero-content">
 <div class="hero-eyebrow"><span class="eyebrow-star">✦</span> БЕЗ ПРОХОДОК · БЕЗ ЛИЦЕНЗИИ · БЕЗ АНКЕТ</div>
-<h1 class="hero-title" id="heroTitle">Feather</h1>
+<h1 class="hero-title" id="heroTitle">Feather<span class="mc">MC</span></h1>
 <h2 class="hero-headline">Твой мир. Твоя история.<br/><em>Твоё приключение.</em></h2>
 <p class="hero-description">Minecraft-сервер без проходок и лицензии. Вход без анкет и заявок — просто добавь <strong>mcfeather.com</strong> и начинай играть.</p>
 <div class="hero-buttons">
@@ -1276,6 +1278,36 @@
 </div>
 </div>
 </section>
+<section class="section world-gallery homepage" id="world-gallery" aria-labelledby="worldGalleryTitle">
+<div class="container">
+<div class="world-gallery-heading reveal">
+ <div><div class="section-eyebrow">✦ FEATHER / АТМОСФЕРА</div><h2 class="section-title" id="worldGalleryTitle">Мир, в который<br><em>хочется вернуться.</em></h2></div>
+ <div class="world-gallery-intro"><p class="section-lead">Золотые вечера, тёплый свет и настроение новых историй. Загляни в атмосферу FeatherMC.</p><span class="world-gallery-hint"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h16m-6-6 6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg> Нажми на изображение</span></div>
+</div>
+<div class="world-gallery-grid">
+<a class="world-scene world-scene-featured reveal" href="assets/background-light.webp" data-world-scene data-scene-title="Золотой час" aria-label="Открыть арт-изображение «Золотой час»">
+  <img src="assets/background-light.webp" alt="Художественная иллюстрация золотого мира FeatherMC" loading="lazy" decoding="async" width="1200" height="750">
+  <span class="world-scene-number" aria-hidden="true">01 / 03</span>
+  <span class="world-scene-caption"><span><small>FEATHER / ДЕНЬ</small><strong>Золотой час</strong></span><span class="world-scene-open" aria-hidden="true">↗</span></span>
+</a>
+<a class="world-scene reveal" href="assets/background-dark.webp" data-world-scene data-scene-title="После заката" aria-label="Открыть арт-изображение «После заката»">
+  <img src="assets/background-dark.webp" alt="Художественная ночная иллюстрация FeatherMC" loading="lazy" decoding="async" width="1200" height="750">
+  <span class="world-scene-number" aria-hidden="true">02 / 03</span>
+  <span class="world-scene-caption"><span><small>FEATHER / НОЧЬ</small><strong>После заката</strong></span><span class="world-scene-open" aria-hidden="true">↗</span></span>
+</a>
+<a class="world-scene reveal" href="assets/background-legacy-light.webp" data-world-scene data-scene-title="Тихие мгновения" aria-label="Открыть арт-изображение «Тихие мгновения»">
+  <img src="assets/background-legacy-light.webp" alt="Тёплая концепт-иллюстрация атмосферы FeatherMC" loading="lazy" decoding="async" width="1200" height="750">
+  <span class="world-scene-number" aria-hidden="true">03 / 03</span>
+  <span class="world-scene-caption"><span><small>FEATHER / ИСТОРИИ</small><strong>Тихие мгновения</strong></span><span class="world-scene-open" aria-hidden="true">↗</span></span>
+</a>
+</div>
+<div class="world-gallery-bottom"><p>Иллюстрации атмосферы FeatherMC — не скриншоты игрового сервера.</p><a href="#join">Начать свою историю <span aria-hidden="true">↗</span></a></div>
+</div>
+</section>
+<dialog class="world-lightbox" id="worldLightbox" aria-label="Просмотр иллюстрации">
+ <button class="world-lightbox-close" type="button" data-world-close aria-label="Закрыть иллюстрацию">✕</button>
+ <figure><img id="worldLightboxImage" alt="" decoding="async"><figcaption id="worldLightboxCaption"></figcaption></figure>
+</dialog>
 <section class="join-section homepage" id="join">
 <div class="container join-grid">
 <div class="reveal">
