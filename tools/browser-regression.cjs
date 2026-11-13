@@ -78,6 +78,13 @@ const server = http.createServer((req, res) => {
     await page.locator('[data-copy]:visible').first().click();
     await page.waitForTimeout(100);
     assert.equal(await page.evaluate(() => navigator.clipboard.readText()), 'mcfeather.com');
+    // Artistic gallery must open accessibly and close without leaving the page.
+    assert.equal(await page.locator('[data-world-scene]').count(), 3);
+    await page.locator('[data-world-scene]').first().click();
+    assert(await page.locator('#worldLightbox').evaluate(element => element.open));
+    assert.equal(await page.locator('#worldLightboxImage').getAttribute('src'), 'assets/background-light.webp');
+    await page.locator('[data-world-close]').click();
+    assert(!await page.locator('#worldLightbox').evaluate(element => element.open));
     for (const route of ['wiki', 'map']) {
       await page.evaluate(r => location.hash = r, route);
       await page.waitForTimeout(200);
@@ -90,7 +97,7 @@ const server = http.createServer((req, res) => {
     assert.equal(await page.locator('a[href*="gradient"]').count(), 0);
     assert.equal(await page.locator('#view-gradient').count(), 0);
     assert.equal(await page.locator('.header .brand-name').textContent(), 'Feather');
-    assert.equal(await page.locator('#heroTitle').textContent(), 'Feather');
+    assert.equal(await page.locator('#heroTitle').textContent(), 'FeatherMC');
     assert.match(await page.locator('.hero-description').textContent(), /без проходок и лицензии/);
     assert.match(await page.locator('.hero-description').textContent(), /без анкет и заявок/);
     await page.evaluate(() => location.hash = 'gradient');
