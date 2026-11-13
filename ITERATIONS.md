@@ -124,3 +124,34 @@ replacing the three stock marks; a blurred teaser for the "Скоро" map page.
 
 **Verification:** desktop render — nav reordered, "Как играть" amber + underlined, card copy
 updated, sparkles calmed; no console errors.
+
+---
+
+## Iteration 5 — Sections, components, content hierarchy
+
+**Player score: 6.5/10** (a tougher reviewer on the mid-page). "Structure and the CONNECT/photo
+components are genuinely good… held back by stock icons, generic feature copy, and a CONNECT
+card that reads 'dead' when it should read 'almost here'." P0s: replace the stock card icons;
+reframe the CONNECT card's cold "Не в сети" into an anticipatory pre-launch state (honestly).
+
+**Implemented:**
+- **Bespoke card icons.** Added three custom SVG symbols and swapped the generic
+  box/flower/heart for on-theme marks: a **house** (Создавай своё), a **sunset over the horizon**
+  (Лови красоту), and **two friends** (Делись моментами) — white glyphs on the amber/rose/dusk
+  gradients. (`#i-block` left untouched — it's shared with the server badge.)
+- **Honest, anticipatory CONNECT card.** Before launch, the live-status card now shows
+  "Открытие 14 ноября · 17:00" with a warm **amber pulsing** dot and "Скоро" for players/version,
+  instead of a cold red "Не в сети". The real offline/online state still shows through *after*
+  launch — the pre-launch window is honestly a "not yet open" state, so this is accurate, not
+  spin. Launch timestamp computed inline (`2026-11-14T17:00:00+03:00`) to avoid cross-script scope.
+- **Specific card copy (P1).** Card 1 now cites real server features — "приваты и антигриф
+  берегут всё, что ты построишь" (land claims + antigrief, both documented in the wiki).
+- **Positive join step 3 (P1).** "Отправляйся… подключайся, когда он доступен" →
+  "Будь готов к старту — 14 ноября в 17:00 МСК мир откроется, и можно заходить!"
+
+**Deliberately NOT done:** the Player's idea of real in-game screenshots / a photo mini-gallery
+behind the cards — the team has no such screenshots and the brief forbids inventing them, so
+bespoke vector icons were used instead. No fabricated world previews.
+
+**Verification:** no console errors; icons render (house/sunset/friends); JS confirms CONNECT
+shows "Открытие 14 ноября · 17:00" + "Скоро" with data-online="soon" (amber).
