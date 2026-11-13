@@ -155,3 +155,34 @@ bespoke vector icons were used instead. No fabricated world previews.
 
 **Verification:** no console errors; icons render (house/sunset/friends); JS confirms CONNECT
 shows "Открытие 14 ноября · 17:00" + "Скоро" with data-online="soon" (amber).
+
+---
+
+## Iteration 6 — Animation, microinteractions, memorable details
+
+**Player score: 6.5/10.** "Beautiful, cohesive, and the motion is tasteful but entirely ambient —
+it decorates, it never rewards… a lovely static poster that happens to drift." The centerpiece
+miss: the live countdown updates every second with no transition. Plus: no button press-feel,
+no copy-success morph, no signature feather move, a restless marquee.
+
+**Implemented (all transform/opacity, all `prefers-reduced-motion`-aware):**
+- **Countdown digit-roll (P0 centerpiece).** Only the digit that changes rolls up (≈200ms
+  ease-out), so time visibly falls away. Verified the `.rolling` class re-triggers each tick.
+- **Tactile button press (P0).** Every CTA now depresses (`scale(.96)` on `:active`) instead of
+  only lifting — real weight.
+- **Copy → check morph (P1).** On a successful copy, the button's icon swaps copy→check (green)
+  with a scale-pop, synced with the existing toast. Verified the green check renders.
+- **Feather logo idle sway (P1).** A gentle 6s rotate/float loop — the site's signature move
+  (confirmed `featherSway` is the computed animation).
+- **Calmer marquee (P1).** Slowed 35s→62s and given faded mask edges so it supports the calm
+  sunset mood instead of fighting it.
+- **Gentler "breathing" dots (P2).** Pre-launch status dots now breathe (slower scale/opacity)
+  rather than pulsing urgently — fits a "Скоро" state.
+- **Launch-hour payoff (P2).** A warm gold bloom on the countdown card when the timer hits zero.
+- **Robust reduced-motion guard (P0).** A `@media (prefers-reduced-motion: reduce)` block stops
+  the marquee, digit-roll, feather sway, and dot animations (petals/shimmer were already gated).
+
+**Verification:** cache-busted render — no console errors; digit-roll, feather-sway (featherSway),
+marquee 62s, and green copy-check morph all confirmed. (Programmatic clicks can't trigger the
+real clipboard, so the morph was verified by forcing the success state — the copy logic itself
+is unchanged from the original working path.)

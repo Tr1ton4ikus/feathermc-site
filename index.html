@@ -671,6 +671,44 @@
 /* The CONNECT card reads "almost here" (warm amber), not a cold "dead" red, before launch. */
 [data-online="soon"] .status-dot{ background:var(--fx-amber) !important; box-shadow:0 0 0 4px rgba(255,182,63,.20); animation:pulseDot 2.4s ease-in-out infinite; }
 .status-inline[data-online="soon"], .live-status[data-online="soon"]{ color:#ffd79a; }
+
+/* ---------- Iteration 6 — motion & microinteractions ---------- */
+@media(prefers-reduced-motion:no-preference){
+  /* Countdown centerpiece: the digit that changes rolls up, so time visibly falls away. */
+  @keyframes digitRoll{ 0%{transform:translateY(-62%);opacity:0} 55%{opacity:1} 100%{transform:translateY(0);opacity:1} }
+  .count-unit strong.rolling{ animation:digitRoll .2s var(--round); }
+  /* Feather logo breathes — the site's signature move. */
+  .brand-icon img{ animation:featherSway 6s ease-in-out infinite; transform-origin:52% 86%; }
+  @keyframes featherSway{ 0%,100%{transform:rotate(-2.2deg) translateY(0)} 50%{transform:rotate(2.2deg) translateY(-2px)} }
+  /* Copy success pops the button. */
+  .button.copied,.copy-mini.copied,.address-field button.copied,.nav-cta.copied{ animation:copyPop .36s var(--round); }
+  @keyframes copyPop{ 0%{transform:scale(1)} 42%{transform:scale(1.06)} 100%{transform:scale(1)} }
+}
+
+/* Tactile press — every CTA depresses, not only lifts. */
+.button:active,.nav-cta:active,.copy-mini:active,.address-field button:active,.theme-toggle:active{ transform:scale(.96); }
+
+/* Copy→check morph reads green on success. */
+.button.copied use,.copy-mini.copied use,.address-field button.copied use,.nav-cta.copied use{ color:#56d98a; }
+
+/* Calmer marquee: slower, with faded edges, so it supports the mood instead of fighting it. */
+.ticker{ -webkit-mask-image:linear-gradient(90deg,transparent,#000 9%,#000 91%,transparent); mask-image:linear-gradient(90deg,transparent,#000 9%,#000 91%,transparent); }
+.ticker-inner{ animation-duration:62s !important; }
+
+/* Gentler "breathing" glow for pre-launch dots (not an urgent pulse). */
+@keyframes pulseDot{ 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.72;transform:scale(.9)} }
+.live-status.is-launch .status-dot,[data-online="soon"] .status-dot{ animation-duration:3.2s !important; }
+
+/* Launch-hour payoff: a warm gold bloom when the countdown reaches zero. */
+.launch-spotlight.launched{ animation:launchGlow 1.6s ease-out; }
+@keyframes launchGlow{ 0%{box-shadow:0 0 0 0 rgba(255,181,78,.0)} 35%{box-shadow:0 0 60px 8px rgba(255,181,78,.55)} 100%{box-shadow:0 26px 80px rgba(15,10,12,.33)} }
+
+@media(prefers-reduced-motion:reduce){
+  .ticker-inner{ animation:none !important; transform:none !important; }
+  .count-unit strong.rolling{ animation:none !important; }
+  .brand-icon img{ animation:none !important; }
+  .status-dot{ animation:none !important; }
+}
 </style>
 </head>
 <body>
@@ -929,6 +967,8 @@
         if (copied) {
           showToast('IP скопирован: feathermc.com');
           button.classList.add('copied');
+          const u = button.querySelector('use');
+          if (u) { const orig = u.getAttribute('href'); u.setAttribute('href', '#i-check'); setTimeout(() => u.setAttribute('href', orig), 1200); }
           setTimeout(() => button.classList.remove('copied'), 1200);
         } else {
           showToast('Скопируй адрес: feathermc.com');
@@ -1160,8 +1200,8 @@ buildWikiNav();filterWiki();
 const launch=Date.parse('2026-11-14T17:00:00+03:00');
 const boxes=['cDays','cHours','cMinutes','cSeconds'].map(id=>document.getElementById(id));
 function tick(){let remaining=Math.max(0,launch-Date.now());const values=[Math.floor(remaining/86400000),Math.floor(remaining/3600000)%24,Math.floor(remaining/60000)%60,Math.floor(remaining/1000)%60];
-  values.forEach((v,i)=>boxes[i].textContent=String(v).padStart(2,'0'));
-  if(remaining===0){document.querySelector('.launch-copy h2').innerHTML='Приключение <em>началось!</em>';}
+  values.forEach((v,i)=>{const s=String(v).padStart(2,'0'); if(boxes[i].textContent!==s){boxes[i].textContent=s; boxes[i].classList.remove('rolling'); void boxes[i].offsetWidth; boxes[i].classList.add('rolling');}});
+  if(remaining===0){document.querySelector('.launch-copy h2').innerHTML='Приключение <em>началось!</em>'; const l=document.getElementById('launch'); if(l) l.classList.add('launched');}
 }
 tick();setInterval(tick,1000);
 
