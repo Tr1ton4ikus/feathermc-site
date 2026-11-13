@@ -1,0 +1,66 @@
+/* FeatherWiki signature layer — shared across the embedded wiki and documentation pages. */
+.sitebar{background:rgba(19,15,24,.70);border-bottom-color:rgba(255,192,101,.17);-webkit-backdrop-filter:blur(22px) saturate(140%);backdrop-filter:blur(22px) saturate(140%)}
+html[data-theme=light] .sitebar{background:rgba(255,247,233,.78);border-bottom-color:rgba(128,78,39,.15)}
+.sitebar .barrow{min-height:78px}
+.sitebar .logo{letter-spacing:-.04em}
+.sitebar .navlinks a{padding:7px 10px;border-radius:9px;transition:background-color .2s,color .2s}
+.sitebar .navlinks a:hover,.sitebar .navlinks a[aria-current]{background:rgba(255,175,71,.10);color:var(--accent)}
+.sitebar .navlinks .donate-link{padding:7px 14px;border:1px solid rgba(255,209,143,.50);background:linear-gradient(122deg,#ffdda0,#ffb14a);color:#362110!important;font-weight:800;box-shadow:0 5px 18px rgba(210,122,29,.17)}
+.sitebar .navlinks .donate-link:hover{background:linear-gradient(122deg,#ffebbe,#ffc86c);color:#2f1a09!important}
+.sitebar .themebtn{min-width:63px;border-radius:12px;transition:background-color .2s,border-color .2s}
+.sitebar .themebtn:hover{border-color:var(--accent)}
+.intro{position:relative;isolation:isolate}
+.intro::before{content:"";position:absolute;z-index:-1;left:-6%;top:0;width:70%;height:100%;background:radial-gradient(ellipse at 20% 20%,rgba(255,174,75,.10),transparent 68%);pointer-events:none}
+.intro h1{letter-spacing:-.05em}
+.intro .eyebrow{font-family:system-ui,sans-serif;font-size:12px;font-weight:850;letter-spacing:.16em}
+.wiki-topics{gap:10px;margin-bottom:25px}
+.wiki-topics .topic{font-size:13px;font-weight:700;border-color:var(--line);transition:transform .2s,border-color .2s,background-color .2s}
+.wiki-topics .topic:hover{transform:translateY(-2px)}
+.wiki-topics .topic.active{box-shadow:0 5px 18px rgba(222,145,58,.11)}
+#wikiGrid{gap:18px}
+#wikiGrid .card{position:relative;overflow:hidden;border-radius:22px;min-height:242px;border-color:var(--line);background:color-mix(in srgb,var(--paper) 82%,transparent);box-shadow:0 11px 35px rgba(6,7,12,.055);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);transition:transform .32s cubic-bezier(.2,.8,.2,1),border-color .25s,box-shadow .32s}
+#wikiGrid .card::before{content:"";position:absolute;right:-45px;top:-55px;width:140px;height:140px;border-radius:50%;background:radial-gradient(circle,rgba(255,186,82,.17),transparent 70%);pointer-events:none}
+#wikiGrid .card:hover{transform:translateY(-6px);border-color:rgba(255,182,77,.55);box-shadow:0 18px 38px rgba(8,9,18,.12)}
+#wikiGrid .card .ico{border:1px solid rgba(255,188,94,.22)}
+#wikiGrid .card h2{font-size:clamp(19px,2.1vw,24px);letter-spacing:-.035em}
+#wikiGrid .card p{line-height:1.75}
+#wikiGrid .card .more{font-weight:850}
+.search{border-color:var(--line);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);transition:border-color .2s,box-shadow .2s}
+.search:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(255,183,82,.12)}
+.sidebar,.reading{background:color-mix(in srgb,var(--paper) 91%,transparent);border-color:var(--line);box-shadow:0 18px 48px rgba(7,7,16,.06);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px)}
+.sidebar{scrollbar-width:thin}
+.sidebar details{border-top-color:var(--line)}
+.sidebar summary{min-height:36px;display:flex;align-items:center}
+.sidebar a{transition:background-color .2s,color .2s,padding-left .2s}
+.sidebar a:hover,.sidebar a.active{padding-left:14px}
+.article-toc{background:var(--paper2);border-color:var(--line);border-radius:18px}
+.article-toc summary{list-style-position:inside}
+.article-toc a[aria-current]{font-weight:800}
+.reading .summary{font-size:clamp(15px,1.6vw,18px);line-height:1.8}
+.reading h1{letter-spacing:-.045em}
+.article-content{line-height:1.85}
+.article-content h2{padding-top:8px;letter-spacing:-.03em}
+.article-content :is(h2,h3){scroll-margin-top:120px}
+.article-content h2::before{content:"";display:inline-block;vertical-align:middle;width:5px;height:24px;margin-right:12px;border-radius:5px;background:linear-gradient(#ffde91,#f8a338)}
+.article-content code{border:1px solid var(--line);border-radius:7px;padding:2px 6px;overflow-wrap:anywhere}
+.article-content table{margin-block:24px;border:1px solid var(--line);border-radius:15px;scrollbar-width:thin;background:var(--paper)}
+.article-content th,.article-content td{padding:13px 15px}
+.article-content th{color:var(--ink);font-weight:800}
+.article-content img{border:1px solid var(--line);padding:8px;background:var(--paper2)}
+.article-content blockquote{border-left-width:4px}
+.article-pagination a{transition:transform .2s,border-color .2s,background-color .2s}
+.article-pagination a:hover{transform:translateY(-2px);background:var(--paper)}
+/* Embedded homepage wiki receives the same polished editorial language. */
+#view-wiki .wiki-paper{border-radius:20px;box-shadow:0 20px 55px rgba(7,8,19,.07)}
+#view-wiki .wiki-category-strip a{transition:transform .25s,border-color .25s,box-shadow .25s}
+#view-wiki .wiki-category-strip a:hover{transform:translateY(-4px);box-shadow:0 13px 27px rgba(7,8,19,.11)}
+#view-wiki .wiki-nav-entry{border-radius:10px}
+#view-wiki .wiki-rail{scrollbar-width:thin}
+#view-wiki .wiki-library-filters button{transition:background-color .2s,transform .2s,border-color .2s}
+#view-wiki .wiki-library-filters button:hover{transform:translateY(-2px)}
+#view-wiki .wiki-article-pagination a{transition:transform .22s,border-color .22s,box-shadow .22s}
+#view-wiki .wiki-article-pagination a:hover{transform:translateY(-3px);box-shadow:0 12px 25px rgba(7,8,19,.08)}
+#view-wiki .wiki-reading .article-content table{overflow-x:auto}
+@media(max-width:800px){.sitebar .barrow{gap:10px}.sitebar .navlinks{gap:4px}.sitebar .navlinks a{padding:7px 8px}.sitebar .navlinks .donate-link{padding:7px 11px}.sidebar{max-height:380px}.reading{box-shadow:none}}
+@media(max-width:520px){#wikiGrid .card{min-height:0}.intro .eyebrow{font-size:10px}.article-content th,.article-content td{padding:10px}.article-content h2::before{height:19px}}
+@media(prefers-reduced-motion:reduce){.sitebar .navlinks a,.sitebar .themebtn,#wikiGrid .card,.sidebar a,.wiki-topics .topic,.article-pagination a,#view-wiki .wiki-category-strip a,#view-wiki .wiki-library-filters button{transition:none!important}}
