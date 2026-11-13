@@ -1,6 +1,9 @@
 (() => {
   'use strict';
   const normalize = value => value.toLocaleLowerCase('ru').replace(/ё/g, 'е').replace(/\s+/g, ' ').trim();
+  const themeButton=document.getElementById('themeToggle');
+  const syncThemeLabel=()=>{const light=document.documentElement.dataset.theme==='light';themeButton.setAttribute('aria-pressed',String(light));themeButton.setAttribute('aria-label',light?'Включить тёмную тему':'Включить светлую тему');};
+  syncThemeLabel();themeButton.addEventListener('click',syncThemeLabel);
   const search = document.getElementById('search');
   if (search) {
     const cards = [...document.querySelectorAll('#wikiGrid .card')];
