@@ -1159,6 +1159,7 @@
   }
 }
 </style>
+<link rel="stylesheet" href="assets/home-polish.css"/>
 </head>
 <body>
 <a class="skip-link" href="#main">Перейти к содержимому</a>
@@ -1268,9 +1269,9 @@
 <p class="section-lead">Большие приключения начинаются с маленьких шагов. Какой будет твоя следующая история?</p>
 </div>
 <div class="features-grid">
-<article class="feature-card reveal"><div class="feature-top"><span class="feature-icon"><svg aria-hidden="true"><use href="#i-build"></use></svg></span><span class="feature-index">/ 01</span></div><h3>Создавай своё</h3><p>От уютного домика до проекта мечты — приваты и антигриф берегут всё, что ты построишь.</p><span aria-hidden="true" class="feature-bottom">✧</span></article>
-<article class="feature-card reveal"><div class="feature-top"><span class="feature-icon"><svg aria-hidden="true"><use href="#i-sunset"></use></svg></span><span class="feature-index">/ 02</span></div><h3>Лови красоту</h3><p>Рассветы, цветущие пейзажи и та самая атмосфера, ради которой хочется остаться.</p><span aria-hidden="true" class="feature-bottom">✿</span></article>
-<article class="feature-card reveal"><div class="feature-top"><span class="feature-icon"><svg aria-hidden="true"><use href="#i-friends"></use></svg></span><span class="feature-index">/ 03</span></div><h3>Делись моментами</h3><p>Голосовой чат, кланы и общие приключения — зови друзей и собирай воспоминания вместе.</p><span aria-hidden="true" class="feature-bottom">♡</span></article>
+<article class="feature-card reveal"><div class="feature-top"><span class="feature-icon"><svg aria-hidden="true"><use href="#i-build"></use></svg></span><span class="feature-index">/ 01</span></div><h3>Создавай своё</h3><p>От уютного домика до проекта мечты — приваты и антигриф берегут всё, что ты построишь.</p><a class="feature-link" href="#wiki/zashita-i-bezopasnost">О защите построек <span aria-hidden="true">→</span></a><span aria-hidden="true" class="feature-bottom">✧</span></article>
+<article class="feature-card reveal"><div class="feature-top"><span class="feature-icon"><svg aria-hidden="true"><use href="#i-sunset"></use></svg></span><span class="feature-index">/ 02</span></div><h3>Лови красоту</h3><p>Рассветы, цветущие пейзажи и та самая атмосфера, ради которой хочется остаться.</p><a class="feature-link" href="#wiki">Исследовать FeatherWiki <span aria-hidden="true">→</span></a><span aria-hidden="true" class="feature-bottom">✿</span></article>
+<article class="feature-card reveal"><div class="feature-top"><span class="feature-icon"><svg aria-hidden="true"><use href="#i-friends"></use></svg></span><span class="feature-index">/ 03</span></div><h3>Делись моментами</h3><p>Голосовой чат, кланы и общие приключения — зови друзей и собирай воспоминания вместе.</p><a class="feature-link" href="#wiki/golosovoi-chat">О голосовом чате <span aria-hidden="true">→</span></a><span aria-hidden="true" class="feature-bottom">♡</span></article>
 </div>
 </div>
 </section>
@@ -1544,9 +1545,11 @@
         // Hero stays encouraging before launch — never a bare "Не в сети".
         heroStatus.dataset.online = flag;
         heroStatus.classList.toggle('is-online', kind === 'online');
-        heroStatus.classList.toggle('is-launch', kind !== 'online');
+        heroStatus.classList.toggle('is-launch', kind !== 'online' && preLaunch);
         document.getElementById('heroStatusText').textContent =
-          kind === 'online' ? 'Сервер онлайн — заходи!' : 'Открытие 14 ноября · 17:00 МСК';
+          kind === 'online' ? 'Сервер онлайн — заходи!'
+            : preLaunch ? 'Открытие 14 ноября · 17:00 МСК'
+            : kind === 'offline' ? 'Сервер не в сети' : 'Статус сервера недоступен';
         const soonDash = preLaunch ? 'Скоро' : '—';
         document.getElementById('playersOnline').textContent = kind === 'online' && Number.isInteger(players) ? String(players) : soonDash;
         document.getElementById('serverVersion').textContent = kind === 'online' && version ? String(version).slice(0,20) : soonDash;
@@ -1736,7 +1739,19 @@ const launch=Date.parse('2026-11-14T17:00:00+03:00');
 const boxes=['cDays','cHours','cMinutes','cSeconds'].map(id=>document.getElementById(id));
 function tick(){let remaining=Math.max(0,launch-Date.now());const values=[Math.floor(remaining/86400000),Math.floor(remaining/3600000)%24,Math.floor(remaining/60000)%60,Math.floor(remaining/1000)%60];
   values.forEach((v,i)=>{const s=String(v).padStart(2,'0'); if(boxes[i].textContent!==s){boxes[i].textContent=s; boxes[i].classList.remove('rolling'); void boxes[i].offsetWidth; boxes[i].classList.add('rolling');}});
-  if(remaining===0){document.querySelector('.launch-copy h2').innerHTML='Приключение <em>началось!</em>'; const l=document.getElementById('launch'); if(l) l.classList.add('launched');}
+  if(remaining===0 && !document.getElementById('launch').classList.contains('launched')){
+    const panel=document.getElementById('launch');
+    panel.classList.add('launched');
+    panel.setAttribute('aria-label','Запланированная дата открытия FeatherMC');
+    panel.querySelector('.launch-pretitle').textContent='ДАТА ОТКРЫТИЯ';
+    panel.querySelector('.launch-copy h2').innerHTML='Новая глава <em>FeatherMC.</em>';
+    panel.querySelector('.launch-rule').textContent='14 НОЯБРЯ · 17:00 МСК';
+    panel.querySelector('.countdown-grid').hidden=true;
+    panel.querySelector('.launch-bottom span:last-child').textContent='Текущий статус сервера — ниже';
+    const step=document.querySelector('.join-step:last-child');
+    step.querySelector('h3').textContent='Подключись к серверу';
+    step.querySelector('p').textContent='Выбери FeatherMC в списке серверов. Текущую доступность можно проверить в карточке подключения.';
+  }
 }
 tick();setInterval(tick,1000);
 
