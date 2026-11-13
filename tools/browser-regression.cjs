@@ -97,7 +97,7 @@ const server = http.createServer((req, res) => {
     assert.equal(await page.locator('a[href*="gradient"]').count(), 0);
     assert.equal(await page.locator('#view-gradient').count(), 0);
     assert.equal(await page.locator('.header .brand-name').textContent(), 'Feather');
-    assert.equal(await page.locator('#heroTitle').textContent(), 'FeatherMC');
+    assert.equal(await page.locator('#heroTitle').textContent(), 'Feather');
     assert.match(await page.locator('.hero-description').textContent(), /без проходок и лицензии/);
     assert.match(await page.locator('.hero-description').textContent(), /без анкет и заявок/);
     await page.evaluate(() => location.hash = 'gradient');
