@@ -1226,10 +1226,10 @@
 <a class="button button-donate" href="https://feather.trademc.org/" target="_blank" rel="noopener noreferrer" aria-label="Донат-магазин Feather, откроется в новой вкладке"><span class="donate-gift"><svg aria-hidden="true"><use href="#i-gift"></use></svg></span><span class="donate-copy"><strong>Донат-магазин</strong></span><svg class="donate-external" aria-hidden="true"><use href="#i-external"></use></svg></a>
 </div></div><aside aria-label="Обратный отсчёт до открытия Feather" class="launch-spotlight" id="launch">
 <div aria-hidden="true" class="launch-flare">✦ <span>✧</span></div>
-<div class="launch-topline"><span class="launch-live-dot"></span> FEATHER • НАЧАЛО ИСТОРИИ <span class="launch-ticket">PLAY NOW</span></div>
-<div class="launch-copy"><span class="launch-pretitle">МОЖНО ИГРАТЬ</span><h2>Мир уже ждёт<br/><em>тебя.</em></h2><p>IP: play.mcfeather.com</p></div>
-<div class="launch-rule"><span></span> ПРИСОЕДИНЯЙСЯ <span></span></div>
-<div aria-live="off" class="countdown-grid" hidden><div class="count-unit"><strong id="cDays">00</strong><small>ДНЕЙ</small></div><div class="count-unit"><strong id="cHours">00</strong><small>ЧАСОВ</small></div><div class="count-unit"><strong id="cMinutes">00</strong><small>МИНУТ</small></div><div class="count-unit"><strong id="cSeconds">00</strong><small>СЕКУНД</small></div></div>
+<div class="launch-topline"><span class="launch-live-dot"></span> FEATHER • НАЧАЛО ИСТОРИИ <span class="launch-ticket">14 / 11</span></div>
+<div class="launch-copy"><span class="launch-pretitle">СКОРО ОТКРЫТИЕ</span><h2>Мир откроется<br/><em>для тебя.</em></h2><p>14 ноября 2026 · 17:00 МСК</p></div>
+<div class="launch-rule"><span></span> ДО СТАРТА <span></span></div>
+<div aria-live="off" class="countdown-grid"><div class="count-unit"><strong id="cDays">00</strong><small>ДНЕЙ</small></div><div class="count-unit"><strong id="cHours">00</strong><small>ЧАСОВ</small></div><div class="count-unit"><strong id="cMinutes">00</strong><small>МИНУТ</small></div><div class="count-unit"><strong id="cSeconds">00</strong><small>СЕКУНД</small></div></div>
 <div class="launch-bottom"><span class="launch-planet">✦</span><span>Один мир. Тысячи историй.</span></div>
 </aside>
 <div aria-hidden="true" class="hero-caption"><span class="caption-line"></span><span><strong>SUNSET FOREST</strong><small>EVERY SUNSET IS A NEW BEGINNING</small></span></div>
@@ -1239,7 +1239,7 @@
 <div class="server-pill-text"><span class="micro-label">АДРЕС СЕРВЕРА / SERVER IP</span><strong>play.mcfeather.com</strong></div>
 <button aria-label="Скопировать play.mcfeather.com" class="copy-mini" data-copy="" title="Скопировать адрес" type="button"><svg aria-hidden="true"><use href="#i-copy"></use></svg></button>
 </div>
-<div class="live-status is-launch" data-online="unknown" id="heroStatus"><span class="status-dot"></span><span id="heroStatusText">Проверяем доступность сервера...</span></div>
+<div class="live-status is-launch" data-online="unknown" id="heroStatus"><span class="status-dot"></span><span id="heroStatusText">Открытие 14 ноября · 17:00 МСК</span></div>
 </div>
 <div aria-hidden="true" class="scroll-marker">ЛИСТАЙ ВНИЗ</div>
 </section>
@@ -1316,7 +1316,7 @@
 <div class="join-steps">
 <div class="join-step"><span class="step-number">01</span><div><h3>Открой Minecraft</h3><p>Запусти игру и перейди в раздел «Сетевая игра».</p></div></div>
 <div class="join-step"><span class="step-number">02</span><div><h3>Добавь сервер</h3><p>Нажми «Добавить сервер» и введи адрес <strong>play.mcfeather.com</strong>.</p></div></div>
-<div class="join-step"><span class="step-number">03</span><div><h3>Заходи в игру</h3><p>Выбирай Feather в списке серверов и начинай своё приключение!</p></div></div>
+<div class="join-step"><span class="step-number">03</span><div><h3>Будь готов к старту</h3><p>Сохрани адрес — 14 ноября в 17:00 МСК сервер откроется для игроков!</p></div></div>
 </div>
 </div>
 <div class="reveal">
@@ -1327,7 +1327,7 @@
 <p>Скопируй адрес и вставь его в список серверов Minecraft.</p>
 <div class="address-field"><code>play.mcfeather.com</code><button data-copy="" type="button"><svg aria-hidden="true"><use href="#i-copy"></use></svg><span>КОПИРОВАТЬ</span></button></div>
 <div class="connect-info">
-<div><span class="info-label">СТАТУС СЕРВЕРА</span><span class="info-value status-inline" data-online="unknown" id="joinStatus"><span class="status-dot"></span><span id="joinStatusText">Проверка...</span></span></div>
+<div><span class="info-label">СТАТУС СЕРВЕРА</span><span class="info-value status-inline" data-online="unknown" id="joinStatus"><span class="status-dot"></span><span id="joinStatusText">Открытие 14 ноября · 17:00 МСК</span></span></div>
 <div><span class="info-label">ОНЛАЙН / ИГРОКИ</span><span class="info-value" id="playersOnline">—</span></div>
 <div><span class="info-label">ВЕРСИЯ</span><span class="info-value" id="serverVersion">—</span></div>
 </div>
@@ -1563,7 +1563,8 @@
       const heroStatus = document.getElementById('heroStatus');
       const joinStatus = document.getElementById('joinStatus');
       function renderStatus(kind, status, players, version) {
-        const preLaunch = false;
+        const preLaunch = Date.now() < Date.parse("2026-11-14T17:00:00+03:00");
+  if (preLaunch) kind = "soon";
         // Honest but anticipatory: before launch a non-online server reads "almost here",
         // not a cold "dead" red dot. After launch the real offline state shows through.
         const joinText = kind === 'online' ? 'В сети'
@@ -1786,15 +1787,34 @@ document.addEventListener('keydown',e=>{if(e.key==='/'&&!e.ctrlKey&&!e.metaKey&&
  if(location.hash.startsWith('#wiki')){e.preventDefault();wikiSearch.focus();}}
  if(e.key==='Escape'&&document.activeElement===wikiSearch){wikiSearch.blur();}});
 buildWikiNav();filterWiki();
-// Opening announcement is live. Actual online status remains API-driven.
+// Official opening: 14 November 2026 at 17:00 Moscow time (UTC+03:00).
+const launchAt = Date.parse('2026-11-14T17:00:00+03:00');
 const launchPanel = document.getElementById('launch');
-if (launchPanel) {
-  launchPanel.classList.add('launched');
-  launchPanel.setAttribute('aria-label', 'Feather — начать играть');
-  const oldCountdown = launchPanel.querySelector('.countdown-grid');
-  if (oldCountdown) oldCountdown.hidden = true;
+const countdown = launchPanel?.querySelector('.countdown-grid');
+const countdownUnits = ['cDays','cHours','cMinutes','cSeconds'].map(id=>document.getElementById(id));
+function updateOpeningCountdown() {
+  const remaining = Math.max(0, launchAt - Date.now());
+  const values = [Math.floor(remaining / 86400000), Math.floor(remaining / 3600000) % 24, Math.floor(remaining / 60000) % 60, Math.floor(remaining / 1000) % 60];
+  values.forEach((value, index) => {
+    if (countdownUnits[index]) countdownUnits[index].textContent = String(value).padStart(2, '0');
+  });
+  if (launchPanel) {
+    const started = remaining === 0;
+    launchPanel.classList.toggle('launched', started);
+    launchPanel.setAttribute('aria-label', started ? 'Дата открытия Feather наступила' : 'До открытия Feather 14 ноября в 17:00 МСК');
+    if (countdown) countdown.hidden = started;
+    if (started && !launchPanel.dataset.openingDateReached) {
+      launchPanel.dataset.openingDateReached = 'true';
+      launchPanel.querySelector('.launch-pretitle').textContent = 'ДАТА ОТКРЫТИЯ';
+      launchPanel.querySelector('.launch-copy h2').innerHTML = 'Новая глава <em>Feather.</em>';
+      launchPanel.querySelector('.launch-rule').textContent = '14 НОЯБРЯ · 17:00 МСК';
+      launchPanel.querySelector('.launch-bottom span:last-child').textContent = 'Актуальный статус сервера — в карточке подключения';
+      checkServer();
+    }
+  }
 }
-
+updateOpeningCountdown();
+setInterval(updateOpeningCountdown, 1000);
 
 showRoute();
 })();
