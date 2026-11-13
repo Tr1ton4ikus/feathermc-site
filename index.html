@@ -728,6 +728,29 @@
 }
 /* Disclaimer reads better in the body sans than the pixel font at small sizes. */
 .connect-footnote{ font:400 12.5px/1.6 var(--font-body) !important; letter-spacing:.2px; }
+
+/* ---------- Iteration 8 — signature voxel skyline at the hero's base ---------- */
+/* A crisp pixel town against the sunset, windows glowing like an evening settling in —
+   the one true "Minecraft world" screenshot moment. Wide-desktop hero only (where the
+   hero is tall and absolutely composed); hidden on stacked layouts to avoid overlap. */
+.hero.homepage .voxel-town{ position:absolute; left:0; right:0; bottom:0; height:clamp(66px,8vw,116px); z-index:0; pointer-events:none; overflow:hidden; }
+.hero.homepage .voxel-town svg{ position:absolute; bottom:-1px; left:0; width:100%; height:100%; display:block; }
+.voxel-town .blds rect{ fill:#140e1d; }
+.voxel-town .wins rect{ fill:#ffc25c; filter:drop-shadow(0 0 3px rgba(255,180,70,.75)); }
+@media(prefers-reduced-motion:no-preference){
+  .voxel-town .wins rect{ animation:townWin 6s ease-in-out infinite; }
+  @keyframes townWin{ 0%,100%{opacity:.95} 46%{opacity:.2} }
+  .voxel-town .wins rect:nth-child(3n){ animation-duration:7.6s; animation-delay:.7s; }
+  .voxel-town .wins rect:nth-child(3n+1){ animation-duration:5.1s; animation-delay:1.4s; }
+  .voxel-town .wins rect:nth-child(4n){ animation-delay:2.2s; }
+  .voxel-town .wins rect:nth-child(5n){ animation-delay:3.1s; }
+}
+@media(prefers-reduced-motion:reduce){ .voxel-town .wins rect{ opacity:.9; } }
+@media(max-width:1140px){ .hero.homepage .voxel-town{ display:none; } }
+
+/* P2 — CTA hierarchy: the gold "Скопировать IP" clearly wins; the secondary recedes to a ghost. */
+.hero-buttons .button-secondary{ background:transparent; border:1px solid var(--border); }
+.hero-buttons .button-secondary:hover{ background:var(--chip); }
 </style>
 </head>
 <body>
@@ -798,6 +821,7 @@
 <div class="live-status is-launch" data-online="unknown" id="heroStatus"><span class="status-dot"></span><span id="heroStatusText">Открытие 14 ноября · 17:00 МСК</span></div>
 </div>
 <div aria-hidden="true" class="scroll-marker">ЛИСТАЙ ВНИЗ</div>
+<div aria-hidden="true" class="voxel-town"><svg preserveAspectRatio="xMidYMax slice" viewBox="0 0 1440 120" xmlns="http://www.w3.org/2000/svg"><g class="blds"><rect height="70" width="120" x="0" y="50"></rect><rect height="95" width="90" x="120" y="25"></rect><rect height="55" width="70" x="210" y="65"></rect><rect height="80" width="110" x="280" y="40"></rect><rect height="60" width="80" x="390" y="60"></rect><rect height="100" width="130" x="470" y="20"></rect><rect height="70" width="90" x="600" y="50"></rect><rect height="85" width="100" x="690" y="35"></rect><rect height="55" width="75" x="790" y="65"></rect><rect height="92" width="120" x="865" y="28"></rect><rect height="65" width="95" x="985" y="55"></rect><rect height="105" width="140" x="1080" y="15"></rect><rect height="72" width="100" x="1220" y="48"></rect><rect height="88" width="120" x="1320" y="32"></rect></g><g class="wins"><rect height="11" width="9" x="140" y="45"></rect><rect height="11" width="9" x="167" y="45"></rect><rect height="11" width="9" x="140" y="72"></rect><rect height="11" width="9" x="167" y="72"></rect><rect height="11" width="9" x="300" y="60"></rect><rect height="11" width="9" x="330" y="60"></rect><rect height="11" width="9" x="360" y="60"></rect><rect height="11" width="9" x="300" y="88"></rect><rect height="11" width="9" x="330" y="88"></rect><rect height="11" width="9" x="495" y="45"></rect><rect height="11" width="9" x="525" y="45"></rect><rect height="11" width="9" x="555" y="45"></rect><rect height="11" width="9" x="495" y="75"></rect><rect height="11" width="9" x="525" y="75"></rect><rect height="11" width="9" x="555" y="75"></rect><rect height="11" width="9" x="712" y="58"></rect><rect height="11" width="9" x="742" y="58"></rect><rect height="11" width="9" x="772" y="58"></rect><rect height="11" width="9" x="712" y="88"></rect><rect height="11" width="9" x="890" y="50"></rect><rect height="11" width="9" x="920" y="50"></rect><rect height="11" width="9" x="950" y="50"></rect><rect height="11" width="9" x="890" y="80"></rect><rect height="11" width="9" x="920" y="80"></rect><rect height="11" width="9" x="1105" y="40"></rect><rect height="11" width="9" x="1140" y="40"></rect><rect height="11" width="9" x="1175" y="40"></rect><rect height="11" width="9" x="1105" y="72"></rect><rect height="11" width="9" x="1140" y="72"></rect><rect height="11" width="9" x="1175" y="72"></rect><rect height="11" width="9" x="1342" y="55"></rect><rect height="11" width="9" x="1372" y="55"></rect><rect height="11" width="9" x="1402" y="55"></rect><rect height="11" width="9" x="1342" y="85"></rect></g></svg></div>
 </section>
 <div aria-hidden="true" class="ticker homepage"><div class="ticker-inner">
 <span>FEATHERMC</span><b>✦</b><span>ТВОЯ ИСТОРИЯ НАЧИНАЕТСЯ ЗДЕСЬ</span><b>✿</b><span>СТРОЙ СВОЮ МЕЧТУ</span><b>✦</b><span>ИССЛЕДУЙ ВМЕСТЕ</span><b>✿</b><span>ЕЩЁ ОДИН ЗАКАТ</span><b>✦</b>

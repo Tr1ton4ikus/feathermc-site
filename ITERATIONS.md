@@ -214,3 +214,28 @@ why it slipped through — the damage was *inside* the clipped card.
 **Verification:** 375px — `scrollWidth===clientWidth===375` (no sideways scroll), 0 children
 overflow the card, address+button stacked, status single-column; no console errors. Desktop
 untouched (fixes scoped to `max-width:640`).
+
+---
+
+## Iteration 8 — Creative experimentation & bold improvements
+
+**Player score: 7/10.** "Polished, cohesive, beautiful hero — but emotionally safe. It looks like
+a lovely brand site, not a Minecraft world I'm aching to enter." The signature P0: a living
+voxel skyline with windows lighting up — "THIS is the screenshot."
+
+**Implemented:**
+- **Signature voxel skyline (P0).** A hand-built pure-SVG pixel town (14 buildings, ~34 windows)
+  now sits along the hero's base, a crisp foreground silhouette against the sunset with amber
+  **windows that glow and flicker** on staggered loops — like an evening settling in. It's the
+  one unmistakably *Minecraft* moment, performant (opacity-only animation), `prefers-reduced-motion`
+  aware (windows hold lit), and scoped to the wide-desktop hero (hidden ≤1140px so it never
+  overlaps the stacked mobile countdown).
+- **CTA hierarchy (P2).** The secondary hero button ("Что тебя ждёт") recedes to a ghost/outline
+  so the gold "Скопировать IP" clearly wins.
+
+**Considered but deferred** (cost vs. this round's budget; noted for the final polish):
+scroll-driven sunset→dusk→night background (the site's sections are opaque, so it's not the
+"cheap" change it appears), and isometric voxel mini-scenes inside each feature card.
+
+**Verification:** 1366px render — voxel town visible with glowing windows beneath the floating
+IP/launch pills; ghost secondary button; no console errors.
