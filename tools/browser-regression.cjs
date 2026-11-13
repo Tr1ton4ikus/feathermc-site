@@ -42,6 +42,9 @@ const server = http.createServer((req, res) => {
         await page.waitForFunction(w => document.documentElement.scrollWidth <= w, width, { timeout: 3000 });
         const geometry = await page.evaluate(() => ({ width: innerWidth, scroll: document.documentElement.scrollWidth, outside: [...document.querySelectorAll('body *')].filter(e => e.getBoundingClientRect().right > innerWidth + 1).slice(0, 8).map(e => ({ class: String(e.className), right: e.getBoundingClientRect().right })) }));
         assert(geometry.scroll <= width, JSON.stringify({theme, ...geometry}));
+        const row = await page.evaluate(() => ({ bottom: document.querySelector('.header').getBoundingClientRect().bottom, hero: document.querySelector('.hero-content').getBoundingClientRect().top, brand: document.querySelector('.header .brand-name').textContent }));
+        assert(row.hero >= row.bottom, `Header covers hero: ${width}/${theme}`);
+        assert.equal(row.brand, 'Feather');
         assert.equal(await page.locator('#main-menu').evaluate(e => e.inert), width <= 1290);
         if (width <= 1290) {
           await page.locator('#menuButton').click();
@@ -55,6 +58,10 @@ const server = http.createServer((req, res) => {
         assert(await page.locator('.header').evaluate(e => e.classList.contains('is-scrolled')));
         const panels = await page.locator('.nav > .brand, .nav > .nav-actions').evaluateAll(es => es.map(e => ({ left: e.getBoundingClientRect().left, right: e.getBoundingClientRect().right })));
         assert(panels.every(b => b.left >= 0 && b.right <= width), `Header bounds: ${width}`);
+        if (width > 1290) {
+          const groups = await page.locator('.nav > .brand, .nav > .nav-links, .nav > .nav-actions').evaluateAll(es => es.map(e => ({ left: e.getBoundingClientRect().left, right: e.getBoundingClientRect().right })));
+          assert(groups[0].right < groups[1].left && groups[1].right < groups[2].left, `Split groups overlap: ${width}`);
+        }
         await page.evaluate(() => scrollTo(0, 0));
         await page.waitForTimeout(200);
         assert(!await page.locator('.header').evaluate(e => e.classList.contains('is-scrolled')));
@@ -71,7 +78,7 @@ const server = http.createServer((req, res) => {
     await page.locator('[data-copy]:visible').first().click();
     await page.waitForTimeout(100);
     assert.equal(await page.evaluate(() => navigator.clipboard.readText()), 'mcfeather.com');
-    for (const route of ['wiki', 'gradient', 'map']) {
+    for (const route of ['wiki', 'map']) {
       await page.evaluate(r => location.hash = r, route);
       await page.waitForTimeout(200);
       assert(await page.locator('#view-' + route).isVisible(), route);
@@ -80,25 +87,15 @@ const server = http.createServer((req, res) => {
         await page.waitForFunction(w => document.documentElement.scrollWidth <= w, width, { timeout: 3000 });
       }
     }
+    assert.equal(await page.locator('a[href*="gradient"]').count(), 0);
+    assert.equal(await page.locator('#view-gradient').count(), 0);
+    assert.equal(await page.locator('.header .brand-name').textContent(), 'Feather');
+    assert.equal(await page.locator('#heroTitle').textContent(), 'Feather');
+    assert.match(await page.locator('.hero-description').textContent(), /без проходок и лицензии/);
+    assert.match(await page.locator('.hero-description').textContent(), /без анкет и заявок/);
     await page.evaluate(() => location.hash = 'gradient');
-    await page.locator('#gradientText').fill('Я🪶');
-    assert.equal(await page.locator('#gradientPreview').textContent(), 'Я🪶');
-    assert.match(await page.locator('#gradMini').textContent(), /<gradient:/);
-    assert.equal(await page.locator('#gradientPreview span').count(), 2);
-    await page.locator('[data-copy-gradient="mini"]').click();
     await page.waitForTimeout(100);
-    assert.equal(await page.evaluate(() => navigator.clipboard.readText()), await page.locator('#gradMini').textContent());
-    await page.locator('#gradReset').click();
-    assert.equal(await page.locator('#gradientText').inputValue(), 'FeatherMC');
-    await page.locator('#gradientText').fill('<red>A\\B');
-    assert((await page.locator('#gradMini').textContent()).includes('\\<red>A\\\\B'));
-    await page.evaluate(() => {
-      Object.defineProperty(navigator, 'clipboard', { configurable: true, value: { writeText: async () => { throw Error('denied'); } } });
-      document.execCommand = () => false;
-    });
-    await page.locator('[data-copy-gradient="mini"]').click();
-    await page.waitForTimeout(100);
-    assert.match(await page.locator('#gradStatus').textContent(), /Не удалось/);
+    assert(!await page.locator('body').evaluate(e => e.classList.contains('page-active')));
     await page.evaluate(() => location.hash = 'wiki/komandy-servera');
     await page.waitForTimeout(100);
     assert(await page.locator('#wikiArticle').isVisible());
@@ -121,7 +118,7 @@ const server = http.createServer((req, res) => {
     assert(!await page.locator('body').evaluate(e => e.classList.contains('page-active')));
     assert.deepEqual(errors, [], 'Uncaught JavaScript errors');
     assert.deepEqual(failedLocal, [], 'Failed local assets');
-    console.log('PASS: both themes, 8 widths, menu/focus/motion, routes, wiki search, gradient, theme persistence, clipboard, local assets and page errors.');
+    console.log('PASS: both themes, 8 widths, menu/focus/motion, routes, wiki search, removed gradient, Feather branding, theme persistence, clipboard, local assets and page errors.');
     await context.close();
   } finally { await browser.close(); }
 })().catch(error => { console.error(error); process.exitCode = 1; }).finally(() => server.close());

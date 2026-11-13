@@ -11,7 +11,7 @@ No application build or runtime framework is required. Serve the checkout over H
 python -m http.server 18765 --bind 127.0.0.1
 ```
 
-The homepage supports existing `#wiki/<article>`, `#gradient`, and `#map` routes. Standalone `wiki.html`, `wiki/*.html`, `gradient.html`, and `map.html` remain available. Theme preference is shared across pages.
+The homepage supports existing `#wiki/<article>` and `#map` routes. Standalone `wiki.html`, `wiki/*.html`, and `map.html` remain available. Theme preference is shared across pages.
 
 ## Validation
 
@@ -35,3 +35,5 @@ See WIKI-MAINTENANCE.md for canonical article editing. Run both generator comman
 GitHub Actions validates documentation, JavaScript, links and browser behavior on PRs and main. The deploy job runs only after quality passes and only outside PR events. Only public HTML, assets, wiki, CNAME, robots.txt, sitemap.xml and .nojekyll enter the Pages artifact. DNS and domain settings are managed separately.
 
 Map availability remains marked as upcoming. The scheduled launch date is preserved from project content; expiry of the countdown does not prove that the Minecraft server is online. Status requests can fail independently of the website.
+
+The gradient generator has been removed. Its old standalone URL and hash route lead back to the homepage. The public name is Feather; Minecraft address remains mcfeather.com.
