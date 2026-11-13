@@ -34,6 +34,8 @@ jobs:
       - run: npx playwright install --with-deps chromium
       - name: Validate canonical documentation
         run: npm run check:wiki
+      - name: Validate Discord webhook templates
+        run: python3 tests/check-discord-announcements.py
       - name: Browser regression
         run: |
           python -m http.server 18765 --bind 127.0.0.1 > /tmp/feather-http.log 2>&1 &

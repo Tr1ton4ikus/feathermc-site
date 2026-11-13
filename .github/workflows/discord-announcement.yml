@@ -1,7 +1,16 @@
-name: Send FeatherMC opening announcement
+name: Send FeatherMC Discord announcement
 
 on:
   workflow_dispatch:
+    inputs:
+      announcement:
+        description: "Choose which Discord post to send"
+        required: true
+        type: choice
+        default: how-to-play
+        options:
+          - how-to-play
+          - opening
 
 permissions:
   contents: read
@@ -12,7 +21,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-      - name: Publish Discord announcement
+      - name: Publish selected Discord announcement
         env:
           DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
-        run: python3 tools/send-discord-announcement.py
+          FEATHER_ANNOUNCEMENT: ${{ inputs.announcement }}
+        run: python3 tools/send-discord-announcement.py --announcement "$FEATHER_ANNOUNCEMENT"

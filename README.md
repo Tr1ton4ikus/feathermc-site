@@ -38,6 +38,17 @@ Map availability remains marked as upcoming. The obsolete opening countdown was 
 
 The gradient generator has been removed. Its old standalone URL and hash route lead back to the homepage. The public website hostname is mcfeather.com and the Minecraft connection IP is play.mcfeather.com.
 
-## Discord opening announcement
 
-The webhook payload is in `discord/launch-announcement.json`. Configure a GitHub Actions repository secret named `DISCORD_WEBHOOK_URL` with the Discord webhook URL; never commit the secret. Then run **Actions → Send FeatherMC opening announcement → Run workflow**. This deliberately runs only on manual dispatch, preventing duplicate announcements on ordinary website commits. The sender is `tools/send-discord-announcement.py`.
+## Discord "How to play" post
+
+The screenshot-style, branded `discord/how-to-play.json` contains a Russian
+instruction embed, highlighted game IP `play.mcfeather.com`, and **four Discord
+link buttons**: information, FeatherWiki, donate, and support. No Minecraft
+version, backup IP, or verification code has been invented.
+
+To post, add the `DISCORD_WEBHOOK_URL` repository Actions secret in GitHub,
+then open **Actions → Send FeatherMC Discord announcement → Run workflow** and
+choose **how-to-play** or **opening**. The sender adds
+`?with_components=true&wait=true` so normal Discord webhooks display link
+buttons and confirm the message was created. The workflow is manual-only to
+avoid repeated Discord announcements. Never commit your webhook URL.
