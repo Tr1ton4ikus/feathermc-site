@@ -6,6 +6,8 @@ window.FEATHER_CONFIG = Object.freeze({
   metrikaCounterId: 0,
   // The owner permits publishing the direct BlueMap address.
   mapDirectUrl: "http://144.31.2.178:8100/#world:207:0:820:506:0:0:0:1:flat",
-  // Optional HTTPS proxy, ending in /. Leave empty for direct access.
+  // Read-only HTTP page embeds the HTTP BlueMap inside the Feather site.
+  mapEmbedUrl: "http://mcfeather.com/map.html?embed=1",
+  // Optional HTTPS proxy, ending in /. Leave empty for the embedded HTTP page.
   mapProxyUrl: "",
 });

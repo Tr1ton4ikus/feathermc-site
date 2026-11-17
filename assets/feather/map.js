@@ -36,14 +36,45 @@
   };
   syncDirect();
   window.addEventListener("hashchange", syncDirect);
-  // The direct HTTP map works in its own tab. HTTPS Pages never attempts an
-  // iframe request that browsers will block as mixed content.
   const source = proxy || direct;
-  if (
-    !source ||
-    (location.protocol === "https:" && source.protocol === "http:")
-  )
+  if (!source) return;
+  if (location.protocol === "https:" && source.protocol === "http:") {
+    // A separate HTTP page on the same public website can frame this HTTP map.
+    // A marker prevents loops when a visitor enforces HTTPS-only navigation.
+    if (
+      config.mapEmbedUrl &&
+      !new URL(location.href).searchParams.has("embed")
+    ) {
+      const embedded = new URL(config.mapEmbedUrl);
+      if (
+        embedded.protocol === "http:" &&
+        ["mcfeather.com", "www.mcfeather.com"].includes(embedded.hostname)
+      ) {
+        embedded.hash = view();
+        location.replace(embedded.href);
+      }
+    } else {
+      status.querySelector("p").textContent =
+        "Браузер не разрешил встроенную карту. Можно открыть её напрямую.";
+    }
     return;
+  }
+  if (
+    location.protocol === "http:" &&
+    ["mcfeather.com", "www.mcfeather.com"].includes(location.hostname)
+  ) {
+    // Return from the read-only HTTP map to the encrypted main site.
+    document.querySelectorAll("a[href]").forEach((link) => {
+      const url = new URL(link.href, location.href);
+      if (
+        url.origin === location.origin &&
+        !/\/map(?:\.html|\/)?$/.test(url.pathname)
+      ) {
+        url.protocol = "https:";
+        link.href = url.href;
+      }
+    });
+  }
   let timer;
   const failed = () => {
     clearTimeout(timer);

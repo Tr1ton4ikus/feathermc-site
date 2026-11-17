@@ -2241,3 +2241,53 @@ h2 {
     gap: 12px;
   }
 }
+
+.copy-dialog {
+  width: min(420px, calc(100% - 40px));
+  margin: auto;
+  padding: 28px;
+  border: 1px solid #ffbd4a35;
+  border-radius: 16px;
+  background: var(--panel);
+  color: var(--ink);
+}
+.copy-dialog::backdrop {
+  background: #0009;
+}
+.copy-dialog h2 {
+  font-size: 25px;
+  letter-spacing: -0.8px;
+}
+.copy-dialog p {
+  font-size: 14px;
+  line-height: 1.7;
+  color: var(--muted);
+  margin-block: 16px 22px;
+}
+.copy-dialog label {
+  display: block;
+  color: var(--muted);
+  font-size: 12px;
+  margin-bottom: 8px;
+}
+.copy-dialog input {
+  display: block;
+  width: 100%;
+  padding: 14px 12px;
+  border: 1px solid #ffbd4a40;
+  border-radius: 8px;
+  background: var(--bg);
+  color: var(--gold);
+  font-size: 18px;
+  user-select: text;
+  -webkit-user-select: text;
+}
+.copy-dialog input:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 3px;
+}
+.copy-dialog .button {
+  margin-top: 22px;
+  width: 100%;
+  justify-content: center;
+}

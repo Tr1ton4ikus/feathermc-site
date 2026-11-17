@@ -1,12 +1,12 @@
 (() => {
   "use strict";
-  // An HTTP BlueMap cannot be framed by an HTTPS Pages document. Link to its
-  // full page instead; regular navigation opens it without mixed-content errors.
+  // Keep the map inside Feather. Only the read-only map page uses HTTP,
+  // matching BlueMap; the rest of the site stays on HTTPS.
   if (location.protocol !== "https:" || window.FEATHER_CONFIG?.mapProxyUrl)
     return;
   let map;
   try {
-    map = new URL(window.FEATHER_CONFIG?.mapDirectUrl);
+    map = new URL(window.FEATHER_CONFIG?.mapEmbedUrl);
     if (
       !["http:", "https:"].includes(map.protocol) ||
       map.username ||
@@ -24,9 +24,9 @@
     )
       return;
     link.href = map.href;
-    link.target = "_blank";
-    link.rel = "noopener noreferrer";
+    link.removeAttribute("target");
+    link.removeAttribute("rel");
     link.dataset.featherMap = "";
-    link.title = "Открыть живую карту в новой вкладке";
+    link.title = "Открыть карту внутри сайта";
   });
 })();

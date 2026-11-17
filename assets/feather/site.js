@@ -92,6 +92,61 @@
     if (event.matches && menuButton) setMenu(false);
   });
 
+  // Legacy copy stays synchronous inside the tap for HTTP and older iOS.
+  const legacyCopy = (address) => {
+    const selection = window.getSelection();
+    const ranges = selection
+      ? Array.from({ length: selection.rangeCount }, (_, index) =>
+          selection.getRangeAt(index).cloneRange(),
+        )
+      : [];
+    const active = document.activeElement;
+    const input = document.createElement("textarea");
+    input.value = address;
+    input.readOnly = true;
+    input.tabIndex = -1;
+    input.setAttribute("aria-label", "Адрес сервера");
+    input.style.cssText =
+      "position:fixed;top:0;left:0;width:1px;height:1px;padding:0;border:0;opacity:0;font-size:16px;";
+    document.body.append(input);
+    let copied = false;
+    try {
+      input.focus({ preventScroll: true });
+      input.select();
+      input.setSelectionRange(0, input.value.length);
+      copied = document.execCommand("copy");
+    } catch {
+      /* A browser can deny both clipboard mechanisms. */
+    } finally {
+      input.remove();
+      if (active instanceof HTMLElement) active.focus({ preventScroll: true });
+      if (selection) {
+        selection.removeAllRanges();
+        ranges.forEach((range) => selection.addRange(range));
+      }
+    }
+    return copied;
+  };
+  let copyDialog;
+  const manualCopy = (address) => {
+    if (!copyDialog) {
+      copyDialog = document.createElement("dialog");
+      copyDialog.className = "copy-dialog";
+      copyDialog.setAttribute("aria-labelledby", "copy-dialog-title");
+      copyDialog.innerHTML =
+        '<form method="dialog"><h2 id="copy-dialog-title">Адрес сервера</h2><p>Зажми адрес и выбери «Скопировать».</p><label for="copy-manual-address">IP Feather</label><input id="copy-manual-address" type="text" readonly translate="no" spellcheck="false"><button class="button" type="submit">Готово</button></form>';
+      document.body.append(copyDialog);
+      copyDialog.addEventListener("click", (event) => {
+        if (event.target === copyDialog) copyDialog.close();
+      });
+    }
+    const input = copyDialog.querySelector("input");
+    input.value = address;
+    copyDialog.showModal();
+    input.focus();
+    input.select();
+    input.setSelectionRange(0, address.length);
+  };
   document.querySelectorAll(".copy-address").forEach((button) => {
     const value = button.querySelector(".copy-value");
     const original = value.innerHTML;
@@ -101,9 +156,19 @@
     let timer;
     button.addEventListener("click", async () => {
       clearTimeout(timer);
-      try {
-        if (!navigator.clipboard?.writeText) throw new Error("clipboard");
-        await navigator.clipboard.writeText(address);
+      let copied = false;
+      // Run the fallback before yielding when the modern API is unavailable.
+      if (!window.isSecureContext || !navigator.clipboard?.writeText)
+        copied = legacyCopy(address);
+      else {
+        try {
+          await navigator.clipboard.writeText(address);
+          copied = true;
+        } catch {
+          copied = legacyCopy(address);
+        }
+      }
+      if (copied) {
         value.replaceChildren(document.createTextNode("Скопировано!"));
         value.append(
           button.ownerDocument
@@ -114,27 +179,19 @@
         );
         status.textContent = "Адрес скопирован в буфер обмена";
         document.dispatchEvent(new Event("feather:copied"));
-      } catch {
-        // The original address stays visible and selectable on HTTP or denial.
-        status.textContent = `Не удалось скопировать. Выдели адрес вручную: ${address}`;
-        let error = button.querySelector(".copy-error");
-        if (!error) {
-          error = document.createElement("span");
-          error.className = "copy-error";
-          button.append(error);
-        }
-        error.textContent = "Выдели и скопируй адрес вручную";
+        animate(
+          button,
+          [{ transform: "scale(.98)" }, { transform: "scale(1)" }],
+          { duration: 150 },
+        );
+        timer = setTimeout(() => {
+          value.innerHTML = original;
+          status.textContent = "";
+        }, 2500);
+      } else {
+        status.textContent = "Выдели адрес в открывшемся окне и скопируй его.";
+        manualCopy(address);
       }
-      animate(
-        button,
-        [{ transform: "scale(.98)" }, { transform: "scale(1)" }],
-        { duration: 150 },
-      );
-      timer = setTimeout(() => {
-        value.innerHTML = original;
-        status.textContent = "";
-        button.querySelector(".copy-error")?.remove();
-      }, 2500);
     });
   });
 

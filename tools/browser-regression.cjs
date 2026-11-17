@@ -79,7 +79,7 @@ const server = http.createServer(async (request,response) => {
     // Configure a dummy counter only in this isolated, fully intercepted test.
     const metric=await browser.newContext();
     const m=await metric.newPage();let loads=0;
-    await m.route('**/assets/site-config.js',r=>r.fulfill({contentType:'text/javascript',body:'window.FEATHER_CONFIG={metrikaCounterId:123456789};'}));
+    await m.route('**/assets/site-config.js*',r=>r.fulfill({contentType:'text/javascript',body:'window.FEATHER_CONFIG={metrikaCounterId:123456789};'}));
     await m.route('https://mc.yandex.ru/**',r=>{loads++;return r.fulfill({contentType:'text/javascript',body:''});});
     await m.goto(base+'/');
     const queued=await m.evaluate(()=>window.ym.a.map(args=>Array.from(args)));

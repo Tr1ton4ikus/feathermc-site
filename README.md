@@ -4,6 +4,8 @@ Public site: https://mcfeather.com/ · Minecraft: **play.mcfeather.com**.
 The homepage preserves the dark/gold Feather design and original mascot. No React,
 Next.js, Tailwind, Framer Motion, application build or runtime dependency is needed.
 Animations use CSS and native Web Animations API with reduced-motion support.
+Address buttons use Clipboard API with synchronous legacy copy fallback for
+HTTP/older mobile browsers. If both are denied, a selectable input dialog opens.
 
 ## Local development
 
@@ -39,10 +41,11 @@ it does not send test traffic to a real counter.
 ## Live map
 
 The owner permits the public BlueMap address, configured as `mapDirectUrl` in
-assets/site-config.js. BlueMap currently serves HTTP only. On the HTTPS site,
-map navigation opens the live map directly in a separate tab; the map.html page
-also offers a visible direct link. This avoids blocked mixed-content iframes.
-On an HTTP local/static page, the map can be embedded with its normal viewport.
+assets/site-config.js. BlueMap currently serves HTTP only. Map navigation opens the read-only **http://mcfeather.com/map.html** page in the
+same tab. That page embeds BlueMap in an iframe with real viewport dimensions.
+Only the map page uses HTTP; its return links go back to the HTTPS website.
+An HTTPS map URL redirects to the same-site HTTP embed. A marker avoids loops
+when a visitor enforces HTTPS-only navigation; that case retains a direct link.
 The direct link also works without JavaScript and preserves shared coordinates.
 
 An optional separately hosted HTTPS proxy can still be set in `mapProxyUrl`.
