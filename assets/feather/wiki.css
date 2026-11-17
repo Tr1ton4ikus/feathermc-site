@@ -6,7 +6,7 @@
   padding: 0 32px;
   display: flex;
   align-items: center;
-  gap: 30px;
+  gap: 15px;
   justify-content: space-between;
   border-bottom: 1px solid var(--line);
   position: sticky;
@@ -38,35 +38,60 @@
   color: var(--gold);
 }
 .wiki-sidebar-toggle {
-  display: flex;
-  gap: 24px;
-  align-items: center;
-  border: 1px solid #ffbd4a30;
+  display: inline-grid;
+  place-items: center;
+  flex: 0 0 44px;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 0;
   border-radius: 9px;
-  background: var(--panel);
-  padding: 11px 17px;
-  min-height: 44px;
-  font-size: 13px;
+  background: transparent;
+  color: var(--muted);
 }
 .wiki-sidebar-toggle:hover {
-  border-color: var(--gold);
+  background: var(--panel);
+  color: var(--gold);
+}
+.wiki-sidebar-toggle[aria-expanded="true"] {
+  color: var(--gold);
+}
+.sidebar-icon-chevron {
+  transform-box: view-box;
+  transform-origin: 13.5px 12px;
+  transition: transform 220ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+.wiki-sidebar-toggle[aria-expanded="false"] .sidebar-icon-chevron {
+  transform: scaleX(-1);
 }
 .wiki-layout {
+  --sidebar-width: 350px;
   display: grid;
-  grid-template-columns: 350px minmax(0, 1fr);
+  grid-template-columns: var(--sidebar-width) minmax(0, 1fr);
   max-width: 1800px;
   margin: auto;
+  overflow: clip;
+}
+.wiki-sidebar-space {
+  width: var(--sidebar-width);
 }
 .wiki-sidebar {
-  position: sticky;
+  position: fixed;
+  left: max(0px, calc((100vw - 1800px) / 2));
   top: var(--wiki-head);
+  width: var(--sidebar-width);
   height: calc(100dvh - var(--wiki-head));
   overflow: auto;
   overscroll-behavior: contain;
   padding: 28px 22px;
   border-right: 1px solid var(--line);
+  background: var(--bg);
+  z-index: 25;
   scrollbar-width: thin;
   scrollbar-color: #5d4c31 transparent;
+}
+.wiki-sidebar[inert] {
+  pointer-events: none;
 }
 .sidebar-heading a {
   display: flex;
@@ -482,6 +507,9 @@ input::placeholder {
 .wiki-layout.sidebar-collapsed {
   grid-template-columns: minmax(0, 1fr);
 }
+.sidebar-collapsed .wiki-sidebar-space {
+  display: none;
+}
 .sidebar-collapsed .wiki-content {
   max-width: 1300px;
   width: 100%;
@@ -497,7 +525,7 @@ input::placeholder {
 }
 @media (max-width: 1150px) {
   .wiki-layout {
-    grid-template-columns: 310px minmax(0, 1fr);
+    --sidebar-width: 310px;
   }
   .wiki-content {
     padding: 32px 26px;
@@ -559,11 +587,13 @@ input::placeholder {
     height: 32px;
   }
   .wiki-sidebar-toggle {
-    padding: 10px 13px;
-    gap: 14px;
+    margin-left: -8px;
   }
   .wiki-layout {
     display: block;
+  }
+  .wiki-sidebar-space {
+    display: none;
   }
   .wiki-content {
     padding: 30px 20px;
@@ -690,13 +720,10 @@ input::placeholder {
   .wiki-header .logo {
     gap: 4px;
   }
-  .wiki-sidebar-toggle {
-    gap: 9px;
-    padding-inline: 11px;
-  }
 }
 @media (prefers-reduced-motion: reduce) {
-  .wiki-banner {
+  .wiki-banner,
+  .sidebar-icon-chevron {
     transition: none;
   }
 }

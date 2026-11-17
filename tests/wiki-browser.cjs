@@ -26,13 +26,28 @@ const assert = require('node:assert/strict');
  await page.setViewportSize({width:1440,height:900});
  await page.locator('#wikiNavSearch').fill('неттакойстатьи');assert.equal(await page.locator('#wikiNavEmpty').isVisible(),true);
  await page.locator('#wikiNavSearch').fill('');
+ // Closing has a real exit; reversing mid-flight must preserve the drawn position.
+ const continuity=await page.evaluate(async()=>{
+   const button=document.querySelector('.wiki-sidebar-toggle');
+   const panel=document.getElementById('wikiSidebar');
+   button.click();await new Promise(resolve=>setTimeout(resolve,70));
+   const before=panel.getBoundingClientRect().left;
+   const closing=!panel.hidden && panel.inert;
+   button.click();const after=panel.getBoundingClientRect().left;
+   await new Promise(resolve=>setTimeout(resolve,320));
+   return {closing,jump:Math.abs(after-before),settled:!panel.hidden && !panel.inert && panel.getAnimations().length===0};
+ });
+ assert(continuity.closing);assert(continuity.jump<2);assert(continuity.settled);
  // Drawer reversal, phone focus containment and Escape must work during animation.
  await page.setViewportSize({width:390,height:844});
  const toggle=page.locator('.wiki-sidebar-toggle');
+ assert.equal((await toggle.textContent()).trim(),'');
+ assert((await toggle.boundingBox()).x < 40);
+ assert.equal(await toggle.locator('svg').count(),1);
  await toggle.click();await toggle.click();await toggle.click();
  assert(await page.locator('#wikiSidebar').isVisible());
  assert(await page.locator('#mainContent').evaluate(e=>e.inert));
- await page.keyboard.press('Escape');assert(await page.locator('#wikiSidebar').isHidden());
+ await page.keyboard.press('Escape');await page.locator('#wikiSidebar').waitFor({state:'hidden'});assert(await page.locator('#wikiSidebar').isHidden());
  assert(await toggle.evaluate(e=>e===document.activeElement));
  assert(!await page.locator('#mainContent').evaluate(e=>e.inert));
  await toggle.tap();await page.locator('.sidebar-cards a').nth(5).tap();

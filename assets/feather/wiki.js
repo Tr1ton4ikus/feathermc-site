@@ -6,46 +6,95 @@
   const toggle = document.querySelector(".wiki-sidebar-toggle");
   const layout = document.querySelector(".wiki-layout");
   const main = document.getElementById("mainContent");
+  let isOpen = !mobile.matches;
   let animation;
-  const setOpen = (open, focus = false) => {
+  let contentAnimation;
+  let revision = 0;
+  const setOpen = (open, focus = false, immediate = false) => {
+    // Read the current visual position before cancelling, so rapid reversals
+    // continue from the frame already on screen instead of jumping to an edge.
+    const closedTransform = `translateX(calc(-100% - ${mobile.matches ? 0 : Math.max(0, (innerWidth - 1800) / 2)}px))`;
+    const sidebarTransform = sidebar.hidden
+      ? closedTransform
+      : getComputedStyle(sidebar).transform;
+    const contentLeft = main.getBoundingClientRect().left;
     animation?.cancel();
-    sidebar.hidden = !open;
+    contentAnimation?.cancel();
+    const ownRevision = ++revision;
+    isOpen = open;
+    sidebar.hidden = false;
     sidebar.inert = !open;
     main.inert = open && mobile.matches;
     toggle.setAttribute("aria-expanded", String(open));
-    toggle.setAttribute(
-      "aria-label",
-      open ? "Закрыть список статей" : "Открыть список статей",
-    );
+    const label = open ? "Закрыть список статей" : "Открыть список статей";
+    toggle.setAttribute("aria-label", label);
+    toggle.title = label;
     layout.classList.toggle("sidebar-collapsed", !open);
     document.body.classList.toggle("sidebar-open", open && mobile.matches);
-    if (open && !reduced.matches && sidebar.animate)
-      animation = sidebar.animate(
+    if (focus || (!open && sidebar.contains(document.activeElement)))
+      (open ? document.getElementById("wikiNavSearch") : toggle).focus({
+        preventScroll: true,
+      });
+    const finish = () => {
+      if (revision !== ownRevision) return;
+      sidebar.hidden = !isOpen;
+      animation?.cancel();
+      contentAnimation?.cancel();
+      animation = contentAnimation = undefined;
+    };
+    if (immediate || reduced.matches || !sidebar.animate) {
+      finish();
+      return;
+    }
+    const timing = {
+      duration: 280,
+      easing: "cubic-bezier(.22,1,.36,1)",
+      fill: "both",
+    };
+    animation = sidebar.animate(
+      [
+        { transform: sidebarTransform },
+        { transform: open ? "translateX(0)" : closedTransform },
+      ],
+      timing,
+    );
+    // FLIP the article's position with transform; no width/layout tween.
+    if (!mobile.matches) {
+      const offset = contentLeft - main.getBoundingClientRect().left;
+      contentAnimation = main.animate(
         [
-          { transform: "translateX(-12px)" },
+          { transform: `translateX(${offset}px)` },
           { transform: "translateX(0)" },
         ],
-        { duration: 180, easing: "ease-out" },
+        timing,
       );
-    if (focus)
-      (open ? document.getElementById("wikiNavSearch") : toggle).focus();
+    }
+    animation.finished.then(finish).catch(() => {});
   };
-  setOpen(!mobile.matches);
-  toggle.addEventListener("click", () => setOpen(sidebar.hidden, true));
-  mobile.addEventListener("change", () => setOpen(!mobile.matches));
-  reduced.addEventListener("change", () => {
-    if (reduced.matches) animation?.cancel();
+  setOpen(isOpen, false, true);
+  toggle.addEventListener("click", () => setOpen(!isOpen, true));
+  mobile.addEventListener("change", () =>
+    setOpen(!mobile.matches, false, true),
+  );
+  // Reflow changes during a transition should settle, not leave stale offsets.
+  window.addEventListener("resize", () => {
+    if (animation || contentAnimation) setOpen(isOpen, false, true);
+  });
+  reduced.addEventListener("change", () => setOpen(isOpen, false, true));
+  window.addEventListener("pagehide", () => {
+    animation?.cancel();
+    contentAnimation?.cancel();
   });
   document.addEventListener("keydown", (event) => {
-    if (event.key === "Escape" && !sidebar.hidden) {
+    if (event.key === "Escape" && isOpen) {
       setOpen(false, true);
       return;
     }
-    if (event.key !== "Tab" || sidebar.hidden || !mobile.matches) return;
+    if (event.key !== "Tab" || !isOpen || !mobile.matches) return;
     const focusable = [
       toggle,
       ...sidebar.querySelectorAll("a[href],button,input"),
-    ].filter((e) => !e.hidden && e.getClientRects().length);
+    ].filter((element) => !element.hidden && element.getClientRects().length);
     const first = focusable[0],
       last = focusable.at(-1);
     if (event.shiftKey && document.activeElement === first) {
