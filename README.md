@@ -1,21 +1,57 @@
-# Feather
+# Feather — HTML, CSS, vanilla JavaScript
 
-Static Russian-language Minecraft community website at https://mcfeather.com/.
-Minecraft address: **play.mcfeather.com**. Donation store: https://feather.trademc.org/.
+Public site: https://mcfeather.com/ · Minecraft: **play.mcfeather.com**.
+The homepage preserves the dark/gold Feather design and original mascot. No React,
+Next.js, Tailwind, Framer Motion, application build or runtime dependency is needed.
+Animations use CSS and native Web Animations API with reduced-motion support.
 
-## Development
-
-No application build or runtime framework is required. Serve the checkout over HTTP:
+## Local development
 
 ```sh
-python -m http.server 18765 --bind 127.0.0.1
+python3 -m http.server 18765 --bind 127.0.0.1
 ```
 
-The homepage supports existing `#wiki/<article>` and `#map` routes. Standalone `wiki.html`, `wiki/*.html`, and `map.html` remain available. Theme preference is shared across pages.
+Open http://127.0.0.1:18765/. All assets and page links are relative, including fonts.
+GitHub project-prefix URLs and the existing custom domain are supported.
+Node dependencies are used only for browser checks, never shipped to visitors.
 
-## Validation
+## Wiki
 
-Node 22+ and Python 3.11+:
+`assets/wiki-catalog.json` owns all 12 articles and six categories. Run
+`python3 tools/build-wiki.py` after editing it. The generator writes the index and
+all standalone article pages. Large illustrated cards appear in the catalog,
+collapsible sidebar and article headers. Art settings are in the generator's
+`art` dictionary; downloaded CCVault sources are in `assets/wiki-icons/SOURCES.md`.
+Search covers article text/commands. Old `#wiki/<id>` and `#map` links redirect to
+static pages. Articles and cards remain readable without JavaScript.
+
+## Yandex Metrica
+
+Set the real numeric `metrikaCounterId` in **assets/site-config.js** and commit it.
+It is currently **0**, so analytics is disabled and sends no requests.
+The shared loader covers the homepage, map and all wiki pages. It loads the
+Yandex tag asynchronously, enables clickmap/link/bounce measurement, and leaves
+Webvisor off. Optional JavaScript goals: `copy_server`, `open_discord`,
+`open_shop`, `open_map`. Add the same identifiers in the counter settings.
+The automated integration check intercepts the tag and uses a dummy ID locally;
+it does not send test traffic to a real counter.
+
+## Live map
+
+GitHub Pages is static: it cannot run the old server proxy. The supplied upstream
+uses HTTP and must not be put in public JavaScript or embedded in an HTTPS page.
+Until an HTTPS proxy is deployed, the map page honestly shows unavailable status.
+
+`tools/map-proxy.mjs` is a standalone Node 22+ proxy ready for separate hosting.
+Set its private `MAP_UPSTREAM_ORIGIN` environment variable on that server, place
+it behind HTTPS, then set public `mapProxyUrl` in assets/site-config.js to the
+proxy URL with a trailing slash. See tools/map-proxy.env.example. It uses a fixed
+upstream, hides upstream headers/redirects, forwards assets/live polling, and
+sends readiness/coordinates to the allowed parent origins via postMessage.
+The proxy and environment files are excluded from the Pages artifact.
+No external proxy service has been provisioned by this change.
+
+## Validation and deployment
 
 ```sh
 npm ci
@@ -26,18 +62,15 @@ npm run test:wiki
 npm run test:supporting
 ```
 
-Keep the HTTP server running for the wiki and supporting suites. `npm test` creates its own temporary local server. Browser tests use installed Microsoft Edge on Windows or Playwright Chromium elsewhere; `BROWSER_PATH` can override the executable. `SITE_URL` can target another served checkout.
+Keep the static server on port 18765 for the wiki/supporting tests. The homepage
+suite starts its own server. Tests cover 320–1920px, keyboard/touch controls,
+clipboard, mode tabs, FAQ, no-JS, reduced motion, project-prefix asset paths,
+legacy routes and mocked Metrica/map configuration.
 
-See WIKI-MAINTENANCE.md for canonical article editing. Run both generator commands after catalog changes; `--check` verifies output without modifying files.
-
-## Deployment
-
-GitHub Actions validates documentation, JavaScript, links and browser behavior on PRs and main. The deploy job runs only after quality passes and only outside PR events. Only public HTML, assets, wiki, CNAME, robots.txt, sitemap.xml and .nojekyll enter the Pages artifact. DNS and domain settings are managed separately.
-
-Map availability remains marked as upcoming. The obsolete opening countdown was replaced by an invitation to join. Server status remains API-driven; the site never invents online player counts.
-
-The gradient generator has been removed. Its old standalone URL and hash route lead back to the homepage. The public website hostname is mcfeather.com and the Minecraft connection IP is play.mcfeather.com.
-
+The existing GitHub Pages workflow validates the site before deploying main.
+Only public HTML, assets, wiki, map, CNAME, robots.txt, sitemap.xml and .nojekyll
+enter its artifact. The existing mcfeather.com custom domain is preserved.
+Manual Discord announcement workflows remain manual; deployment sends no posts.
 
 ## Discord "How to play" post
 

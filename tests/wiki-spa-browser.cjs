@@ -1,3 +1,20 @@
+// Compatibility of old shared hashes after replacing the SPA with static pages.
 const { chromium, launchOptions } = require('./browser-config.cjs');
 const assert = require('node:assert/strict');
-(async()=>{const browser=await chromium.launch(launchOptions);try{const page=await browser.newPage({reducedMotion:'reduce'});const errors=[];page.on('pageerror',e=>errors.push(e.message));await page.goto((process.env.SITE_URL || 'http://127.0.0.1:18765')+'/#wiki',{waitUntil:'load'});assert.equal(await page.locator('#wikiNavigation details').count(),6);await page.locator('.wiki-library-filters button').filter({hasText:'Безопасность'}).click();assert.equal(await page.locator('#wikiAllLinks a:visible').count(),1);await page.locator('.wiki-library-filters button').first().click();await page.locator('#wikiSearch').fill('/bank');assert.ok(await page.locator('#wikiNavigation .wiki-nav-entry:visible').count()>0);await page.locator('#wikiSearchClear').click();await page.locator('#wikiAllLinks a[href="#wiki/komandy-servera"]').click();await page.locator('#wikiArticle h1').waitFor();assert.equal(await page.locator('#wikiArticle h1').count(),1);assert.ok(await page.locator('.wiki-article-pagination a').count()>0);assert.equal(await page.locator('#wikiNavigation [aria-current="page"]').count(),1);await page.locator('.wiki-article-pagination a').first().click();await page.locator('#wikiArticle h1').waitFor();assert.equal(await page.locator('#wikiArticle h1').count(),1);for(const width of [320,360,390,768,1024,1440,1920])for(const theme of ['dark','light']){await page.setViewportSize({width,height:900});await page.evaluate(t=>document.documentElement.dataset.theme=t,theme);await page.waitForFunction(w=>document.documentElement.scrollWidth<=w,width,{timeout:3000});}assert.deepEqual(errors,[]);console.log('PASS: integrated SPA six categories, search, route transitions, single heading, prev-next, current nav, seven widths/both themes, no page errors');}finally{await browser.close()}})().catch(e=>{console.error(e);process.exitCode=1});
+(async()=>{
+  const browser=await chromium.launch(launchOptions);
+  try {
+    const page=await browser.newPage();const errors=[];
+    page.on('pageerror',error=>errors.push(error.message));
+    const base=process.env.SITE_URL || 'http://127.0.0.1:18765';
+    await page.goto(base+'/#wiki');await page.waitForURL('**/wiki.html');
+    assert.equal(await page.locator('#wikiGrid .card').count(),12);
+    await page.goto(base+'/#wiki/komandy-servera');await page.waitForURL('**/wiki/komandy-servera.html');
+    assert.equal(await page.locator('h1').count(),1);
+    await page.goto(base+'/#wiki/unknown-article');await page.waitForURL('**/wiki.html');
+    await page.goto(base+'/#map');await page.waitForURL('**/map.html');
+    assert(await page.locator('#mapStatus').isVisible());
+    assert.deepEqual(errors,[]);
+    console.log('PASS: legacy wiki index/article/unknown-article and map hashes redirect to canonical static pages');
+  }finally{await browser.close();}
+})().catch(error=>{console.error(error);process.exitCode=1;});

@@ -2,3 +2,9 @@
 node_modules/
 test-results/
 __pycache__/
+.env
+.env.*
+!.env.example
+_site/
+.playwright-cli/
+output/

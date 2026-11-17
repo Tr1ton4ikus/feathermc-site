@@ -1,134 +1,92 @@
-// npm ci && npx playwright install chromium && npm test
 const assert = require('node:assert/strict');
-const fs = require('node:fs');
+const fs = require('node:fs/promises');
 const path = require('node:path');
 const http = require('node:http');
-let chromium;
-try { ({ chromium } = require('playwright')); }
-catch { ({ chromium } = require('../.qa/node_modules/playwright')); }
+const { chromium, launchOptions } = require('../tests/browser-config.cjs');
 const root = path.resolve(__dirname, '..');
-const mime = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript', '.css': 'text/css', '.json': 'application/json', '.webp': 'image/webp', '.png': 'image/png' };
-const server = http.createServer((req, res) => {
-  const pathname = decodeURIComponent(new URL(req.url, 'http://localhost').pathname);
-  const file = path.resolve(root, '.' + (pathname === '/' ? '/index.html' : pathname));
-  if (!file.startsWith(root + path.sep)) { res.writeHead(403).end(); return; }
-  fs.readFile(file, (error, data) => {
-    res.writeHead(error ? 404 : 200, { 'Content-Type': mime[path.extname(file)] || 'application/octet-stream' });
-    res.end(error ? 'Not found' : data);
-  });
-});
-
-(async () => {
-  await new Promise(resolve => server.listen(0, '127.0.0.1', resolve));
-  const base = process.env.SITE_URL || `http://127.0.0.1:${server.address().port}/`;
-  const edge = 'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe';
-  const browser = await chromium.launch({ headless: true, ...(fs.existsSync(edge) ? { executablePath: edge } : {}) });
+const mime = {'.html':'text/html; charset=utf-8','.js':'text/javascript','.css':'text/css','.json':'application/json','.webp':'image/webp','.png':'image/png','.woff2':'font/woff2'};
+const server = http.createServer(async (request,response) => {
   try {
-    const context = await browser.newContext({ reducedMotion: 'reduce', permissions: ['clipboard-read', 'clipboard-write'] });
-    // Third-party availability must not make local behavior nondeterministic.
-    await context.route('https://api.mcsrvstat.us/**', route => route.fulfill({ json: { online: false } }));
+    let pathname = decodeURIComponent(new URL(request.url,'http://localhost').pathname);
+    pathname = pathname.replace(/^\/feathermc-site(?=\/)/, '');
+    if (pathname.endsWith('/')) pathname += 'index.html';
+    const file = path.resolve(root,'.'+pathname);
+    if (!file.startsWith(root+path.sep)) {response.writeHead(403).end();return;}
+    const data = await fs.readFile(file);
+    response.writeHead(200,{'Content-Type':mime[path.extname(file)] || 'application/octet-stream'}).end(data);
+  } catch {response.writeHead(404).end();}
+});
+(async () => {
+  await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));
+  const base = process.env.SITE_URL || `http://127.0.0.1:${server.address().port}`;
+  const browser = await chromium.launch(launchOptions);
+  try {
+    const context = await browser.newContext({reducedMotion:'reduce', permissions:['clipboard-read','clipboard-write']});
     const page = await context.newPage();
-    const errors = [], failedLocal = [];
-    page.on('pageerror', error => errors.push(error.message));
-    page.on('response', response => { if (response.url().startsWith(base) && response.status() >= 400) failedLocal.push(response.url()); });
-    await page.goto(base, { waitUntil: 'load' });
-    await page.evaluate(() => document.fonts.ready);
-    for (const theme of ['dark', 'light']) {
-      await page.evaluate(t => { document.documentElement.dataset.theme = t; localStorage.setItem('feathermc-theme', t); }, theme);
-      for (const width of [320, 360, 390, 768, 1024, 1291, 1440, 1920]) {
-        await page.setViewportSize({ width, height: 900 });
-        await page.evaluate(() => scrollTo(0, 0));
-        await page.waitForTimeout(200);
-        await page.waitForFunction(w => document.documentElement.scrollWidth <= w, width, { timeout: 3000 });
-        const geometry = await page.evaluate(() => ({ width: innerWidth, scroll: document.documentElement.scrollWidth, outside: [...document.querySelectorAll('body *')].filter(e => e.getBoundingClientRect().right > innerWidth + 1).slice(0, 8).map(e => ({ class: String(e.className), right: e.getBoundingClientRect().right })) }));
-        assert(geometry.scroll <= width, JSON.stringify({theme, ...geometry}));
-        const row = await page.evaluate(() => ({ bottom: document.querySelector('.header').getBoundingClientRect().bottom, hero: document.querySelector('.hero-content').getBoundingClientRect().top, brand: document.querySelector('.header .brand-name').textContent }));
-        assert(row.hero >= row.bottom, `Header covers hero: ${width}/${theme}`);
-        assert.equal(row.brand, 'Feather');
-        assert.equal(await page.locator('#main-menu').evaluate(e => e.inert), width <= 1290);
-        if (width <= 1290) {
-          await page.locator('#menuButton').click();
-          assert.equal(await page.locator('#menuButton').getAttribute('aria-expanded'), 'true');
-          await page.keyboard.press('Escape');
-          assert.equal(await page.locator('#menuButton').getAttribute('aria-expanded'), 'false');
-          assert.equal(await page.evaluate(() => document.activeElement.id), 'menuButton');
-        }
-        await page.evaluate(() => scrollTo(0, 420));
-        await page.waitForTimeout(200);
-        assert(await page.locator('.header').evaluate(e => e.classList.contains('is-scrolled')));
-        const panels = await page.locator('.nav > .brand, .nav > .nav-actions').evaluateAll(es => es.map(e => ({ left: e.getBoundingClientRect().left, right: e.getBoundingClientRect().right })));
-        assert(panels.every(b => b.left >= 0 && b.right <= width), `Header bounds: ${width}`);
-        if (width > 1290) {
-          const groups = await page.locator('.nav > .brand, .nav > .nav-links, .nav > .nav-actions').evaluateAll(es => es.map(e => ({ left: e.getBoundingClientRect().left, right: e.getBoundingClientRect().right })));
-          assert(groups[0].right < groups[1].left && groups[1].right < groups[2].left, `Split groups overlap: ${width}`);
-        }
-        await page.evaluate(() => scrollTo(0, 0));
-        await page.waitForTimeout(200);
-        assert(!await page.locator('.header').evaluate(e => e.classList.contains('is-scrolled')));
+    const errors=[], failedLocal=[], analytics=[];
+    page.on('pageerror',e=>errors.push(e.message));
+    page.on('response',r=>{if(r.url().startsWith(base)&&r.status()>=400)failedLocal.push(r.url());});
+    page.on('request',r=>{if(/mc\.yandex/.test(r.url()))analytics.push(r.url());});
+    await page.goto(base+'/');
+    await page.evaluate(()=>document.fonts.ready);
+    for(const width of [320,390,760,768,1024,1100,1149,1150,1440,1920]) {
+      await page.setViewportSize({width,height:900});
+      await page.waitForFunction(() => document.documentElement.scrollWidth <= innerWidth);
+      assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false,`overflow ${width}`);
+      if(width<=760){
+        await page.getByRole('button',{name:'Открыть меню'}).click();
+        assert(await page.locator('#mobile-navigation').isVisible());
+        await page.keyboard.press('Escape');
+        assert(await page.locator('#mobile-navigation').isHidden());
+        assert(await page.locator('.menu-button').evaluate(e=>e===document.activeElement));
       }
     }
-    await page.setViewportSize({ width: 1440, height: 1000 });
-    await page.locator('#themeToggle').click();
-    await page.waitForTimeout(100);
-    assert.equal(await page.evaluate(() => localStorage.getItem('feathermc-theme')), 'dark');
-    await page.reload({ waitUntil: 'domcontentloaded' });
-    assert.equal(await page.locator('html').getAttribute('data-theme'), 'dark');
-    assert.equal(await page.locator('.nav-shop-link').getAttribute('href'), 'https://feather.trademc.org/');
+    await page.setViewportSize({width:1440,height:1000});
+    await page.locator('.hero-connect .copy-address').click();
+    assert.equal(await page.evaluate(()=>navigator.clipboard.readText()),'play.mcfeather.com');
+    await page.getByRole('tab',{name:'Дуэли'}).click();
+    assert(await page.locator('#panel-duels').isVisible());
+    await page.getByRole('tab',{name:'Дуэли'}).press('ArrowLeft');
+    assert(await page.locator('#panel-vanilla').isVisible());
+    await page.getByRole('tab',{name:'Ванилла'}).press('End');
+    assert(await page.getByRole('tab',{name:'Дуэли'}).evaluate(e=>e===document.activeElement));
+    await page.getByRole('tab',{name:'Дуэли'}).press('Home');
+    await page.locator('.faq-item summary').nth(1).click();
+    assert(await page.locator('.faq-item').nth(1).evaluate(e=>e.open));
+    assert.equal(await page.locator('script[src*="_next"],script[src*="react"],script[src*="framer"]').count(),0);
+    assert.equal(analytics.length,0,'Metrica must stay off with no real ID');
+    assert(await page.locator('a[href="wiki.html"]').count());
     assert(await page.locator('a[href="https://discord.gg/afb4uxe3GP"]').count());
-    await page.locator('[data-copy]:visible').first().click();
-    await page.waitForTimeout(100);
-    assert.equal(await page.evaluate(() => navigator.clipboard.readText()), 'play.mcfeather.com');
-    // Artistic gallery must open accessibly and close without leaving the page.
-    assert.equal(await page.locator('[data-world-scene]').count(), 3);
-    await page.locator('[data-world-scene]').first().click();
-    assert(await page.locator('#worldLightbox').evaluate(element => element.open));
-    assert.equal(await page.locator('#worldLightboxImage').getAttribute('src'), 'assets/background-light.webp');
-    await page.locator('[data-world-close]').click();
-    assert(!await page.locator('#worldLightbox').evaluate(element => element.open));
-    for (const route of ['wiki', 'map']) {
-      await page.evaluate(r => location.hash = r, route);
-      await page.waitForTimeout(200);
-      assert(await page.locator('#view-' + route).isVisible(), route);
-      for (const width of [320, 390, 768, 1440]) {
-        await page.setViewportSize({ width, height: 900 });
-        await page.waitForFunction(w => document.documentElement.scrollWidth <= w, width, { timeout: 3000 });
-      }
+    assert.equal(await page.evaluate(()=>document.getAnimations().filter(a=>!(a instanceof CSSTransition)).length),0,'reduced motion');
+    // The same document and its resources work beneath a GitHub project prefix.
+    if(!process.env.SITE_URL){
+      await page.goto(base+'/feathermc-site/');
+      await page.locator('.hero-world-link').click();
+      await page.waitForURL('**/feathermc-site/map.html');
+      assert(await page.locator('#mapStatus').isVisible());
     }
-    assert.equal(await page.locator('a[href*="gradient"]').count(), 0);
-    assert.equal(await page.locator('#view-gradient').count(), 0);
-    assert.equal(await page.locator('.header .brand-name').textContent(), 'Feather');
-    assert.equal(await page.locator('#heroTitle').textContent(), 'Feather');
-    assert.match(await page.locator('.hero-description').textContent(), /без проходок и лицензии/);
-    assert.match(await page.locator('.hero-description').textContent(), /без анкет и заявок/);
-    await page.evaluate(() => location.hash = 'gradient');
-    await page.waitForTimeout(100);
-    assert(!await page.locator('body').evaluate(e => e.classList.contains('page-active')));
-    await page.evaluate(() => location.hash = 'wiki/komandy-servera');
-    await page.waitForTimeout(100);
-    assert(await page.locator('#wikiArticle').isVisible());
-    await page.locator('#wikiSearch').fill('/discord');
-    assert(await page.locator('.wiki-nav-entry:visible').count() > 0);
-    await page.locator('#wikiSearch').fill('нет-такой-статьи-12345');
-    assert(await page.locator('#wikiNothing').isVisible());
-    await page.locator('#wikiSearchClear').click();
-    assert.equal(await page.locator('#wikiSearch').inputValue(), '');
-    await page.setViewportSize({ width: 320, height: 900 });
-    const wikiToggle = page.locator('.wiki-mobile-toggle');
-    assert.equal(await wikiToggle.getAttribute('aria-expanded'), 'false');
-    assert(!await page.locator('#wikiNavigation').isVisible());
-    await wikiToggle.click();
-    assert(await page.locator('#wikiNavigation').isVisible());
-    await page.locator('#wikiNavigation a').first().click();
-    assert.equal(await wikiToggle.getAttribute('aria-expanded'), 'false');
-    await page.evaluate(() => location.hash = '%E0%A4%A');
-    await page.waitForTimeout(100);
-    assert(!await page.locator('body').evaluate(e => e.classList.contains('page-active')));
-    assert.deepEqual(errors, [], 'Uncaught JavaScript errors');
-    assert.deepEqual(failedLocal, [], 'Failed local assets');
-    console.log('PASS: both themes, 8 widths, menu/focus/motion, routes, wiki search, removed gradient, Feather branding, theme persistence, clipboard, local assets and page errors.');
-    await context.close();
-  } finally { await browser.close(); }
-})().catch(error => { console.error(error); process.exitCode = 1; }).finally(() => server.close());
-
-
-
+    const nojs=await browser.newContext({javaScriptEnabled:false});
+    const plain=await nojs.newPage();await plain.goto(base+'/');
+    assert(await plain.locator('.hero-copy').isVisible());
+    assert(await plain.locator('#panel-duels').isVisible());
+    await nojs.close();
+    const touch=await browser.newContext({viewport:{width:390,height:844},isMobile:true,hasTouch:true,reducedMotion:'reduce'});
+    const phone=await touch.newPage();await phone.goto(base+'/');
+    await phone.getByRole('button',{name:'Открыть меню'}).tap();
+    await phone.locator('#mobile-navigation a[href="wiki.html"]').tap();
+    await phone.waitForURL('**/wiki.html');await touch.close();
+    // Configure a dummy counter only in this isolated, fully intercepted test.
+    const metric=await browser.newContext();
+    const m=await metric.newPage();let loads=0;
+    await m.route('**/assets/site-config.js',r=>r.fulfill({contentType:'text/javascript',body:'window.FEATHER_CONFIG={metrikaCounterId:123456789};'}));
+    await m.route('https://mc.yandex.ru/**',r=>{loads++;return r.fulfill({contentType:'text/javascript',body:''});});
+    await m.goto(base+'/');
+    const queued=await m.evaluate(()=>window.ym.a.map(args=>Array.from(args)));
+    assert.equal(queued.filter(args=>args[1]==='init').length,1);
+    assert.equal(loads,1);
+    await m.locator('.hero-connect .copy-address').click();
+    await metric.close();
+    assert.deepEqual(errors,[]);assert.deepEqual(failedLocal,[]);
+    console.log('PASS: vanilla runtime, 10 widths, keyboard/touch menu, tabs, clipboard, FAQ, reduced motion, no-JS, project-prefix paths, disabled and mocked Metrica');
+  } finally {await browser.close();server.close();}
+})().catch(error=>{console.error(error);server.close();process.exitCode=1;});

@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="theme-color" content="#121110" />
+    <meta name="color-scheme" content="dark" />
+    <title>Карта мира — Feather</title>
+    <meta
+      name="description"
+      content="Свои люди. Твой мир. Ванильный Minecraft, первый сезон Feather. Бесплатно, без лицензии — play.mcfeather.com."
+    />
+    <link rel="canonical" href="https://mcfeather.com/map.html" />
+    <link
+      rel="icon"
+      href="../assets/feather/feather-logo.png"
+      type="image/png"
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="ru_RU" />
+    <meta property="og:site_name" content="Feather" />
+    <meta property="og:title" content="Feather — Свои люди. Твой мир." />
+    <meta
+      property="og:description"
+      content="Ванильный Minecraft. Строй, исследуй и играй вместе с друзьями."
+    />
+    <meta property="og:url" content="https://mcfeather.com/map.html" />
+    <meta
+      property="og:image"
+      content="https://mcfeather.com/assets/feather/feather-character.png"
+    />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="stylesheet" href="../assets/feather/fonts.css" />
+    <link rel="stylesheet" href="../assets/feather/site.css" />
+    <script defer src="../assets/site-config.js"></script>
+    <script defer src="../assets/analytics.js"></script>
+    <script defer src="../assets/feather/map.js"></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Перейти к карте</a>
+    <main class="map-page" id="main">
+      <header class="map-header">
+        <div class="map-header-title">
+          <a href="../index.html" class="logo" aria-label="Feather — главная"
+            ><img
+              src="../assets/feather/feather-logo.png"
+              width="36"
+              height="36"
+              alt=""
+            /><span>Feather</span></a
+          ><span>Карта мира / Сезон 01</span>
+        </div>
+        <a href="../index.html" class="map-back">← На главную</a>
+      </header>
+      <div class="map-frame-wrap">
+        <section class="map-unavailable" id="mapStatus" role="status">
+          <h1>Карта временно недоступна</h1>
+          <p>Можно пока изучить вики или вернуться в игру.</p>
+          <div class="map-status-actions">
+            <a class="button" href="../wiki.html">Открыть вики</a
+            ><button
+              class="button button-secondary"
+              id="mapRetry"
+              type="button"
+              hidden
+            >
+              Повторить загрузку
+            </button>
+          </div>
+        </section>
+        <iframe
+          id="liveMap"
+          title="Живая интерактивная карта мира Feather"
+          allow="fullscreen"
+          referrerpolicy="no-referrer"
+          hidden
+        ></iframe>
+      </div>
+      <footer class="map-footer">
+        <a href="../index.html#start">play.mcfeather.com</a
+        ><span>Перемещай карту и приближай, чтобы увидеть больше</span>
+      </footer>
+    </main>
+    <noscript
+      ><p class="map-noscript">
+        Для интерактивной карты нужен JavaScript.
+        <a href="../wiki.html">Открыть вики</a>
+      </p></noscript
+    >
+  </body>
+</html>
