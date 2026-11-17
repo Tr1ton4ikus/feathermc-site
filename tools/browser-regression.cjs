@@ -22,6 +22,7 @@ const server = http.createServer(async (request,response) => {
   const browser = await chromium.launch(launchOptions);
   try {
     const context = await browser.newContext({reducedMotion:'reduce', permissions:['clipboard-read','clipboard-write']});
+    await context.route(/^http:\/\/[^/]+:8100\//, route=>route.fulfill({contentType:'text/html',body:'<title>Map test</title>'}));
     const page = await context.newPage();
     const errors=[], failedLocal=[], analytics=[];
     page.on('pageerror',e=>errors.push(e.message));
@@ -63,7 +64,7 @@ const server = http.createServer(async (request,response) => {
       await page.goto(base+'/feathermc-site/');
       await page.locator('.hero-world-link').click();
       await page.waitForURL('**/feathermc-site/map.html');
-      assert(await page.locator('#mapStatus').isVisible());
+      assert(await page.locator('.map-page').isVisible());
     }
     const nojs=await browser.newContext({javaScriptEnabled:false});
     const plain=await nojs.newPage();await plain.goto(base+'/');

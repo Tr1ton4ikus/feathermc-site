@@ -38,18 +38,16 @@ it does not send test traffic to a real counter.
 
 ## Live map
 
-GitHub Pages is static: it cannot run the old server proxy. The supplied upstream
-uses HTTP and must not be put in public JavaScript or embedded in an HTTPS page.
-Until an HTTPS proxy is deployed, the map page honestly shows unavailable status.
+The owner permits the public BlueMap address, configured as `mapDirectUrl` in
+assets/site-config.js. BlueMap currently serves HTTP only. On the HTTPS site,
+map navigation opens the live map directly in a separate tab; the map.html page
+also offers a visible direct link. This avoids blocked mixed-content iframes.
+On an HTTP local/static page, the map can be embedded with its normal viewport.
+The direct link also works without JavaScript and preserves shared coordinates.
 
-`tools/map-proxy.mjs` is a standalone Node 22+ proxy ready for separate hosting.
-Set its private `MAP_UPSTREAM_ORIGIN` environment variable on that server, place
-it behind HTTPS, then set public `mapProxyUrl` in assets/site-config.js to the
-proxy URL with a trailing slash. See tools/map-proxy.env.example. It uses a fixed
-upstream, hides upstream headers/redirects, forwards assets/live polling, and
-sends readiness/coordinates to the allowed parent origins via postMessage.
-The proxy and environment files are excluded from the Pages artifact.
-No external proxy service has been provisioned by this change.
+An optional separately hosted HTTPS proxy can still be set in `mapProxyUrl`.
+`tools/map-proxy.mjs` is tested locally but has not been externally deployed.
+The gribmine-vds server must not be used for this project.
 
 ## Validation and deployment
 

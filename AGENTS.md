@@ -11,8 +11,8 @@ accessibility/responsive checks, motion-director for animation decisions, and
 web-design-guidelines plus web-motion-auditor before completing interface changes.
 Honor reduced motion, visible focus, keyboard navigation and no-JS reading.
 
-All public settings live in assets/site-config.js. Never commit private map
-upstream addresses, credentials or environment files. GitHub Pages cannot run the
+All public settings live in assets/site-config.js. Never commit credentials or environment files. The owner explicitly permits the
+public BlueMap address in mapDirectUrl; do not access or change gribmine-vds. GitHub Pages cannot run the
 optional Node map proxy in tools/map-proxy.mjs; it needs separate HTTPS hosting.
 Metrica stays disabled until a real counter ID is supplied.
 

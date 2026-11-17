@@ -3,54 +3,104 @@
   const frame = document.getElementById("liveMap");
   const status = document.getElementById("mapStatus");
   const retry = document.getElementById("mapRetry");
-  const configured = window.FEATHER_CONFIG?.mapProxyUrl;
-  if (!configured) return;
-  let proxy;
+  const directLink = document.getElementById("mapDirect");
+  const config = window.FEATHER_CONFIG || {};
+  const validView = (hash) => /^#[\w:.,-]{1,300}$/.test(hash);
+  const initialView = "#world:207:0:820:506:0:0:0:1:flat";
+  let direct, proxy;
   try {
-    proxy = new URL(configured);
-    if (proxy.protocol !== "https:" || proxy.username || proxy.password) return;
+    if (config.mapDirectUrl) {
+      direct = new URL(config.mapDirectUrl);
+      if (
+        !["http:", "https:"].includes(direct.protocol) ||
+        direct.username ||
+        direct.password
+      )
+        direct = null;
+    }
+    if (config.mapProxyUrl) {
+      proxy = new URL(config.mapProxyUrl);
+      if (proxy.protocol !== "https:" || proxy.username || proxy.password)
+        proxy = null;
+    }
   } catch {
     return;
   }
-  const initialView = "#world:207:0:820:506:0:0:0:1:flat";
-  const validView = (hash) => /^#[\w:.,-]{1,300}$/.test(hash);
+  const view = () =>
+    validView(location.hash) ? location.hash : direct?.hash || initialView;
+  const syncDirect = () => {
+    if (!direct) return;
+    const url = new URL(direct);
+    url.hash = view();
+    directLink.href = url.href;
+  };
+  syncDirect();
+  window.addEventListener("hashchange", syncDirect);
+  // The direct HTTP map works in its own tab. HTTPS Pages never attempts an
+  // iframe request that browsers will block as mixed content.
+  const source = proxy || direct;
+  if (
+    !source ||
+    (location.protocol === "https:" && source.protocol === "http:")
+  )
+    return;
   let timer;
+  const failed = () => {
+    clearTimeout(timer);
+    frame.hidden = true;
+    frame.inert = true;
+    status.hidden = false;
+    status.querySelector("h1").textContent = "Не удалось загрузить карту";
+    status.querySelector("p").textContent =
+      "Попробуй ещё раз или открой карту в отдельной вкладке.";
+    retry.hidden = false;
+  };
+  const ready = () => {
+    clearTimeout(timer);
+    status.hidden = true;
+    frame.hidden = false;
+    frame.style.visibility = "visible";
+    frame.inert = false;
+  };
   const load = () => {
     clearTimeout(timer);
     status.querySelector("h1").textContent = "Открываем мир Feather…";
     status.querySelector("p").textContent =
       "Загружаем постройки, местность и игроков.";
     status.hidden = false;
-    frame.hidden = true;
     retry.hidden = true;
-    frame.src =
-      proxy.href.split("#")[0] +
-      (validView(location.hash) ? location.hash : initialView);
-    timer = setTimeout(() => {
-      status.querySelector("h1").textContent = "Не удалось загрузить карту";
-      status.querySelector("p").textContent = "Попробуй ещё раз через минуту.";
-      retry.hidden = false;
-    }, 20000);
-  };
-  // The proxy reports readiness and coordinates; cross-origin frame access is avoided.
-  window.addEventListener("message", (event) => {
-    if (event.origin !== proxy.origin || event.source !== frame.contentWindow)
-      return;
-    if (event.data?.type !== "feather-map-view") return;
-    clearTimeout(timer);
-    status.hidden = true;
+    // Keep viewport dimensions for BlueMap/WebGL initialization.
     frame.hidden = false;
-    if (validView(event.data.hash))
-      history.replaceState(
-        null,
-        "",
-        location.pathname + location.search + event.data.hash,
-      );
-  });
+    frame.style.visibility = "hidden";
+    frame.inert = true;
+    frame.src = source.href.split("#")[0] + view();
+    timer = setTimeout(failed, 20000);
+  };
+  if (proxy)
+    window.addEventListener("message", (event) => {
+      if (event.origin !== proxy.origin || event.source !== frame.contentWindow)
+        return;
+      if (event.data?.type === "feather-map-error") {
+        failed();
+        return;
+      }
+      if (event.data?.type !== "feather-map-view") return;
+      ready();
+      if (validView(event.data.hash)) {
+        history.replaceState(
+          null,
+          "",
+          location.pathname + location.search + event.data.hash,
+        );
+        syncDirect();
+      }
+    });
+  else frame.addEventListener("load", ready);
+  frame.addEventListener("error", failed);
   retry.addEventListener("click", load);
   window.addEventListener("hashchange", () => {
     if (validView(location.hash))
-      frame.src = proxy.href.split("#")[0] + location.hash;
+      frame.src = source.href.split("#")[0] + location.hash;
   });
   window.addEventListener("pagehide", () => clearTimeout(timer), {
     once: true,

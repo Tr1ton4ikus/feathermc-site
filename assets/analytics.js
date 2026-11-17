@@ -30,8 +30,9 @@
     const link = event.target.closest("a[href]");
     if (!link) return;
     const url = new URL(link.href, location.href);
-    const goal =
-      url.hostname === "discord.gg"
+    const goal = link.hasAttribute("data-feather-map")
+      ? "open_map"
+      : url.hostname === "discord.gg"
         ? "open_discord"
         : url.hostname === "feather.trademc.org"
           ? "open_shop"
