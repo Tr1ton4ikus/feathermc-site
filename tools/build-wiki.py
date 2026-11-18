@@ -7,7 +7,7 @@ p=argparse.ArgumentParser();p.add_argument('--check',action='store_true');args=p
 docs=json.loads((ROOT/'assets/wiki-catalog.json').read_text(encoding='utf-8-sig'))
 # Art direction only; gameplay content is owned by the JSON catalog.
 art={
- 'torgovlya-s-zhitelyami':('Торговля с жителями','book','#392d67','#8063c3'),
+ 'torgovlya-s-zhitelyami':('Торговля с жителями','emerald','#392d67','#8063c3'),
  'komandy-servera':('Команды сервера','book','#5d3a12','#bd842b'),
  'instrumenty-i-ustroistva':('Инструменты и устройства','pickaxe','#133b3b','#277b78'),
  'cepi-i-redstoun':('Цепи и редстоун','chain','#541c26','#ae384b'),
@@ -19,11 +19,41 @@ art={
  'klany':('Кланы','shield','#21405b','#3d86ab'),
  'obshenie-i-profil':('Общение и профиль','paper','#502737','#aa536d'),
  'golosovoi-chat':('Голосовой чат','disc','#382651','#8153aa'),
- 'futbol':('Футбол','snowball','#184246','#2c8b91'),
+ 'futbol':('Футбол','black-ball-head','#184246','#2c8b91'),
  'morozhenoe':('Мороженое','snowball','#4c2d44','#b16b9c'),
  'sigarety-i-keis':('Сигареты и кейс','spyglass','#49351e','#987047'),
  'zashita-i-bezopasnost':('Защита и безопасность','shield','#253d58','#4c82aa'),
 }
+
+# Different item groups for each card: one hero, duos, trios and four-piece sets.
+# (asset, left %, top %, width %, rotation degrees)
+scenes={
+ 'torgovlya-s-zhitelyami':[('emerald',10,16,74,-13),('emerald',64,3,30,18),('emerald',67,64,34,-28)],
+ 'komandy-servera':[('book',8,14,73,-10),('paper',64,59,42,16)],
+ 'instrumenty-i-ustroistva':[('pickaxe',1,10,75,-20),('compass',65,2,37,17),('redstone',55,65,40,-9)],
+ 'cepi-i-redstoun':[('chain',2,8,94,12),('redstone',59,64,42,-16)],
+ 'fermerstvo-i-napitki':[('wheat',9,17,75,11),('bottle',67,56,37,-8)],
+ 'shpalernye-kultury':[('wheat',7,8,77,-14),('wheat',61,55,42,24),('emerald',61,0,29,-18)],
+ 'napitki':[('bottle',7,14,80,-5),('wheat',66,59,36,17)],
+ 'drugie-mekhaniki':[('compass',13,17,68,-5),('paper',61,4,30,18),('redstone',59,66,31,-15),('shield',0,73,29,14)],
+ 'ekonomika-i-klany':[('emerald',6,9,77,-10),('paper',65,55,39,17)],
+ 'klany':[('shield',7,6,83,-7),('emerald',61,57,36,-17),('paper',0,66,26,15)],
+ 'obshenie-i-profil':[('paper',5,12,78,12),('book',58,69,34,-24)],
+ 'golosovoi-chat':[('disc',7,8,86,-13)],
+ 'futbol':[('black-ball-head',4,3,94,-7)],
+ 'morozhenoe':[('ice-cream',14,5,72,-8),('snowball',66,64,38,14)],
+ 'sigarety-i-keis':[('spyglass',5,0,84,-14),('paper',62,65,39,20)],
+ 'zashita-i-bezopasnost':[('shield',6,5,89,5)],
+}
+vector_icons={'black-ball-head','bottle','ice-cream'}
+
+def scene_images(doc,prefix):
+ result=[]
+ for icon,x,y,width,turn in scenes[doc['id']]:
+  extension='svg' if icon in vector_icons else 'png'
+  style=f'--art-x:{x}%;--art-y:{y}%;--art-w:{width}%;--art-rotate:{turn}deg'
+  result.append(f'<img class="art-sprite" src="{prefix}assets/wiki-icons/{icon}.{extension}" style="{style}" alt="" width="256" height="256" loading="lazy">')
+ return ''.join(result)
 
 def banner(doc,prefix='',current='',heading=False,featured=False):
  title,icon,dark,color=art[doc['id']]
@@ -34,7 +64,8 @@ def banner(doc,prefix='',current='',heading=False,featured=False):
  variant=doc.get('layout','standard') if featured and not heading else 'standard'
  variant_class=' wiki-card--'+variant if variant!='standard' else ''
  summary=f'<span class="banner-summary">{escape(doc["desc"])}</span>' if featured and variant in ('feature','tall') else ''
- return f'''<{tag} class="wiki-banner{' article-banner' if heading else ' card'}{variant_class}" style="--card-dark:{dark};--card-color:{color}"{attrs}><span class="banner-copy"><span class="banner-category">{escape(doc['cat'])}</span><{texttag} class="banner-title">{escape(title)}</{texttag}>{summary}</span><span class="banner-art" aria-hidden="true"><img src="{prefix}assets/wiki-icons/{icon}.png" alt="" width="256" height="256"><img src="{prefix}assets/wiki-icons/{icon}.png" alt="" width="256" height="256" loading="lazy"><img src="{prefix}assets/wiki-icons/{icon}.png" alt="" width="256" height="256" loading="lazy"></span>{'' if heading else '<span class="banner-arrow" aria-hidden="true">↗</span>'}</{tag}>'''
+ composition=scene_images(doc,prefix)
+ return f'''<{tag} class="wiki-banner{' article-banner' if heading else ' card'}{variant_class}" style="--card-dark:{dark};--card-color:{color}"{attrs}><span class="banner-copy"><span class="banner-category">{escape(doc['cat'])}</span><{texttag} class="banner-title">{escape(title)}</{texttag}>{summary}</span><span class="banner-art" aria-hidden="true">{composition}</span>{'' if heading else '<span class="banner-arrow" aria-hidden="true">↗</span>'}</{tag}>'''
 
 def page(doc=None):
  prefix='../' if doc else ''

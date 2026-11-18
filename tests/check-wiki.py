@@ -24,6 +24,11 @@ docs=json.loads((ROOT/'assets/wiki-catalog.json').read_text(encoding='utf-8-sig'
 assert len(docs)==16
 assert len({doc['id'] for doc in docs})==16
 assert len({doc['cat'] for doc in docs})==6
+assert all('!казна' not in doc['html'] for doc in docs)
+builder=(ROOT/'tools/build-wiki.py').read_text(encoding='utf-8')
+assert "'futbol':[('black-ball-head',4,3,94,-7)]" in builder
+assert "'torgovlya-s-zhitelyami':[('emerald',10,16,74,-13)" in builder
+
 assert {'torgovlya-s-zhitelyami','shpalernye-kultury','napitki','klany'}.issubset({doc['id'] for doc in docs})
 trade=next(doc for doc in docs if doc['id']=='torgovlya-s-zhitelyami')
 assert 'Все зачарованные книги' in trade['html'] and 'алмазную руду' in trade['html']

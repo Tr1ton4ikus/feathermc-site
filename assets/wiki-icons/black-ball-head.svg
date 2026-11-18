@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="Чёрная футбольная голова" shape-rendering="crispEdges">
+<path fill="#090d10" d="M32 9h65l23 24v70l-25 20H31L9 101V32z"/>
+<path fill="#3b454a" d="M32 9h65l23 24H54L9 32z"/>
+<path fill="#141a20" d="M97 9l23 24v70l-23 20V33z"/>
+<path fill="#232c31" d="M9 32h88v91H31L9 101z"/>
+<path fill="#4a5759" d="M17 40h71v5H17zM17 45h5v48h-5z"/>
+<path fill="#0a0c0e" d="M31 50h20l10 12-6 18-20 8-14-17zM63 38h17l10 15-9 19-20-10-10-12zM55 80l26-8 10 17-10 21H54l-11-18z"/>
+<path fill="none" stroke="#b0b5b2" stroke-width="5" d="M22 71l14 1 17-10 8 0 17 10 3 17-13 11M51 50l9-12M36 72l7 20M61 62l-6 18"/>
+<path fill="#d9dbd3" d="M23 46h8v5h-8zM83 47h6v7h-6zM34 96h9v6h-9z"/>
+<path fill="#020304" d="M97 37h13v57l-13 13z"/>
+<path fill="#647077" d="M36 13h57l12 11H47z" opacity=".5"/>
+</svg>

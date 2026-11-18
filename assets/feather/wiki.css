@@ -776,3 +776,53 @@ input::placeholder {
  #wikiGrid .wiki-card--compact{min-height:175px}
 }
 @media(prefers-reduced-motion:reduce){#wikiGrid .wiki-banner{scroll-behavior:auto}}
+
+/* Individually composed Minecraft item sprites (no duplicated three-icon pattern). */
+.wiki-banner .banner-art img.art-sprite,
+.sidebar-cards .wiki-banner .banner-art img.art-sprite,
+.article-banner .banner-art img.art-sprite,
+#wikiGrid .wiki-banner .banner-art img.art-sprite {
+  position:absolute;
+  left:var(--art-x);
+  top:var(--art-y);
+  right:auto;
+  width:var(--art-w);
+  height:auto;
+  max-height:90%;
+  object-fit:contain;
+  transform:rotate(var(--art-rotate));
+  image-rendering:pixelated;
+  filter:drop-shadow(0 10px 8px rgba(5,8,14,.22));
+}
+#wikiGrid .wiki-card--feature .banner-art img.art-sprite {
+  left:var(--art-x);
+  top:var(--art-y);
+  right:auto;
+  width:var(--art-w);
+  height:auto;
+  transform:rotate(var(--art-rotate));
+}
+#wikiGrid .wiki-card--reverse .banner-art img.art-sprite {
+  left:var(--art-x);
+  top:var(--art-y);
+  right:auto;
+  width:var(--art-w);
+  height:auto;
+  transform:rotate(var(--art-rotate));
+}
+#wikiGrid .wiki-card--tall .banner-art img.art-sprite {
+  left:var(--art-x);
+  top:var(--art-y);
+  right:auto;
+  width:var(--art-w);
+  height:auto;
+  transform:rotate(var(--art-rotate));
+}
+/* Keep hero illustrations within the card and text readable at narrow widths. */
+@media(max-width:580px){
+ #wikiGrid .wiki-banner .banner-art img.art-sprite{max-height:84%}
+ .sidebar-cards .wiki-banner .banner-art img.art-sprite{max-height:82%}
+}
+@media(prefers-reduced-motion:reduce){
+ .wiki-banner .banner-art img.art-sprite{transition:none!important}
+}

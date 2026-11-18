@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="Мороженое" shape-rendering="crispEdges">
+<path fill="#241722" d="M27 40h10V25h10V14h36v10h12v17h9v25H88L72 123H54L39 66H26z"/>
+<path fill="#ffcee4" d="M38 40V28h10V19h34v10h10v12h7v21H31V42z"/>
+<path fill="#fff2f6" d="M42 35h12V24h26v10H67v16H39z"/>
+<path fill="#dc90b9" d="M75 38h17v9h6v13H75z"/>
+<path fill="#d7a365" d="M44 69h42l-14 47H58z"/>
+<path fill="#f8d29b" d="M53 75h23l-11 33z"/>
+<path fill="#9d6e49" d="M46 78l32 20M48 94l22-17" stroke="#9d6e49" stroke-width="6"/>
+<path fill="#d85b71" d="M60 12h12v12H60z"/>
+</svg>
