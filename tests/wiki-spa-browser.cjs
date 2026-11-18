@@ -5,7 +5,7 @@ const assert = require('node:assert/strict');
   const browser=await chromium.launch(launchOptions);
   try {
     const page=await browser.newPage();
-    await page.route(/^http:\/\/[^/]+:8100\//, route=>route.fulfill({contentType:'text/html',body:'<title>Map test</title>'}));
+    await page.route(/^https?:\/\/(?:[^/]+:8100|map\.mcfeather\.com)\//, route=>route.fulfill({contentType:'text/html',body:'<title>Map test</title>'}));
     const errors=[];
     page.on('pageerror',error=>errors.push(error.message));
     const base=process.env.SITE_URL || 'http://127.0.0.1:18765';

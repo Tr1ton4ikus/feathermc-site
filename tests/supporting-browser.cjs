@@ -10,27 +10,22 @@ const assert=require('node:assert/strict');
    const url=new URL(route.request().url());
    const response=await route.fetch({url:base+url.pathname+url.search});await route.fulfill({response});
   });
-  await page.route(/^http:\/\/[^/]+:8100\//,r=>r.fulfill({contentType:'text/html',body:'<title>Map fixture</title><canvas width="640" height="480"></canvas>'}));
+  await page.route(/^https?:\/\/(?:[^/]+:8100|map\.mcfeather\.com)\//,r=>r.fulfill({contentType:'text/html',body:'<title>Map fixture</title><canvas width="640" height="480"></canvas>'}));
   const forbidden=[];page.on('request',r=>{if(r.url().startsWith('http:')&&r.frame().parentFrame()?.url().startsWith('https:'))forbidden.push(r.url());});
   for(const route of ['/map.html','/map/']){
    await page.goto('https://pages.test'+route+'#world:1:0:2');
-   await page.waitForURL('http://mcfeather.com/map.html?embed=1#world:1:0:2');
    await page.locator('#liveMap').waitFor({state:'visible'});
    assert.equal(await page.frameLocator('#liveMap').locator('canvas').count(),1);
-   assert((await page.locator('#liveMap').getAttribute('src')).endsWith('#world:1:0:2'));
+   const src=await page.locator('#liveMap').getAttribute('src');
+   assert(src.startsWith('https://map.mcfeather.com/')&&src.endsWith('#world:1:0:2'));
    for(const width of [320,390,768,1024,1440,1920]){
     await page.setViewportSize({width,height:900});
     assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false,`map ${width}`);
    }
    assert.equal((await page.locator('.logo').textContent()).trim(),'Feather');
-   assert.equal(await page.locator('.map-back').getAttribute('href'),'https://mcfeather.com/index.html');
   }
-  // HTTPS-only browsers must get a fallback rather than a navigation loop.
-  await page.goto('https://pages.test/map.html?embed=1');
-  assert(await page.locator('#mapStatus').isVisible());assert(await page.locator('#liveMap').isHidden());
   await page.goto('https://pages.test/');
-  await page.waitForFunction(()=>document.querySelector('.hero-world-link').href.startsWith('http://mcfeather.com/map.html'));
-  assert.equal(await page.locator('.hero-world-link').getAttribute('target'),null);
+  assert(await page.evaluate(()=>document.querySelector('.hero-world-link').href.startsWith('https://pages.test/map')));
   for(const [label,url] of [['design by Epartis','https://t.me/epartis'],['code by rossek2','https://rossek2.ru']])
    assert.equal(await page.getByRole('link',{name:label,exact:true}).getAttribute('href'),url);
   assert.deepEqual(forbidden,[],'HTTPS documents must not request HTTP iframes');

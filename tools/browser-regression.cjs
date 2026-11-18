@@ -22,7 +22,7 @@ const server = http.createServer(async (request,response) => {
   const browser = await chromium.launch(launchOptions);
   try {
     const context = await browser.newContext({reducedMotion:'reduce', permissions:['clipboard-read','clipboard-write']});
-    await context.route(/^http:\/\/[^/]+:8100\//, route=>route.fulfill({contentType:'text/html',body:'<title>Map test</title>'}));
+    await context.route(/^https?:\/\/(?:[^/]+:8100|map\.mcfeather\.com)\//, route=>route.fulfill({contentType:'text/html',body:'<title>Map test</title>'}));
     const page = await context.newPage();
     const errors=[], failedLocal=[], analytics=[];
     page.on('pageerror',e=>errors.push(e.message));
