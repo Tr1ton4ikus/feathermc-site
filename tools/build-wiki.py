@@ -19,7 +19,7 @@ art={
  'klany':('Кланы','shield','#21405b','#3d86ab'),
  'obshenie-i-profil':('Общение и профиль','paper','#502737','#aa536d'),
  'golosovoi-chat':('Голосовой чат','disc','#382651','#8153aa'),
- 'futbol':('Футбол','black-ball-head','#184246','#2c8b91'),
+ 'futbol':('Футбол','snowball','#184246','#2c8b91'),
  'morozhenoe':('Мороженое','snowball','#4c2d44','#b16b9c'),
  'sigarety-i-keis':('Сигареты и кейс','spyglass','#49351e','#987047'),
  'zashita-i-bezopasnost':('Защита и безопасность','shield','#253d58','#4c82aa'),
@@ -32,27 +32,27 @@ scenes={
  'komandy-servera':[('book',8,14,73,-10),('paper',64,59,42,16)],
  'instrumenty-i-ustroistva':[('pickaxe',1,10,75,-20),('compass',65,2,37,17),('redstone',55,65,40,-9)],
  'cepi-i-redstoun':[('chain',2,8,94,12),('redstone',59,64,42,-16)],
- 'fermerstvo-i-napitki':[('wheat',9,17,75,11),('bottle',67,56,37,-8)],
+ 'fermerstvo-i-napitki':[('wheat',9,17,75,11),('paper',67,56,37,-8)],
  'shpalernye-kultury':[('wheat',7,8,77,-14),('wheat',61,55,42,24),('emerald',61,0,29,-18)],
- 'napitki':[('bottle',7,14,80,-5),('wheat',66,59,36,17)],
+ 'napitki':[('paper',7,14,80,-5),('wheat',66,59,36,17)],
  'drugie-mekhaniki':[('compass',13,17,68,-5),('paper',61,4,30,18),('redstone',59,66,31,-15),('shield',0,73,29,14)],
  'ekonomika-i-klany':[('emerald',6,9,77,-10),('paper',65,55,39,17)],
  'klany':[('shield',7,6,83,-7),('emerald',61,57,36,-17),('paper',0,66,26,15)],
  'obshenie-i-profil':[('paper',5,12,78,12),('book',58,69,34,-24)],
  'golosovoi-chat':[('disc',7,8,86,-13)],
- 'futbol':[('black-ball-head',4,3,94,-7)],
- 'morozhenoe':[('ice-cream',14,5,72,-8),('snowball',66,64,38,14)],
+ 'futbol':[('snowball',4,3,94,-7)],
+ 'morozhenoe':[('wheat',14,5,72,-8),('snowball',66,64,38,14)],
  'sigarety-i-keis':[('spyglass',5,0,84,-14),('paper',62,65,39,20)],
  'zashita-i-bezopasnost':[('shield',6,5,89,5)],
 }
-vector_icons={'black-ball-head','bottle','ice-cream'}
 
 def scene_images(doc,prefix):
  result=[]
  for icon,x,y,width,turn in scenes[doc['id']]:
-  extension='svg' if icon in vector_icons else 'png'
+  extension='png'
+  art_class='art-sprite football-ball' if doc['id']=='futbol' else 'art-sprite'
   style=f'--art-x:{x}%;--art-y:{y}%;--art-w:{width}%;--art-rotate:{turn}deg'
-  result.append(f'<img class="art-sprite" src="{prefix}assets/wiki-icons/{icon}.{extension}" style="{style}" alt="" width="256" height="256" loading="lazy">')
+  result.append(f'<img class="{art_class}" src="{prefix}assets/wiki-icons/{icon}.{extension}" style="{style}" alt="" width="256" height="256" loading="lazy">')
  return ''.join(result)
 
 def banner(doc,prefix='',current='',heading=False,featured=False):

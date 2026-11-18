@@ -157,7 +157,7 @@ input::placeholder {
   inset: 0;
   z-index: -1;
   opacity: 0.12;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Cpath fill='%23fff' filter='url(%23n)' opacity='.6' d='M0 0h160v160H0z'/%3E%3C/svg%3E");
+  background-image:radial-gradient(circle at 28% 20%,rgba(255,255,255,.22),transparent 58%);
 }
 .wiki-banner:hover {
   border-color: #fff7d999;
@@ -826,3 +826,6 @@ input::placeholder {
 @media(prefers-reduced-motion:reduce){
  .wiki-banner .banner-art img.art-sprite{transition:none!important}
 }
+
+/* The football uses ccVault's Snowball texture, darkened by CSS: no custom image. */
+.wiki-banner .banner-art img.art-sprite.football-ball{filter:grayscale(1) brightness(.32) contrast(1.8) drop-shadow(0 11px 8px rgba(0,0,0,.34))}

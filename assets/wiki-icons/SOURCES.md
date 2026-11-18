@@ -14,3 +14,5 @@ Downloaded from CCVault (ccLeaf) for Feather wiki banners. Minecraft artwork bel
 - `spyglass.png`: https://ccvaults.com/assets/10.%20Items/36.%20Other/Spyglass.png
 - `redstone.png`: https://ccvaults.com/assets/10.%20Items/26.%20Redstone/Redstone.png
 - `disc.png`: https://ccvaults.com/assets/10.%20Items/17.%20Music%20Discs/music_disc_13.png
+
+All images in FeatherWiki **card, sidebar, and article-header banners** use the twelve downloaded CCVault PNGs listed above. The CSS darkens the CCVault snowball sprite on the football card; there are no custom SVGs. Article-body instructional recipe images are separate from the banner artwork.

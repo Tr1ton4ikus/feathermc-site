@@ -20,7 +20,10 @@ const assert = require('node:assert/strict');
  }
  const scenes=await page.locator('#wikiGrid .card').evaluateAll(cards=>cards.map(card=>({id:card.dataset.id,images:[...card.querySelectorAll('.art-sprite')].map(img=>img.getAttribute('src'))})));
  assert.deepEqual([...new Set(scenes.map(card=>card.images.length))].sort(),[1,2,3,4],'artwork uses one to four items');
- assert.deepEqual(scenes.find(card=>card.id==='futbol').images,['assets/wiki-icons/black-ball-head.svg']);
+ assert.deepEqual(scenes.find(card=>card.id==='futbol').images,['assets/wiki-icons/snowball.png']);
+ assert.equal(await page.locator('#wikiGrid a[data-id="futbol"] img.football-ball').count(),1);
+ const ccVaultFiles=new Set(['emerald.png','pickaxe.png','chain.png','wheat.png','book.png','shield.png','compass.png','snowball.png','paper.png','spyglass.png','redstone.png','disc.png']);
+ assert(scenes.every(card=>card.images.every(src=>ccVaultFiles.has(src.replace(/^assets\/wiki-icons\//,'')))),'all card images sourced from ccVault');
  assert(scenes.find(card=>card.id==='torgovlya-s-zhitelyami').images.every(path=>path==='assets/wiki-icons/emerald.png'),'villager card shows emeralds');
  const links=await page.locator('#wikiGrid .card').evaluateAll(cards=>cards.map(card=>card.getAttribute('href')));
  for(const link of links){await page.goto(base+'/'+link);assert.equal(await page.locator('h1').count(),1);assert.ok(await page.locator('#articleToc a').count()>0);assert.equal(await page.locator('.wiki-sidebar [aria-current="page"]').count(),1);
