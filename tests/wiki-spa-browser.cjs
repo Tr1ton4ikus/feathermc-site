@@ -10,7 +10,7 @@ const assert = require('node:assert/strict');
     page.on('pageerror',error=>errors.push(error.message));
     const base=process.env.SITE_URL || 'http://127.0.0.1:18765';
     await page.goto(base+'/#wiki');await page.waitForURL('**/wiki.html');
-    assert.equal(await page.locator('#wikiGrid .card').count(),12);
+    assert.equal(await page.locator('#wikiGrid .card').count(),16);
     await page.goto(base+'/#wiki/komandy-servera');await page.waitForURL('**/wiki/komandy-servera.html');
     assert.equal(await page.locator('h1').count(),1);
     await page.goto(base+'/#wiki/unknown-article');await page.waitForURL('**/wiki.html');

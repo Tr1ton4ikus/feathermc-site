@@ -11,7 +11,7 @@ const assert = require('node:assert/strict');
  await page.locator('#search').fill('/bank');await page.waitForFunction(()=>document.getElementById('searchStatus').textContent!=='Найдено статей: 0');
  assert.ok(await page.locator('#wikiGrid .card:visible').count()>0,'full text command search');
  await page.locator('#search').fill('несуществующаястатья');assert.equal(await page.locator('#searchEmpty').isVisible(),true);
- await page.locator('#resetSearch').click();assert.equal(await page.locator('#wikiGrid .card:visible').count(),12);
+ await page.locator('#resetSearch').click();assert.equal(await page.locator('#wikiGrid .card:visible').count(),16);
  await page.getByRole('button',{name:'Безопасность',exact:true}).click();assert.equal(await page.locator('#wikiGrid .card:visible').count(),1);
  await page.locator('#resetSearch').click();
  for (const width of [320,360,390,768,1024,1440,1920]) {
@@ -59,6 +59,6 @@ const assert = require('node:assert/strict');
  await plain.goto(base+'/wiki/komandy-servera.html');assert(await plain.locator('.article-content').isVisible());
  assert.equal(await plain.locator('h1').count(),1);await nojs.close();
  assert.deepEqual(errors,[]);assert.deepEqual(failed,[]);
- console.log('PASS: JSON search/commands/categories, 12 articles, shared banners, TOCs, sidebar/current article, seven widths, drawer reversal/Escape/focus, reduced motion, no-JS, no page/asset errors');
+ console.log('PASS: JSON search/commands/categories, 16 articles, shared banners, TOCs, sidebar/current article, seven widths, drawer reversal/Escape/focus, reduced motion, no-JS, no page/asset errors');
  }finally{await browser.close();}
 })().catch(error=>{console.error(error);process.exitCode=1;});

@@ -21,12 +21,15 @@ for path in [ROOT/'wiki.html',*(ROOT/'wiki').glob('*.html')]:
   target=(path.parent/urllib.parse.unquote(url.path)).resolve()
   if not target.exists():errors.append(f'{path.name}: broken {link}')
 docs=json.loads((ROOT/'assets/wiki-catalog.json').read_text(encoding='utf-8-sig'))
-assert len(docs)==12
-assert len({doc['id'] for doc in docs})==12
+assert len(docs)==16
+assert len({doc['id'] for doc in docs})==16
 assert len({doc['cat'] for doc in docs})==6
+assert {'torgovlya-s-zhitelyami','shpalernye-kultury','napitki','klany'}.issubset({doc['id'] for doc in docs})
+trade=next(doc for doc in docs if doc['id']=='torgovlya-s-zhitelyami')
+assert 'Все зачарованные книги' in trade['html'] and 'алмазную руду' in trade['html']
 for doc in docs:
  body=(ROOT/'wiki'/(doc['id']+'.html')).read_text(encoding='utf-8')
  for command in re.findall(r'<code>(.*?)</code>',doc['html'],re.S):
   if '<code>'+command+'</code>'not in body:errors.append(f"{doc['id']}: lost command {command}")
 if errors:raise SystemExit('\n'.join(errors))
-print('PASS: 13 wiki pages, unique headings/IDs, all local links and assets, 12 canonical articles, 6 categories, all command markup preserved')
+print('PASS: 17 wiki pages, unique headings/IDs, all local links and assets, 16 canonical articles, 6 categories, all command markup preserved')

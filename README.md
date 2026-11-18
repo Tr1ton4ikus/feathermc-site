@@ -19,10 +19,10 @@ Node dependencies are used only for browser checks, never shipped to visitors.
 
 ## Wiki
 
-`assets/wiki-catalog.json` owns all 12 articles and six categories. Run
+`assets/wiki-catalog.json` owns all 16 articles and six categories. Run
 `python3 tools/build-wiki.py` after editing it. The generator writes the index and
 all standalone article pages. Large illustrated cards appear in the catalog,
-collapsible sidebar and article headers. Art settings are in the generator's
+collapsible sidebar and article headers. Trading with villagers and major farming/clan mechanics each have their own article. Art settings are in the generator's
 `art` dictionary; downloaded CCVault sources are in `assets/wiki-icons/SOURCES.md`.
 Search covers article text/commands. Old `#wiki/<id>` and `#map` links redirect to
 static pages. Articles and cards remain readable without JavaScript.
