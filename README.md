@@ -100,3 +100,16 @@ Use `discord/discohook-support-menu.json` for a Discohook-compatible support ann
 Note: a webhook cannot process an interactive ticket-category dropdown or create tickets. To implement a working selection menu, configure a Discord ticket bot and its interactions separately. The static embed lists categories, not a functional selector.
 
 The support banner is referenced from the signed Discord CDN URL supplied by the user. It is temporary and expires at **2026-11-14 14:00:17 UTC**. The image could not be downloaded into the repository in this environment. Upload a durable banner and replace the `image.url` in both support templates; the how-to-play banner also uses a signed URL.
+
+## Search engines and SEO
+
+The homepage targets both names: Feather and «Фезер» (Minecraft/Майнкрафт server).
+Each wiki page has a distinct title, meta description, canonical URL, Open Graph metadata
+and JSON-LD Article/BreadcrumbList data. The homepage includes WebSite structured data
+with the site's Russian alternate name. The wiki generator also maintains `sitemap.xml`
+for the homepage, wiki index, all articles and the map. `robots.txt` points crawlers to it.
+
+Run `npm run check:wiki` after editing any SEO metadata or the wiki catalog.
+To request indexing, verify ownership of `https://mcfeather.com/` in Google Search
+Console and Yandex Webmaster, then submit `https://mcfeather.com/sitemap.xml`.
+Repository changes alone do not verify ownership, ensure indexing or guarantee rankings.
