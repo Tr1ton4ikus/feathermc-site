@@ -36,7 +36,7 @@ const assert=require('node:assert/strict');
   await page.route('https://map.test/**',r=>r.fulfill({contentType:'text/html',body:'<script>parent.postMessage({type:"feather-map-error"},"*")</script>'}));
   await page.reload();await page.locator('#mapRetry').waitFor({state:'visible'});
   await page.unroute('**/assets/site-config.js*');
-  await page.goto(base+'/gradient.html');await page.waitForURL('**/index.html#top');
+  await page.goto(base+'/gradient.html');await page.waitForURL(base+'/');
   assert.equal(await page.locator('h1').textContent(),'FEATHER');assert.deepEqual(errors,[]);
   console.log('PASS: same-site map iframe/navigation/coordinates, six widths, HTTPS return links, no redirect loop/mixed frames, credits, proxy readiness/error');
  }finally{await browser.close();}

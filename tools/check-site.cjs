@@ -2,7 +2,8 @@ const fs = require('node:fs');
 const path = require('node:path');
 const vm = require('node:vm');
 const root = path.resolve(__dirname, '..');
-const files = fs.readdirSync(root).filter(f => f.endsWith('.html')).concat(fs.readdirSync(path.join(root, 'wiki')).filter(f => f.endsWith('.html')).map(f => 'wiki/' + f), ['map/index.html']);
+const wikiFiles=fs.readdirSync(path.join(root,'wiki'),{recursive:true}).filter(f=>f.endsWith('.html')).map(f=>'wiki/'+f);
+const files=fs.readdirSync(root).filter(f=>f.endsWith('.html')).concat(wikiFiles,['map/index.html']);
 let scripts = 0;
 for (const file of files) {
   const html = fs.readFileSync(path.join(root, file), 'utf8');

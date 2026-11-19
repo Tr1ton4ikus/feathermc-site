@@ -56,14 +56,14 @@ const server = http.createServer(async (request,response) => {
     assert(await page.locator('.faq-item').nth(1).evaluate(e=>e.open));
     assert.equal(await page.locator('script[src*="_next"],script[src*="react"],script[src*="framer"]').count(),0);
     assert.equal(analytics.length,0,'Metrica must stay off with no real ID');
-    assert(await page.locator('a[href="wiki.html"]').count());
+    assert(await page.locator('a[href="wiki/"]').count());
     assert(await page.locator('a[href="https://discord.gg/afb4uxe3GP"]').count());
     assert.equal(await page.evaluate(()=>document.getAnimations().filter(a=>!(a instanceof CSSTransition)).length),0,'reduced motion');
     // The same document and its resources work beneath a GitHub project prefix.
     if(!process.env.SITE_URL){
       await page.goto(base+'/feathermc-site/');
       await page.locator('.hero-world-link').click();
-      await page.waitForURL('**/feathermc-site/map.html');
+      await page.waitForURL('**/feathermc-site/map/');
       assert(await page.locator('.map-page').isVisible());
     }
     const nojs=await browser.newContext({javaScriptEnabled:false});
@@ -74,8 +74,8 @@ const server = http.createServer(async (request,response) => {
     const touch=await browser.newContext({viewport:{width:390,height:844},isMobile:true,hasTouch:true,reducedMotion:'reduce'});
     const phone=await touch.newPage();await phone.goto(base+'/');
     await phone.getByRole('button',{name:'Открыть меню'}).tap();
-    await phone.locator('#mobile-navigation a[href="wiki.html"]').tap();
-    await phone.waitForURL('**/wiki.html');await touch.close();
+    await phone.locator('#mobile-navigation a[href="wiki/"]').tap();
+    await phone.waitForURL('**/wiki/');await touch.close();
     // Configure a dummy counter only in this isolated, fully intercepted test.
     const metric=await browser.newContext();
     const m=await metric.newPage();let loads=0;

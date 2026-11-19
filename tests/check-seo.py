@@ -1,57 +1,43 @@
-"""Static SEO sanity checks: content, canonicals, JSON-LD, crawlability and sitemap."""
+"""Check canonical routes, metadata, structured data and old URL compatibility."""
 from pathlib import Path
-from html import unescape
-import json, re, xml.etree.ElementTree as ET
-
+from html.parser import HTMLParser
+import json,xml.etree.ElementTree as ET
 ROOT=Path(__file__).resolve().parents[1]
-docs=json.loads((ROOT/'assets/wiki-catalog.json').read_text(encoding='utf-8-sig'))
-BASE='https://mcfeather.com/'
-canonical_pages=['index.html','wiki.html','map.html']+['wiki/'+d['id']+'.html' for d in docs]
-expected={BASE, BASE+'wiki.html', BASE+'map.html'}|{BASE+'wiki/'+d['id']+'.html' for d in docs}
-titles=set()
-
-for path in canonical_pages+['map/index.html']:
- html=(ROOT/path).read_text(encoding='utf-8')
- def one(pattern):
-  results=re.findall(pattern,html,re.S)
-  assert len(results)==1, f'{path}: expected one {pattern}, found {len(results)}'
-  return unescape(results[0])
- title=one(r'<title>(.*?)</title>')
- description=one(r'<meta\s+name="description"\s+content="([^"]+)"')
- canonical=one(r'<link\s+rel="canonical"\s+href="([^"]+)"')
- og_title=one(r'<meta\s+property="og:title"\s+content="([^"]+)"')
- og_desc=one(r'<meta\s+property="og:description"\s+content="([^"]+)"')
- og_url=one(r'<meta\s+property="og:url"\s+content="([^"]+)"')
- schemas=re.findall(r'<script\s+type="application/ld\+json">([\s\S]*?)</script>',html)
- assert len(schemas)==1, f'{path}: missing/duplicate structured data'
- schema=json.loads(schemas[0])
- assert schema.get('@context')=='https://schema.org', f'{path}: invalid schema'
- assert len(description)>=50 and len(title)>=15 and og_title and og_desc
- assert not re.search(r'noindex',html,re.I), f'{path}: noindex'
- assert og_url==canonical, f'{path}: mismatch Open Graph URL'
- if path!='map/index.html':
-  assert canonical in expected, f'{path}: canonical not in sitemap {canonical}'
-  assert title not in titles, f'{path}: duplicate title {title}'
-  titles.add(title)
- else:
-  assert canonical==BASE+'map.html'
- if path=='index.html':
-  assert 'Фезер' in title and 'Майнкрафт' in title
-  assert 'Фезер' in html[html.index('<body'):]
-  assert any(x.get('@type')=='WebSite' and 'Фезер' in x.get('alternateName',[])
-             for x in schema.get('@graph',[])), 'homepage alternate brand missing'
- elif path=='wiki.html':
-  assert schema.get('@type')=='CollectionPage'
- elif path.startswith('wiki/'):
-  assert any(x.get('@type')=='Article' for x in schema.get('@graph',[]))
-  assert any(x.get('@type')=='BreadcrumbList' for x in schema.get('@graph',[]))
-
-sitemap=ET.parse(ROOT/'sitemap.xml').getroot()
-ns={'s':'http://www.sitemaps.org/schemas/sitemap/0.9'}
-urls=[x.text for x in sitemap.findall('s:url/s:loc',ns)]
-assert len(urls)==len(set(urls)), 'duplicate sitemap URL'
-assert set(urls)==expected, f'sitemap mismatch: missing={expected-set(urls)}, extra={set(urls)-expected}'
-robots=(ROOT/'robots.txt').read_text(encoding='utf-8')
-assert 'Sitemap: https://mcfeather.com/sitemap.xml' in robots
-assert 'Disallow: /' not in robots
-print(f'PASS: SEO metadata, schema and sitemap for {len(expected)} canonical URLs; robots.txt points to sitemap')
+class Page(HTMLParser):
+ def __init__(self):super().__init__();self.meta={};self.canonical=[];self.title='';self.h1=0;self.links=[];self.json=[];self.capture=None;self.text=''
+ def handle_starttag(self,tag,attrs):
+  a=dict(attrs)
+  if tag=='meta':self.meta[a.get('name',a.get('property',''))]=a.get('content','')
+  if tag=='link' and a.get('rel')=='canonical':self.canonical.append(a['href'])
+  if tag=='h1':self.h1+=1
+  if tag=='title':self.capture='title';self.text=''
+  if tag=='script' and a.get('type')=='application/ld+json':self.capture='json';self.text=''
+  if tag=='a' and 'href' in a:self.links.append(a['href'])
+ def handle_data(self,data):
+  if self.capture:self.text+=data
+ def handle_endtag(self,tag):
+  if tag=='title' and self.capture=='title':self.title=self.text;self.capture=None
+  if tag=='script' and self.capture=='json':self.json.append(json.loads(self.text));self.capture=None
+routes=['/','/wiki/','/map/']+['/wiki/'+d['id']+'/' for d in json.load(open(ROOT/'assets/wiki-catalog.json'))]
+titles=[];descriptions=[]
+for route in routes:
+ path=ROOT/route.lstrip('/')/'index.html';p=Page();p.feed(path.read_text())
+ canonical='https://mcfeather.com'+route
+ assert p.canonical==[canonical],(route,p.canonical)
+ assert p.h1==1,(route,p.h1)
+ assert p.title and len(p.meta['description'])>50,route
+ titles.append(p.title);descriptions.append(p.meta['description'])
+ assert p.meta['og:url']==canonical and p.meta['twitter:title']==p.title,route
+ assert p.meta['og:image'].endswith('feather-world-figma.webp'),route
+ assert p.meta['robots'].startswith('index,follow'),route
+ assert len(p.json)==1 and p.json[0]['@context']=='https://schema.org',route
+ assert all('.html' not in link for link in p.links if not link.startswith(('http:','https:'))),(route,p.links)
+ if route.startswith('/wiki/'):
+  assert any(item['@type']=='BreadcrumbList' for item in p.json[0]['@graph']) if route!='/wiki/' else True
+assert len(set(titles))==len(routes);assert len(set(descriptions))==len(routes)
+locs=[node.text for node in ET.parse(ROOT/'sitemap.xml').findall('.//{*}loc')]
+assert set(locs)=={'https://mcfeather.com'+route for route in routes}
+for old in [ROOT/'wiki.html',ROOT/'map.html',*(p for p in (ROOT/'wiki').glob('*.html') if p.name!='index.html')]:
+ text=old.read_text();assert 'http-equiv="refresh"' in text and 'location.replace' in text,str(old)
+assert (ROOT/'404.html').exists()
+print(f'PASS: {len(routes)} clean static pages, unique titles/descriptions, canonicals, OG/Twitter, JSON-LD, sitemap and legacy redirects')

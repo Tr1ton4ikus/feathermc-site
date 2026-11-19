@@ -11,7 +11,7 @@ class Page(HTMLParser):
   for key in ('href','src'):
    if key in a:self.links.append(a[key])
 errors=[]
-for path in [ROOT/'wiki.html',*(ROOT/'wiki').glob('*.html')]:
+for path in [ROOT/'wiki/index.html',*(ROOT/'wiki').glob('*/index.html')]:
  page=Page();page.feed(path.read_text(encoding='utf-8'))
  if page.h1!=1:errors.append(f'{path.name}: {page.h1} h1 headings')
  if len(page.ids)!=len(set(page.ids)):errors.append(f'{path.name}: duplicate IDs')
@@ -34,14 +34,14 @@ allowed=set(re.findall(r'^- `([a-z0-9-]+[.]png)`:',(ROOT/'assets/wiki-icons/SOUR
 assert len(allowed)==12, allowed
 assert all((ROOT/'assets/wiki-icons'/name).is_file() for name in allowed)
 assert not list((ROOT/'assets/wiki-icons').glob('*.svg'))
-for path in [ROOT/'wiki.html',*(ROOT/'wiki').glob('*.html')]:
+for path in [ROOT/'wiki/index.html',*(ROOT/'wiki').glob('*/index.html')]:
  for name in re.findall(r'assets/wiki-icons/([^"]+)',path.read_text(encoding='utf-8')):
   assert name in allowed, f'{path.name}: icon outside CCVault: {name}'
 assert {'torgovlya-s-zhitelyami','shpalernye-kultury','napitki','klany'}.issubset({doc['id'] for doc in docs})
 trade=next(doc for doc in docs if doc['id']=='torgovlya-s-zhitelyami')
 assert 'Все зачарованные книги' in trade['html'] and 'алмазную руду' in trade['html']
 for doc in docs:
- body=(ROOT/'wiki'/(doc['id']+'.html')).read_text(encoding='utf-8')
+ body=(ROOT/'wiki'/doc['id']/'index.html').read_text(encoding='utf-8')
  for command in re.findall(r'<code>(.*?)</code>',doc['html'],re.S):
   if '<code>'+command+'</code>'not in body:errors.append(f"{doc['id']}: lost command {command}")
 if errors:raise SystemExit('\n'.join(errors))

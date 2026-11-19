@@ -17,7 +17,7 @@
   // Preserve URLs shared by the previous static site without shipping its SPA.
   const legacyRoute = () => {
     const hash = location.hash;
-    if (hash === "#wiki") location.replace("wiki.html");
+    if (hash === "#wiki") location.replace("wiki/");
     else if (/^#wiki\/[a-z0-9-]+$/.test(hash)) {
       const article = hash.slice(6);
       // Resolve only known articles, never interpolate arbitrary path fragments.
@@ -29,12 +29,12 @@
         .then((docs) =>
           location.replace(
             docs.some((doc) => doc.id === article)
-              ? `wiki/${article}.html`
-              : "wiki.html",
+              ? `wiki/${article}/`
+              : "wiki/",
           ),
         )
-        .catch(() => location.replace("wiki.html"));
-    } else if (hash === "#map") location.replace("map.html");
+        .catch(() => location.replace("wiki/"));
+    } else if (hash === "#map") location.replace("map/");
     else if (hash === "#join") location.replace("#start");
     else if (hash === "#gradient" || hash === "#top") window.scrollTo(0, 0);
   };

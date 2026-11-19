@@ -113,3 +113,18 @@ Run `npm run check:wiki` after editing any SEO metadata or the wiki catalog.
 To request indexing, verify ownership of `https://mcfeather.com/` in Google Search
 Console and Yandex Webmaster, then submit `https://mcfeather.com/sitemap.xml`.
 Repository changes alone do not verify ownership, ensure indexing or guarantee rankings.
+
+## SEO and clean URLs
+
+Canonical pages use real directories: `/wiki/`, `/wiki/<article>/` and `/map/`.
+Old `.html` files are compatibility redirects (meta refresh plus JavaScript to
+preserve query and hash), since Pages cannot provide custom HTTP redirect rules.
+Each page has unique title/description, a self-referencing canonical, Open Graph,
+Twitter metadata and JSON-LD. The sitemap includes only clean canonical routes.
+The wiki generator owns route aliases and metadata; `tests/check-seo.py` checks
+consistency. Keep the GitHub Pages workflow copying the entire wiki/map folders.
+
+The homepage map cover is the original asset from Figma file
+`YuLmfdHTx4lWRb8md65U8G`, node `44:137`, locally hosted as
+`assets/feather/feather-world-figma.webp` (lossless WebP, 1447×1087).
+No proxy or tile downloads were introduced by this change.
