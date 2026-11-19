@@ -34,7 +34,7 @@ const assert=require('node:assert/strict');
   assert.equal(await dialog.locator('input').evaluate(e=>e.selectionEnd-e.selectionStart),18);
   await dialog.getByRole('button',{name:'Готово'}).tap();assert(await dialog.isHidden());
   assert(await page.locator('.start-intro .copy-address').evaluate(e=>e===document.activeElement));
-  assert.deepEqual(errors,[]);await context.close();
+  assert.deepEqual(errors,[]);await page.unrouteAll({behavior:'wait'});await context.close();
   console.log('PASS: mobile taps copy real clipboard on HTTP, both visible address buttons, denied modern API fallback, manual selection dialog and focus return');
  }finally{await browser.close();}
 })().catch(error=>{console.error(error);process.exitCode=1;});
